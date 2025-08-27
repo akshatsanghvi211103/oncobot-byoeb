@@ -65,7 +65,7 @@ class ChannelClientFactory:
             if self._qikchat_client is None:
                 self._qikchat_client = QikchatClient(
                     api_key=env_qikchat_api_key,
-                    base_url="https://api.qikchat.in/v1"
+                    base_url="https://api.qikchat.in/v1"  # Fixed: Use correct Qikchat API endpoint
                 )
             return self._qikchat_client
 

@@ -88,14 +88,33 @@ class QueueConsumer:
         self
     ):
         await self.initialize()
-        # Only create message consumer service if database services are available
-        if self._user_db_service is not None and self._message_db_service is not None:
+        
+        # Choose message consumer based on configuration
+        message_consumer_type = self._config.get("app", {}).get("message_consumer", "simple")
+        
+        if message_consumer_type == "trapi":
+            # Use TRAPI message consumer for LLM-enhanced responses
+            from byoeb.services.chat.trapi_message_consumer import TRAPIMessageConsumerService
+            
+            # Import translators from dependency setup
+            from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
+            
+            message_consumer_svc = TRAPIMessageConsumerService(
+                config=self._config,
+                channel_client_factory=self._channel_client_factory,
+                speech_translator=speech_translator_whisper,
+                text_translator=text_translator
+            )
+            self._logger.info("Using TRAPI message consumer with O3 LLM and voice support")
+        elif self._user_db_service is not None and self._message_db_service is not None:
+            # Use full message consumer with database
             message_consumer_svc = MessageConsmerService(
                 config=self._config,
                 user_db_service=self._user_db_service,
                 message_db_service=self._message_db_service,
                 channel_client_factory=self._channel_client_factory
             )
+            print("Using full message consumer with database")
         else:
             # For now, create a simple service that can handle KB queries without database
             from byoeb.services.chat.simple_message_consumer import SimpleMessageConsumerService
@@ -103,6 +122,7 @@ class QueueConsumer:
                 config=self._config,
                 channel_client_factory=self._channel_client_factory
             )
+            print("Using simple message consumer without database")
         self._logger.info(f"Queue info: {self._az_storage_queue}")
         while True:
             time_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

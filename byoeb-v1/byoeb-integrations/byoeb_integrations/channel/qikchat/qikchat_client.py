@@ -142,19 +142,27 @@ class QikchatClient:
         """
         endpoint = f"{self.base_url}/media/{media_id}"
         
+        self.logger.info(f"Attempting to download media from: {endpoint}")
+        self.logger.info(f"Using headers: {self.headers}")
+        
         async with aiohttp.ClientSession() as session:
             try:
                 async with session.get(
                     endpoint,
                     headers=self.headers
                 ) as response:
+                    self.logger.info(f"Media download response status: {response.status}")
+                    self.logger.info(f"Media download response headers: {dict(response.headers)}")
+                    
                     if response.status == 200:
                         media_data = await response.read()
-                        self.logger.debug(f"Downloaded media: {media_id}")
+                        self.logger.debug(f"Downloaded media: {media_id}, size: {len(media_data)} bytes")
                         return media_data
                     else:
                         error_data = await response.text()
-                        self.logger.error(f"Failed to download media: {error_data}")
+                        self.logger.error(f"Failed to download media. Status: {response.status}")
+                        self.logger.error(f"Error response: {error_data}")
+                        self.logger.error(f"Response headers: {dict(response.headers)}")
                         raise Exception(f"Media download failed: {error_data}")
                         
             except Exception as e:

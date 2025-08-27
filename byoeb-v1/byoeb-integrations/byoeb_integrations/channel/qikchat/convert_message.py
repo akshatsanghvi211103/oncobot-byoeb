@@ -24,8 +24,8 @@ def convert_qikchat_regular_message(original_message: Dict[str, Any]) -> ByoebMe
         original_message = json.loads(original_message)
     
     # Debug: Log the original message structure (commented out to reduce noise)
-    # print(f"DEBUG CONVERT: Original message keys: {list(original_message.keys())}")
-    # print(f"DEBUG CONVERT: Original message: {original_message}")
+    # print(f"=== QIKCHAT CONVERT DEBUG: Original message keys: {list(original_message.keys())} ===")
+    # print(f"=== QIKCHAT CONVERT DEBUG: Original message: {original_message} ===")
     
     # Extract basic message info - simpler than WhatsApp
     timestamp = original_message.get("timestamp")
@@ -52,19 +52,25 @@ def convert_qikchat_regular_message(original_message: Dict[str, Any]) -> ByoebMe
         
     elif message_type == "audio":
         audio_data = original_message.get("audio", {})
-        message_audio = audio_data.get("id") or audio_data.get("url")
+        # For Qikchat, prefer URL over ID since API download endpoints don't exist
+        message_audio = audio_data.get("url") or audio_data.get("id")
         message_mime = audio_data.get("mime_type", "audio/wav")
         byoeb_message_type = MessageTypes.REGULAR_AUDIO.value
+        # print(f"=== AUDIO CONVERSION DEBUG ===")
+        # print(f"Audio data: {audio_data}")
+        # print(f"Message audio (url or id): {message_audio}")
+        # print(f"Message mime: {message_mime}")
+        # print(f"=== END AUDIO DEBUG ===")
         
     elif message_type == "image":
         image_data = original_message.get("image", {})
-        message_audio = image_data.get("id") or image_data.get("url")
+        message_audio = image_data.get("url") or image_data.get("id")
         message_mime = image_data.get("mime_type", "image/jpeg")
         byoeb_message_type = MessageTypes.REGULAR_IMAGE.value
         
     elif message_type == "document":
         doc_data = original_message.get("document", {})
-        message_audio = doc_data.get("id") or doc_data.get("url")
+        message_audio = doc_data.get("url") or doc_data.get("id")
         message_mime = doc_data.get("mime_type", "application/pdf")
         byoeb_message_type = MessageTypes.REGULAR_DOCUMENT.value
     
@@ -79,6 +85,11 @@ def convert_qikchat_regular_message(original_message: Dict[str, Any]) -> ByoebMe
             media_id=message_audio,
             mime_type=message_mime
         )
+        # print(f"=== MEDIA CONTEXT CREATED ===")
+        # print(f"MediaContext: media_id={message_audio}, mime_type={message_mime}")
+        # print(f"=== END MEDIA CONTEXT DEBUG ===")
+    else:
+        print(f"=== NO MEDIA CONTEXT CREATED - message_audio is None ===")
     
     # Create reply context if available
     reply_context = None
@@ -99,7 +110,7 @@ def convert_qikchat_regular_message(original_message: Dict[str, Any]) -> ByoebMe
         message_id=message_id,
         message_source_text=message_text or "",
         message_type=byoeb_message_type,
-        message_source_additional_info=message_info,
+        media_info=message_info,
         timestamp=timestamp
     )
     

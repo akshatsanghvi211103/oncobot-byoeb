@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import byoeb.services.chat.constants as constants
 import byoeb.services.chat.utils as utils
 import byoeb_integrations.channel.qikchat.request_payload as qik_req_payload
@@ -26,6 +27,10 @@ class QikchatService(BaseChannelService):
     4. Different authentication and configuration
     """
     __client_type = "qikchat"  # Different from "whatsapp"
+
+    def __init__(self):
+        """Initialize QikchatService with logger."""
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def prepare_reaction_requests(
         self,
@@ -211,6 +216,63 @@ class QikchatService(BaseChannelService):
             bot_to_user_messages.append(bot_message)
         
         return bot_to_user_messages
+    
+    def create_cross_conv(
+        self,
+        byoeb_user_message: ByoebMessageContext,
+        byoeb_expert_message: ByoebMessageContext,
+        user_responses: List[Dict[str, Any]],
+        expert_responses: List[Dict[str, Any]]
+    ) -> List[ByoebMessageContext]:
+        """
+        Create cross conversation context from responses.
+        
+        Key Differences from WhatsApp:
+        1. Dict responses instead of WhatsAppResponse objects
+        2. Different message ID extraction
+        3. Simpler response structure
+        """
+        user_messages_context = []
+        for user_response in user_responses:
+            if "error" in user_response:
+                continue
+                
+            # Determine message type based on response content
+            message_type = MessageTypes.INTERACTIVE_LIST.value
+            if user_response.get("media_message") is not None:
+                message_type = MessageTypes.REGULAR_AUDIO.value
+                
+            # Extract message ID from response
+            message_id = user_response.get("message_id") or user_response.get("id")
+            
+            message_context = MessageContext(
+                message_id=message_id,
+                message_type=message_type,
+                additional_info=byoeb_user_message.message_context.additional_info
+            )
+            reply_context = ReplyContext(
+                reply_id=byoeb_user_message.reply_context.reply_id if byoeb_user_message.reply_context else None,
+            )
+            user_message_context = ByoebMessageContext(
+                channel_type=byoeb_user_message.channel_type,
+                message_context=message_context,
+                reply_context=reply_context
+            )
+            user_messages_context.append(user_message_context)
+        
+        # Create cross conversation context
+        cross_conversation_context = {
+            constants.USER: User(
+                user_id=byoeb_user_message.user.user_id,
+                user_type=byoeb_user_message.user.user_type,
+                user_language=byoeb_user_message.user.user_language,
+                test_user=byoeb_user_message.user.test_user,
+                phone_number_id=byoeb_user_message.user.phone_number_id,
+            ),
+            constants.MESSAGES_CONTEXT: user_messages_context
+        }
+        
+        return user_messages_context
     
     async def download_media(
         self,

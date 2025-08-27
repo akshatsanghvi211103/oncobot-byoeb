@@ -17,7 +17,7 @@
     "embeddings": {
         "azure": {
             "model": "text-embedding-3-large",
-            "endpoint": "https://khushi-baby-asha-oai.openai.azure.com/",
+            "endpoint": "https://swasthyabot-oai.openai.azure.com/",
             "deployment_name": "text-embedding-3-large",
             "api_version": "2023-03-15-preview"
         }
@@ -25,7 +25,7 @@
     "llms": {
         "azure": {
             "model": "gpt-4o",
-            "endpoint": "https://khushi-baby-asha-oai.openai.azure.com/",
+            "endpoint": "https://swasthyabot-oai.openai.azure.com/",
             "deployment_name": "gpt-4o",
             "api_version": "2023-03-15-preview"
         },
@@ -36,8 +36,8 @@
     },
     "media_storage": {
         "azure": {
-            "account_url": "https://khushibabyashastorage.blob.core.windows.net",
-            "container_name": "ashacontainer"
+            "account_url": "https://kgretrieval.blob.core.windows.net",
+            "container_name": "documents"
         }
     },
     "vector_store": {
@@ -47,8 +47,8 @@
             "qa_collection_name": "qa_collection"
         },
         "azure_vector_search": {
-            "service_name": "khushi-baby-asha-search",
-            "doc_index_name": "khushi-baby-asha-doc-index"
+            "service_name": "byoeb-search",
+            "doc_index_name": "oncology-documents-index"
         }
     }
 }

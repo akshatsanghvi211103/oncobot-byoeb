@@ -4,6 +4,7 @@
         "azure_cognitive_endpoint": "https://cognitiveservices.azure.com/.default",
         "queue_provider": "azure_storage_queue",
         "db_provider": "none",
+        "message_consumer": "trapi",
         "history_length": 3,
         "max_last_active_duration_seconds": 86400
     },
@@ -50,32 +51,44 @@
     "embeddings": {
         "azure": {
             "model": "text-embedding-3-large",
-            "endpoint": "https://khushi-baby-asha-oai.openai.azure.com/",
+            "endpoint": "https://swasthyabot-oai.openai.azure.com/",
             "deployment_name": "text-embedding-3-large",
             "api_version": "2023-03-15-preview"
+        },
+        "trapi": {
+            "model": "text-embedding-3-large",
+            "deployment_name": "text-embedding-3-large_1",
+            "instance": "gcr/shared",
+            "api_version": "2024-12-01-preview"
         }
     },
     "llms": {
         "azure": {
             "model": "gpt-4o",
-            "endpoint": "https://khushi-baby-asha-oai.openai.azure.com/",
+            "endpoint": "https://swasthyabot-oai.openai.azure.com/",
             "deployment_name": "gpt-4o",
             "api_version": "2023-03-15-preview"
         },
         "openai": {
             "model": "gpt-4o-2024-08-06",
             "api_version": "2023-03-15-preview"
+        },
+        "trapi": {
+            "model": "o3",
+            "deployment_name": "o3_2025-04-16",
+            "instance": "gcr/shared",
+            "api_version": "2024-12-01-preview"
         }
     },
     "media_storage": {
         "azure": {
-            "account_url": "https://smartkcstorage1.blob.core.windows.net",
+            "account_url": "https://kgretrieval.blob.core.windows.net",
             "container_name": "ashacontainer"
         }
     },
     "message_queue": {
         "azure": {
-            "account_url": "https://smartkcstorage1.queue.core.windows.net",
+            "account_url": "https://kgretrieval.queue.core.windows.net",
             "queue_status": "statusmessages",
             "queue_bot": "botmessages",
             "queue_channel": "channelmessages",
@@ -91,9 +104,9 @@
                 "region": "swedencentral"
             },
             "azure_oai": {
-                "endpoint": "https://khushibabyashastorage.queue.core.windows.net",
+                "endpoint": "https://swasthyabot-oai-vision.openai.azure.com/",
                 "model": "whisper",
-                "api_version": "2024-06-01"
+                "api_version": "2024-02-01"
             }
         },
         "text": {
@@ -108,8 +121,8 @@
             "collection_name": "vector_collection"
         },
         "azure_vector_search": {
-            "service_name": "khushi-baby-asha-search",
-            "doc_index_name": "khushi-baby-asha-doc-index"
+            "service_name": "byoeb-search",
+            "doc_index_name": "oncobot_index"
         }
     }
 }

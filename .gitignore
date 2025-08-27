@@ -21,7 +21,11 @@ scratch/
 
 # data
 byoeb-v1/knowledge_base.txt
+byoeb-v1/knowledge_base_2.md
+byoeb-v1/knowledge_base_2_unformatted.txt
+byoeb-v1/knowledge_base_3.md
 byoeb-v1/oncobot-kb-cleaned.csv
+
 byoeb-v1/byoeb/chroma_db/
 byoeb-v1/byoeb/byoeb/chroma_db/
 byoeb-v1/byoeb/byoeb/chat_app/byoeb/byoeb/chroma_db/

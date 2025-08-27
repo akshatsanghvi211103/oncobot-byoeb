@@ -108,50 +108,73 @@ class SimpleMessageConsumerService:
             
             print(f"Oncology query: {user_question}")
             
-            # Query ChromaDB for accurate oncology response
+            # Query Azure Vector Search for accurate oncology response
             try:
-                import chromadb
-                import os
+                import sys
+                sys.path.append('../../')
+                from azure.identity import AzureCliCredential, get_bearer_token_provider
+                from byoeb_integrations.embeddings.llama_index.azure_openai import AzureOpenAIEmbed
+                from byoeb_integrations.vector_stores.azure_vector_search.azure_vector_search import AzureVectorStore, AzureVectorSearchType
                 
-                # Connect to ChromaDB - use absolute path
-                current_dir = os.path.dirname(os.path.abspath(__file__))
-                # Navigate from services/chat/ to byoeb/byoeb/, then to chroma_db
-                chroma_path = os.path.join(current_dir, "..", "..", "chroma_db")
-                chroma_path = os.path.abspath(chroma_path)
+                print(f"=== USING AZURE VECTOR SEARCH FOR: {user_question} ===")
                 
-                print(f"=== Trying ChromaDB path: {chroma_path} ===")
-                client = chromadb.PersistentClient(path=chroma_path)
-                collection = client.get_collection("oncology_kb")
+                # Setup Azure credentials and components
+                credential = AzureCliCredential()
+                token_provider = get_bearer_token_provider(credential, 'https://cognitiveservices.azure.com/.default')
                 
-                # Query the knowledge base with the user's question
-                results = collection.query(
-                    query_texts=[user_question],
-                    n_results=1  # Get the most relevant answer
+                # Create embedding function
+                azure_openai_embed = AzureOpenAIEmbed(
+                    model='text-embedding-3-large',
+                    deployment_name='text-embedding-3-large',
+                    azure_endpoint='https://swasthyabot-oai.openai.azure.com/',
+                    token_provider=token_provider,
+                    api_version='2023-03-15-preview'
+                )
+                embedding_fn = azure_openai_embed.get_embedding_function()
+                
+                # Create vector store
+                vector_store = AzureVectorStore(
+                    service_name='byoeb-search',
+                    index_name='byoeb_index',
+                    embedding_function=embedding_fn,
+                    credential=credential
                 )
                 
-                if results['documents'] and len(results['documents'][0]) > 0:
-                    # Extract the answer from the ChromaDB result
-                    knowledge_base_response = results['documents'][0][0]
+                # Query the Azure vector search
+                results = await vector_store.aretrieve_top_k_chunks(
+                    query_text=user_question,
+                    k=1,  # Get the most relevant answer
+                    search_type=AzureVectorSearchType.DENSE.value,
+                    select=['id', 'text', 'metadata'],
+                    vector_field='text_vector_3072'
+                )
+                
+                if results and len(results) > 0:
+                    # Extract the answer from the Azure Search result
+                    knowledge_base_response = results[0].text
                     
-                    # Clean up the response (remove "Question: ... Answer: " format if present)
+                    # Clean up the response if needed
                     if "Answer:" in knowledge_base_response:
                         response_text = knowledge_base_response.split("Answer:", 1)[1].strip()
                     else:
                         response_text = knowledge_base_response
                         
-                    print(f"=== CHROMADB FOUND RELEVANT ANSWER ===")
-                    print(f"Similarity Score: {results['distances'][0][0] if results['distances'] else 'N/A'}")
+                    print(f"=== AZURE VECTOR SEARCH FOUND RELEVANT ANSWER ===")
+                    print(f"Response: {response_text[:200]}...")
                 else:
                     response_text = "I apologize, but I couldn't find a relevant answer to your oncology question in my knowledge base. Please try rephrasing your question or consult with your healthcare provider."
-                    print(f"=== NO RELEVANT ANSWER FOUND IN CHROMADB ===")
+                    print(f"=== NO RELEVANT ANSWER FOUND IN AZURE VECTOR SEARCH ===")
                     
             except Exception as e:
-                print(f"=== CHROMADB ERROR: {e} ===")
+                print(f"=== AZURE VECTOR SEARCH ERROR: {e} ===")
                 response_text = f"I encountered an error while searching for information about your oncology question: '{user_question}'. Please try again later or consult with your healthcare provider."
             
             print(f"=== WOULD SEND TO {user_id} ===")
             print(f"Response: {response_text}")
             print(f"=== MESSAGE SENDING DISABLED TO SAVE COSTS ===")
+            
+            # Return early to avoid actual message sending - but the message will still be 
+            # marked as successfully processed in the consume() method
             return
             
             # TODO: Integrate ChromaDB for accurate oncology responses

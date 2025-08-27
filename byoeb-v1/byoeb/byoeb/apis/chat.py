@@ -49,10 +49,10 @@ async def qikchat_webhook_alias(request: Request):
         print("Attempting to parse JSON body...")
         _logger.info("Attempting to parse JSON body...")
         body = await request.json()
-        print("JSON parsing successful!")
+        # print("JSON parsing successful!")
         # print(f"Body type: {type(body)}")
         # print(f"Body keys: {list(body.keys()) if isinstance(body, dict) else 'Not a dict'}")
-        _logger.info("JSON parsing successful!")
+        # _logger.info("JSON parsing successful!")
         
         _logger.info(f"=== FULL QIKCHAT WEBHOOK PAYLOAD ===")
         _logger.info(f"Raw JSON: {json.dumps(body, indent=2)}")
