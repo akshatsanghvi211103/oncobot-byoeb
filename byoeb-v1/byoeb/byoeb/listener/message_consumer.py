@@ -94,18 +94,50 @@ class QueueConsumer:
         
         if message_consumer_type == "trapi":
             # Use TRAPI message consumer for LLM-enhanced responses
-            from byoeb.services.chat.trapi_message_consumer import TRAPIMessageConsumerService
-            
-            # Import translators from dependency setup
-            from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
-            
-            message_consumer_svc = TRAPIMessageConsumerService(
-                config=self._config,
-                channel_client_factory=self._channel_client_factory,
-                speech_translator=speech_translator_whisper,
-                text_translator=text_translator
-            )
-            self._logger.info("Using TRAPI message consumer with O3 LLM and voice support")
+            if self._user_db_service is not None and self._message_db_service is not None:
+                # Use TRAPI with conversation history tracking
+                try:
+                    from byoeb.services.chat.trapi_message_consumer_with_history import TRAPIMessageConsumerServiceWithHistory
+                    
+                    # Import translators from dependency setup
+                    from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
+                    
+                    message_consumer_svc = TRAPIMessageConsumerServiceWithHistory(
+                        config=self._config,
+                        channel_client_factory=self._channel_client_factory,
+                        user_db_service=self._user_db_service,
+                        message_db_service=self._message_db_service,
+                        speech_translator=speech_translator_whisper,
+                        text_translator=text_translator
+                    )
+                    self._logger.info("Using TRAPI message consumer with conversation history tracking")
+                except ImportError as e:
+                    self._logger.error(f"Failed to import TRAPI consumer with history: {e}")
+                    # Fallback to standard TRAPI
+                    from byoeb.services.chat.trapi_message_consumer import TRAPIMessageConsumerService
+                    from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
+                    
+                    message_consumer_svc = TRAPIMessageConsumerService(
+                        config=self._config,
+                        channel_client_factory=self._channel_client_factory,
+                        speech_translator=speech_translator_whisper,
+                        text_translator=text_translator
+                    )
+                    self._logger.info("Fallback: Using standard TRAPI message consumer")
+            else:
+                # Use standard TRAPI without conversation history
+                from byoeb.services.chat.trapi_message_consumer import TRAPIMessageConsumerService
+                
+                # Import translators from dependency setup
+                from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
+                
+                message_consumer_svc = TRAPIMessageConsumerService(
+                    config=self._config,
+                    channel_client_factory=self._channel_client_factory,
+                    speech_translator=speech_translator_whisper,
+                    text_translator=text_translator
+                )
+                self._logger.info("Using TRAPI message consumer with O3 LLM and voice support (no conversation history)")
         elif self._user_db_service is not None and self._message_db_service is not None:
             # Use full message consumer with database
             message_consumer_svc = MessageConsmerService(
