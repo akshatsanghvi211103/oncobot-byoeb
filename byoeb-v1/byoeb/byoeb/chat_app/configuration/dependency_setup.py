@@ -98,6 +98,28 @@ speech_translator_whisper = AsyncAzureOpenAIWhisper(
     api_version=app_config["translators"]["speech"]["azure_oai"]["api_version"]
 )
 
+# Create alias for backward compatibility
+speech_translator = speech_translator_whisper
+
+# TTS Service with Azure Blob Storage
+from byoeb.services.chat.tts_service import TTSService
+from byoeb_integrations.media_storage.azure.async_azure_blob_storage import AsyncAzureBlobStorage
+
+# Create Azure Blob Storage client for TTS audio files
+tts_blob_storage = AsyncAzureBlobStorage(
+    container_name=app_config["media_storage"]["azure"]["container_name"],
+    account_url=app_config["media_storage"]["azure"]["account_url"],
+    credentials=AzureCliCredential(),
+    connection_string=None
+)
+
+# Create TTS service
+tts_service = TTSService(
+    speech_key=env_config.env_azure_speech_key,
+    speech_region=env_config.env_azure_speech_region,
+    blob_storage=tts_blob_storage
+)
+
 # vector store
 import os
 from byoeb_integrations.embeddings.llama_index.azure_openai import AzureOpenAIEmbed

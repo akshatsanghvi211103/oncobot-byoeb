@@ -1,5 +1,6 @@
 import re
 import json
+import uuid
 import byoeb.services.chat.constants as constants
 from typing import List, Dict, Any
 from datetime import datetime
@@ -172,10 +173,10 @@ class ByoebExpertGenerateResponse(Handler):
                 emoji,
                 status
             )
-            print("Reply context: ", json.dumps(reply_context.model_dump()))
             message_context = None
             if (reply_to_user_message_context.message_context.message_type == MessageTypes.REGULAR_AUDIO.value):
                 message_context = MessageContext(
+                    message_id=str(uuid.uuid4()),  # Generate unique message ID
                     message_type=MessageTypes.REGULAR_AUDIO.value,
                     additional_info={
                         **media_additiona_info,
@@ -186,6 +187,7 @@ class ByoebExpertGenerateResponse(Handler):
                 description = bot_config["template_messages"]["user"]["follow_up_questions_description"][user.user_language]
                 related_questions = reply_to_user_message_context.message_context.additional_info.get(constants.RELATED_QUESTIONS)
                 message_context = MessageContext(
+                    message_id=str(uuid.uuid4()),  # Generate unique message ID
                     message_type=MessageTypes.REGULAR_TEXT.value,
                     message_english_text=message_en_text,
                     message_source_text=text_message,
@@ -229,12 +231,13 @@ class ByoebExpertGenerateResponse(Handler):
             channel_type=byoeb_message.channel_type,
             message_category=MessageCategory.BOT_TO_EXPERT.value,
             user=User(
-                user_id=byoeb_message.user.user_id,
-                user_type=byoeb_message.user.user_type,
-                user_language=byoeb_message.user.user_language,
-                phone_number_id=byoeb_message.user.phone_number_id
+                user_id=byoeb_message.user.user_id if byoeb_message.user else None,
+                user_type=byoeb_message.user.user_type if byoeb_message.user else None,
+                user_language=byoeb_message.user.user_language if byoeb_message.user else None,
+                phone_number_id=byoeb_message.user.phone_number_id if byoeb_message.user else None
             ),
             message_context=MessageContext(
+                message_id=str(uuid.uuid4()),  # Generate unique message ID
                 message_type=MessageTypes.REGULAR_TEXT.value,
                 message_source_text=text_message,
                 message_english_text=text_message,
@@ -251,7 +254,7 @@ class ByoebExpertGenerateResponse(Handler):
             cross_conversation_context=byoeb_message.cross_conversation_context,
             incoming_timestamp=byoeb_message.incoming_timestamp,
         )
-        if new_expert_message.reply_context.reply_id is None:
+        if new_expert_message.reply_context and new_expert_message.reply_context.reply_id is None:
             new_expert_message.reply_context = None
         return [new_expert_message]
     
@@ -309,12 +312,7 @@ class ByoebExpertGenerateResponse(Handler):
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.PENDING
             and message.message_context.message_english_text == self.yes):
-            byoeb_expert_messages = self.__create_expert_message(
-                self.EXPERT_THANK_YOU_MESSAGE,
-                message,
-                self.EXPERT_RESOLVED_EMOJI,
-                constants.VERIFIED
-            )
+            # Expert verified the answer - only send reaction to original user, no message to expert
             user_lang = self.__get_user_language(
                 message.cross_conversation_context.get(constants.USER)
             )
@@ -328,6 +326,7 @@ class ByoebExpertGenerateResponse(Handler):
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.PENDING
             and message.message_context.message_english_text == self.no):
+            # Expert rejected the answer - ask expert for correction, notify user to wait
             byoeb_expert_messages = self.__create_expert_message(
                 self.EXPERT_ASK_FOR_CORRECTION,
                 message,
@@ -346,6 +345,7 @@ class ByoebExpertGenerateResponse(Handler):
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.WAITING
         ):
+            # Expert provided correction - generate corrected answer and send to user
             correction = message.message_context.message_english_text
             verification_message = reply_context.reply_english_text
             parsed_message = self.__parse_message(verification_message)
@@ -356,12 +356,7 @@ class ByoebExpertGenerateResponse(Handler):
             )
             augmented_prompts = self.__augment(user_prompt)
             llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
-            print("Corrected answer: ", response_text)
-            byoeb_expert_messages = self.__create_expert_message(
-                self.EXPERT_THANK_YOU_MESSAGE,
-                message,
-                self.EXPERT_RESOLVED_EMOJI,
-                constants.VERIFIED)
+            # No message to expert, only send corrected answer to user
             byoeb_user_messages = await self.__create_user_message(
                 response_text,
                 message,

@@ -4,7 +4,6 @@
         "azure_cognitive_endpoint": "https://cognitiveservices.azure.com/.default",
         "queue_provider": "azure_storage_queue",
         "db_provider": "azure_cosmos_mongo_db",
-        "message_consumer": "trapi",
         "history_length": 3,
         "max_last_active_duration_seconds": 86400
     },
@@ -54,12 +53,6 @@
             "endpoint": "https://swasthyabot-oai.openai.azure.com/",
             "deployment_name": "text-embedding-3-large",
             "api_version": "2023-03-15-preview"
-        },
-        "trapi": {
-            "model": "text-embedding-3-large",
-            "deployment_name": "text-embedding-3-large_1",
-            "instance": "gcr/shared",
-            "api_version": "2024-12-01-preview"
         }
     },
     "llms": {
@@ -72,12 +65,6 @@
         "openai": {
             "model": "gpt-4o-2024-08-06",
             "api_version": "2023-03-15-preview"
-        },
-        "trapi": {
-            "model": "o3",
-            "deployment_name": "o3_2025-04-16",
-            "instance": "gcr/shared",
-            "api_version": "2024-12-01-preview"
         }
     },
     "media_storage": {
@@ -93,7 +80,7 @@
             "queue_bot": "botmessages",
             "queue_channel": "channelmessages",
             "messages_per_page": 5,
-            "visibility_timeout": 120,
+            "visibility_timeout": 30,
             "time_to_live": 604800
         }
     },

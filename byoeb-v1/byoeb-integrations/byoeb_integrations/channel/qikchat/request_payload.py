@@ -42,20 +42,33 @@ def get_qikchat_audio_request_from_byoeb_message(
     
     Key Differences from WhatsApp:
     1. Uses 'to_contact' field
-    2. Different audio structure
+    2. Different audio structure - supports both URLs and IDs
     3. May need media upload first
     """
-    audio_data = byoeb_message.message_context.additional_info["data"]
     phone_number = byoeb_message.user.phone_number_id
+    additional_info = byoeb_message.message_context.additional_info
     
-    qikchat_message = {
-        "to_contact": phone_number,
-        "type": "audio",
-        "audio": {
-            "id": audio_data,  # Assumes audio_data is a media ID
-            "mime_type": "audio/wav"
+    # Check if we have an audio URL (for TTS-generated audio)
+    if "audio_url" in additional_info:
+        audio_url = additional_info["audio_url"]
+        qikchat_message = {
+            "to_contact": phone_number,
+            "type": "audio",
+            "audio": {
+                "link": audio_url  # Use link for direct URL
+            }
         }
-    }
+    else:
+        # Fallback to original implementation for uploaded audio
+        audio_data = additional_info["data"]
+        qikchat_message = {
+            "to_contact": phone_number,
+            "type": "audio",
+            "audio": {
+                "id": audio_data,  # Assumes audio_data is a media ID
+                "mime_type": "audio/wav"
+            }
+        }
     
     # Add reply context if available
     if byoeb_message.reply_context is not None:
@@ -89,6 +102,16 @@ def get_qikchat_interactive_button_request_from_byoeb_message(
                     "title": button.get("title", "Button")
                 }
             })
+    elif "button_titles" in additional_info:
+        # Handle button_titles format (used by expert verification messages)
+        for title in additional_info["button_titles"]:
+            buttons.append({
+                "type": "reply",
+                "reply": {
+                    "id": str(uuid.uuid4()),
+                    "title": title
+                }
+            })
     
     qikchat_message = {
         "to_contact": phone_number,
@@ -116,7 +139,23 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
     additional_info = byoeb_message.message_context.additional_info
     
     sections = []
-    if "sections" in additional_info:
+    # Look for row_texts (like WhatsApp implementation) instead of sections
+    if "row_texts" in additional_info:
+        row_texts = additional_info["row_texts"]
+        rows = []
+        for i, row_text in enumerate(row_texts):
+            rows.append({
+                "id": f"option_{i}",
+                "title": row_text[:24],  # Limit title length for Qikchat
+                "description": row_text if len(row_text) <= 72 else row_text[:69] + "..."  # Limit description
+            })
+        
+        sections.append({
+            "title": "Options",
+            "rows": rows
+        })
+    elif "sections" in additional_info:
+        # Fallback to original sections format
         for section in additional_info["sections"]:
             rows = []
             for row in section.get("rows", []):
@@ -131,6 +170,9 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
                 "rows": rows
             })
     
+    # Get description for button text
+    button_text = additional_info.get("description", "Select an option")
+    
     qikchat_message = {
         "to_contact": phone_number,
         "type": "interactive",
@@ -140,7 +182,7 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
                 "text": byoeb_message.message_context.message_source_text
             },
             "action": {
-                "button": "Select an option",
+                "button": button_text,
                 "sections": sections
             }
         }
@@ -184,16 +226,25 @@ def get_qikchat_template_request_from_byoeb_message(
     template_name = additional_info.get("template_name", "hello_world")
     template_language = additional_info.get("template_language", "en")
     
+    # Debug output
+    print(f"🔧 Template language type: {type(template_language)}, value: {template_language}")
+    print(f"🔧 Additional info: {additional_info}")
+    
+    # Ensure template_language is a string
+    if isinstance(template_language, dict):
+        template_language = template_language.get("code", "en")
+    elif not isinstance(template_language, str):
+        template_language = str(template_language)
+    
     qikchat_message = {
         "to_contact": phone_number,
         "type": "template",
         "template": {
             "name": template_name,
-            "language": {
-                "code": template_language
-            },
+            "language": template_language,  # QikChat expects a string, not an object
             "components": []  # Empty components for basic templates
         }
     }
     
+    print(f"🔧 Final template language in payload: {qikchat_message['template']['language']}")
     return qikchat_message

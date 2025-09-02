@@ -141,11 +141,20 @@ def validate_qikchat_interactive_message(original_message: Union[str, Dict[str, 
             return False
     
     try:
+        # Handle qikchat event structure - extract payload if present
+        message_data = original_message
+        if "payload" in original_message and "event" in original_message:
+            payload = original_message.get("payload", {})
+            if "message" in payload:
+                message_data = payload["message"]
+        
         # Check if it's an interactive response
-        if original_message.get("type") != "interactive":
+        message_type = message_data.get("type")
+        
+        if message_type != "interactive":
             return False
             
-        interactive_data = original_message.get("interactive")
+        interactive_data = message_data.get("interactive")
         if not interactive_data:
             logger.error("Interactive message missing 'interactive' field")
             return False

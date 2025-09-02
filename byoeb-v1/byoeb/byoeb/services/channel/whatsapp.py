@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 import byoeb.services.chat.constants as constants
 import byoeb.services.chat.utils as utils 
 import byoeb_integrations.channel.whatsapp.request_payload as wa_req_payload
@@ -107,14 +108,14 @@ class WhatsAppService(BaseChannelService):
                 channel_type=byoeb_user_message.channel_type,
                 message_category=byoeb_user_message.message_category,
                 user=User(
-                    user_id=byoeb_user_message.user.user_id,
-                    user_type=byoeb_user_message.user.user_type,
-                    user_language=byoeb_user_message.user.user_language,
-                    test_user=byoeb_user_message.user.test_user,
-                    phone_number_id=byoeb_user_message.user.phone_number_id,
+                    user_id=byoeb_user_message.user.user_id if byoeb_user_message.user else None,
+                    user_type=byoeb_user_message.user.user_type if byoeb_user_message.user else None,
+                    user_language=byoeb_user_message.user.user_language if byoeb_user_message.user else None,
+                    test_user=byoeb_user_message.user.test_user if byoeb_user_message.user else None,
+                    phone_number_id=byoeb_user_message.user.phone_number_id if byoeb_user_message.user else None,
                 ),
                 message_context=MessageContext(
-                    message_id=response.messages[0].id,
+                    message_id=response.messages[0].id if response.messages and response.messages[0].id else str(uuid.uuid4()),
                     message_type=message_type,
                     message_english_text=byoeb_user_message.message_context.message_english_text,
                     message_source_text=byoeb_user_message.message_context.message_source_text,
@@ -144,7 +145,7 @@ class WhatsAppService(BaseChannelService):
             if user_response.media_message is not None:
                 message_type = MessageTypes.REGULAR_AUDIO.value
             message_context = MessageContext(
-                message_id=user_response.messages[0].id,
+                message_id=user_response.messages[0].id if user_response.messages and user_response.messages[0].id else str(uuid.uuid4()),
                 message_type=message_type,
                 additional_info=byoeb_user_message.message_context.additional_info
             )
@@ -160,11 +161,11 @@ class WhatsAppService(BaseChannelService):
         
         cross_conversation_context = {
             constants.USER: User(
-                    user_id=byoeb_user_message.user.user_id,
-                    user_type=byoeb_user_message.user.user_type,
-                    user_language=byoeb_user_message.user.user_language,
-                    test_user=byoeb_user_message.user.test_user,
-                    phone_number_id=byoeb_user_message.user.phone_number_id,
+                    user_id=byoeb_user_message.user.user_id if byoeb_user_message.user else None,
+                    user_type=byoeb_user_message.user.user_type if byoeb_user_message.user else None,
+                    user_language=byoeb_user_message.user.user_language if byoeb_user_message.user else None,
+                    test_user=byoeb_user_message.user.test_user if byoeb_user_message.user else None,
+                    phone_number_id=byoeb_user_message.user.phone_number_id if byoeb_user_message.user else None,
                 ),
             constants.MESSAGES_CONTEXT: user_messages_context
         }
@@ -175,7 +176,7 @@ class WhatsAppService(BaseChannelService):
                 message_category=byoeb_expert_message.message_category,
                 user=byoeb_expert_message.user,
                 message_context=MessageContext(
-                    message_id=expert_response.messages[0].id,
+                    message_id=expert_response.messages[0].id if expert_response.messages and expert_response.messages[0].id else str(uuid.uuid4()),
                     message_type=byoeb_expert_message.message_context.message_type,
                     message_english_text=byoeb_expert_message.message_context.message_english_text,
                     message_source_text=byoeb_expert_message.message_context.message_source_text,

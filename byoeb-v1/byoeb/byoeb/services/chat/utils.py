@@ -7,21 +7,33 @@ from byoeb.chat_app.configuration.config import bot_config
 def has_audio_additional_info(
     byoeb_message: ByoebMessageContext
 ):
-    return (
+    # Check for traditional audio data format
+    has_traditional_audio = (
         byoeb_message.message_context.additional_info is not None and
         constants.DATA in byoeb_message.message_context.additional_info and
         constants.MIME_TYPE in byoeb_message.message_context.additional_info and
         "audio" in byoeb_message.message_context.additional_info.get(constants.MIME_TYPE)
     )
+    
+    # Check for TTS-generated audio URL format
+    has_tts_audio = (
+        byoeb_message.message_context.additional_info is not None and
+        "audio_url" in byoeb_message.message_context.additional_info
+    )
+    
+    return has_traditional_audio or has_tts_audio
 
 def has_interactive_list_additional_info(
     byoeb_message: ByoebMessageContext
 ):
-    return (
+    has_list = (
         byoeb_message.message_context.additional_info is not None and
         constants.DESCRIPTION in byoeb_message.message_context.additional_info and
         constants.ROW_TEXTS in byoeb_message.message_context.additional_info
     )
+    if byoeb_message.message_context.additional_info:
+        print(f"🔍 Checking interactive list - has description: {'description' in byoeb_message.message_context.additional_info}, has row_texts: {'row_texts' in byoeb_message.message_context.additional_info}, result: {has_list}")
+    return has_list
 
 def has_interactive_button_additional_info(
     byoeb_message: ByoebMessageContext
@@ -58,10 +70,12 @@ def get_last_active_duration_seconds(timestamp: str):
     return (datetime.now() - last_active_time).total_seconds()
 
 def get_expert_byoeb_messages(byoeb_messages: List[ByoebMessageContext]):
+    from byoeb.models.message_category import MessageCategory
     expert_user_types = bot_config["expert"]
     expert_messages = [
         byoeb_message for byoeb_message in byoeb_messages
-        if byoeb_message.user is not None and byoeb_message.user.user_type in expert_user_types.values()
+        if (byoeb_message.user is not None and byoeb_message.user.user_type in expert_user_types.values()) 
+           or byoeb_message.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
     ]
     return expert_messages
 

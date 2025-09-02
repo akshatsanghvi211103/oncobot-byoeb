@@ -108,6 +108,37 @@ class AsyncAzureBlobStorage(BaseMediaStorage):
         except Exception as e:
             self.__logger.error("Error uploading audio file to blob storage: %s", e)
             raise e
+    
+    async def aupload_bytes(
+        self,
+        file_name: str,
+        data: bytes,
+        file_type: str = None,
+    ):
+        blob_client = self.__blob_service_client.get_blob_client(
+            container=self.__container_name,
+            blob=file_name
+        )
+        if file_type is None:
+            file_type = os.path.splitext(file_name)[1]
+        metadata = {
+            "file_name": file_name,
+            "file_type": file_type,
+        }
+        try:
+            await blob_client.upload_blob(data, metadata=metadata, overwrite=True)
+            return StatusCodes.CREATED, None
+        except Exception as e:
+            self.__logger.error("Error uploading bytes to blob storage: %s", e)
+            raise e
+    
+    def get_blob_url(self, file_name: str) -> str:
+        """Get the public URL for a blob"""
+        blob_client = self.__blob_service_client.get_blob_client(
+            container=self.__container_name,
+            blob=file_name
+        )
+        return blob_client.url
         
     async def adownload_file(
         self,

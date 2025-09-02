@@ -136,11 +136,24 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
     if isinstance(original_message, str):
         original_message = json.loads(original_message)
     
-    timestamp = original_message.get("timestamp")
-    from_number = original_message.get("from")
-    message_id = original_message.get("id") or str(uuid.uuid4())
+    # Handle qikchat event structure - extract payload if present
+    message_data = original_message
+    if "payload" in original_message and "event" in original_message:
+        payload = original_message.get("payload", {})
+        if "message" in payload:
+            message_data = payload["message"]
+        # Also get contact info from payload
+        contact_info = payload.get("contact", {})
+        timestamp = original_message.get("timestamp")
+        from_number = contact_info.get("wa_id") or contact_info.get("phone_number")
+        message_id = message_data.get("id") or str(uuid.uuid4())
+    else:
+        # Fallback to original structure
+        timestamp = original_message.get("timestamp")
+        from_number = original_message.get("from")
+        message_id = original_message.get("id") or str(uuid.uuid4())
     
-    interactive_data = original_message.get("interactive", {})
+    interactive_data = message_data.get("interactive", {})
     interactive_type = interactive_data.get("type")
     
     message_text = ""
@@ -151,7 +164,7 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
         button_reply = interactive_data.get("button_reply", {})
         message_text = button_reply.get("title", "")
         button_id = button_reply.get("id", "")
-        byoeb_message_type = MessageTypes.TEMPLATE_BUTTON.value
+        byoeb_message_type = MessageTypes.INTERACTIVE_BUTTON.value
         additional_info = {
             "button_id": button_id,
             "button_title": message_text
@@ -159,13 +172,18 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
         
     elif interactive_type == "list_reply":
         list_reply = interactive_data.get("list_reply", {})
-        message_text = list_reply.get("title", "")
+        message_title = list_reply.get("title", "")
+        message_description = list_reply.get("description", "")
         list_id = list_reply.get("id", "")
-        byoeb_message_type = MessageTypes.TEMPLATE_LIST.value
+        
+        # Use description if available (full text), otherwise fall back to title
+        message_text = message_description if message_description else message_title
+        
+        byoeb_message_type = MessageTypes.INTERACTIVE_LIST.value
         additional_info = {
             "list_id": list_id,
-            "list_title": message_text,
-            "list_description": list_reply.get("description", "")
+            "list_title": message_title,
+            "list_description": message_description
         }
     
     # Create user and message contexts
@@ -241,7 +259,14 @@ def convert_qikchat_message_to_byoeb(original_message: Dict[str, Any]) -> Option
             return convert_qikchat_regular_message(original_message)
             
         elif message_type == "interactive":
-            return convert_qikchat_interactive_message(original_message)
+            try:
+                result = convert_qikchat_interactive_message(original_message)
+                return result
+            except Exception as e:
+                print(f"❌ Error in convert_qikchat_interactive_message: {e}")
+                import traceback
+                traceback.print_exc()
+                return None
             
         elif message_type == "status":
             # Status messages don't convert to ByoebMessageContext

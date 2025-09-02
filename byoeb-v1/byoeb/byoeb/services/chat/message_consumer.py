@@ -11,7 +11,7 @@ from byoeb.factory import ChannelClientFactory
 from byoeb.chat_app.configuration.config import bot_config
 from byoeb_core.models.byoeb.user import User
 from byoeb.services.databases.mongo_db import UserMongoDBService, MessageMongoDBService
-from byoeb_core.models.byoeb.message_context import ByoebMessageContext
+from byoeb_core.models.byoeb.message_context import ByoebMessageContext, ReplyContext
 
 class Conversation(BaseModel):
     user_message: Optional[ByoebMessageContext]
@@ -42,8 +42,23 @@ class MessageConsmerService:
         users: List[User],
         phone_number_id,
 
-    ) -> User:
-        return next((user for user in users if user.phone_number_id == phone_number_id), None)
+    ) -> tuple[User, bool]:  # Returns (user, is_new_user)
+        print(f"[DEBUG] Looking for user with phone_number_id: '{phone_number_id}' in {len(users)} retrieved users")
+        user_id = hashlib.md5(phone_number_id.encode()).hexdigest()
+        print(f"[DEBUG] Generated user_id: '{user_id}' from phone_number_id: '{phone_number_id}'")
+        user = next((user for user in users if user.phone_number_id == phone_number_id), None)
+        if user is None:
+            print(f"[DEBUG] User not found in database, creating new user with ID: {user_id} and phone_number_id: '{phone_number_id}'")
+            user = User(
+                user_id=user_id,
+                phone_number_id=phone_number_id,
+                user_type=self._regular_user_type,
+                user_language="en"
+            )
+            return user, True  # User is newly created
+        else:
+            print(f"[DEBUG] Found existing user with user_id: '{user.user_id}', phone_number_id: '{user.phone_number_id}', conversations: {len(user.last_conversations)}")
+            return user, False  # User exists in database
     
     def __is_expert_user_type(
         self,
@@ -76,22 +91,29 @@ class MessageConsmerService:
         user_ids = list(set([hashlib.md5(number.encode()).hexdigest() for number in phone_numbers]))
         byoeb_users = await self._user_db_service.get_users(user_ids)
         bot_message_ids = list(
-            set(message.reply_context.reply_id for message in messages if message.reply_context.reply_id is not None)
+            set(message.reply_context.reply_id for message in messages if message.reply_context is not None and message.reply_context.reply_id is not None)
         )
         bot_messages = await self._message_db_service.get_bot_messages(bot_message_ids)
         conversations = []
         for message in messages:
-            user = self.__get_user(byoeb_users,message.user.phone_number_id)
-            bot_message = self.__get_bot_message(bot_messages, message.reply_context.reply_id)
+            user, is_new_user = self.__get_user(byoeb_users,message.user.phone_number_id)
+            bot_message = self.__get_bot_message(bot_messages, message.reply_context.reply_id if message.reply_context is not None else None)
             conversation = ByoebMessageContext.model_validate(message)
-            if user.user_type == self._regular_user_type:
+            if user is not None and user.user_type == self._regular_user_type:
                 conversation.message_category = MessageCategory.USER_TO_BOT.value
-            elif self.__is_expert_user_type(user.user_type):
+            elif user is not None and self.__is_expert_user_type(user.user_type):
                 conversation.message_category = MessageCategory.EXPERT_TO_BOT.value
             conversation.user = user
+            # Add a temporary attribute to track if this is a new user
+            setattr(conversation, '_is_new_user', is_new_user)
+            if is_new_user:
+                print(f"[DEBUG] _is_new_user set to True for user_id: {user.user_id}, phone_number_id: {user.phone_number_id}")
             if bot_message is None:
                 conversations.append(conversation)
                 continue
+            # Ensure reply_context exists before updating it
+            if conversation.reply_context is None:
+                conversation.reply_context = ReplyContext()
             conversation.reply_context.message_category = bot_message.message_category
             conversation.reply_context.reply_id = bot_message.message_context.message_id
             conversation.reply_context.reply_type = bot_message.message_context.message_type
@@ -119,12 +141,13 @@ class MessageConsmerService:
         b_utils.log_to_text_file(f"Conversations created in: {end_time - start_time} seconds")
         task = []
         for conversation in conversations:
-            conversation.user.activity_timestamp = str(int(datetime.now().timestamp()))
-            # b_utils.log_to_text_file("Processing message: " + json.dumps(conversation.model_dump()))
-            if conversation.user.user_type == self._regular_user_type:
-                task.append(self.__process_byoebuser_conversation(conversation))
-            elif self.__is_expert_user_type(conversation.user.user_type):
-                task.append(self.__process_byoebexpert_conversation(conversation))
+            if conversation.user is not None:
+                conversation.user.activity_timestamp = str(int(datetime.now().timestamp()))
+                # b_utils.log_to_text_file("Processing message: " + json.dumps(conversation.model_dump()))
+                if conversation.user.user_type == self._regular_user_type:
+                    task.append(self.__process_byoebuser_conversation(conversation))
+                elif self.__is_expert_user_type(conversation.user.user_type):
+                    task.append(self.__process_byoebexpert_conversation(conversation))
         results = await asyncio.gather(*task)
         for queries, processed_message, err in results:
             if err is not None or queries is None:
@@ -133,11 +156,15 @@ class MessageConsmerService:
         start_time = datetime.now().timestamp()
         user_queries = self._user_db_service.aggregate_queries(results)
         message_queries = self._message_db_service.aggregate_queries(results)
+        
+        print(f"Executing database queries - User updates: {len(user_queries.get('update', []))}, Message creates: {len(message_queries.get('create', []))}")
+        
         await asyncio.gather(
             self._user_db_service.execute_queries(user_queries),
             self._message_db_service.execute_queries(message_queries)
         )
         end_time = datetime.now().timestamp()
+        print(f"Database operations completed in {end_time - start_time:.2f} seconds")
         b_utils.log_to_text_file(f"DB queries executed in: {end_time - start_time} seconds")
         return successfully_processed_messages
 
@@ -155,6 +182,8 @@ class MessageConsmerService:
         except Exception as e:
             self._logger.error(f"Error processing user message: {e}")
             print("Error processing user message: ", e)
+            import traceback
+            traceback.print_exc()
             return None, byoeb_message_copy, e
 
     async def __process_byoebexpert_conversation(

@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import uuid
 import byoeb.services.chat.constants as constants
 import byoeb.services.chat.utils as utils
 import byoeb_integrations.channel.qikchat.request_payload as qik_req_payload
@@ -78,7 +79,9 @@ class QikchatService(BaseChannelService):
             
         # Handle interactive list messages
         elif utils.has_interactive_list_additional_info(byoeb_message):
+            # print(f"🔗 Detected interactive list message with additional_info: {byoeb_message.message_context.additional_info}")
             qik_interactive_list_message = qik_req_payload.get_qikchat_interactive_list_request_from_byoeb_message(byoeb_message)
+            # print(f"📋 Generated qikchat interactive list request: {qik_interactive_list_message}")
             qik_requests.append(qik_interactive_list_message)
             
         # Handle text messages
@@ -116,6 +119,9 @@ class QikchatService(BaseChannelService):
         tasks = []
         for message in messages:
             if message.message_context.message_id is None:
+                continue
+            # Check if user exists before accessing phone_number_id
+            if message.user is None:
                 continue
             # Qikchat may need phone number for mark_as_read
             tasks.append(
@@ -189,7 +195,20 @@ class QikchatService(BaseChannelService):
                 
             # Extract message details from Qikchat response
             message_id = response.get("message_id") or response.get("id")
+            if message_id is None:
+                message_id = str(uuid.uuid4())  # Generate unique message ID if not provided
             timestamp = response.get("timestamp") or str(datetime.now().timestamp())
+            
+            # Convert timestamp to integer if it's a string
+            if isinstance(timestamp, str):
+                try:
+                    # Convert string timestamp to integer (remove decimal part)
+                    timestamp_int = int(float(timestamp))
+                except (ValueError, TypeError):
+                    # Fallback to current timestamp if conversion fails
+                    timestamp_int = int(datetime.now().timestamp())
+            else:
+                timestamp_int = int(timestamp)
             
             # Create bot user context
             bot_user = User(
@@ -202,15 +221,19 @@ class QikchatService(BaseChannelService):
             bot_message_context = MessageContext(
                 message_id=message_id,
                 message_source_text=byoeb_user_message.message_context.message_source_text,
-                message_type=MessageTypes.BOT_RESPONSE.value,
-                timestamp=timestamp
+                message_type=MessageTypes.REGULAR_TEXT.value,  # Fixed: Use valid MessageType
+                timestamp=str(timestamp_int)  # Convert to string for MessageContext
             )
             
             # Create BYOeB message context
             bot_message = ByoebMessageContext(
+                channel_type=byoeb_user_message.channel_type,  # Required field
+                message_category=byoeb_user_message.message_category,  # Required field  
                 user=bot_user,
                 message_context=bot_message_context,
-                reply_context=ReplyContext(reply_id=byoeb_user_message.message_context.message_id)
+                reply_context=ReplyContext(reply_id=byoeb_user_message.message_context.message_id),
+                incoming_timestamp=byoeb_user_message.incoming_timestamp,
+                outgoing_timestamp=timestamp_int  # Use integer timestamp
             )
             
             bot_to_user_messages.append(bot_message)
@@ -244,6 +267,8 @@ class QikchatService(BaseChannelService):
                 
             # Extract message ID from response
             message_id = user_response.get("message_id") or user_response.get("id")
+            if message_id is None:
+                message_id = str(uuid.uuid4())  # Generate unique message ID if not provided
             
             message_context = MessageContext(
                 message_id=message_id,
@@ -263,11 +288,11 @@ class QikchatService(BaseChannelService):
         # Create cross conversation context
         cross_conversation_context = {
             constants.USER: User(
-                user_id=byoeb_user_message.user.user_id,
-                user_type=byoeb_user_message.user.user_type,
-                user_language=byoeb_user_message.user.user_language,
-                test_user=byoeb_user_message.user.test_user,
-                phone_number_id=byoeb_user_message.user.phone_number_id,
+                user_id=byoeb_user_message.user.user_id if byoeb_user_message.user else None,
+                user_type=byoeb_user_message.user.user_type if byoeb_user_message.user else None,
+                user_language=byoeb_user_message.user.user_language if byoeb_user_message.user else None,
+                test_user=byoeb_user_message.user.test_user if byoeb_user_message.user else None,
+                phone_number_id=byoeb_user_message.user.phone_number_id if byoeb_user_message.user else None,
             ),
             constants.MESSAGES_CONTEXT: user_messages_context
         }

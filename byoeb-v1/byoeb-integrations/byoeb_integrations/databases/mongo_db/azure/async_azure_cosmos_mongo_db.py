@@ -25,9 +25,15 @@ class AsyncAzureCosmosMongoDB(BaseDocumentDatabase):
 
     def __initialize_client(self):
         if not AsyncAzureCosmosMongoDB._client:
+            # Configure connection pool for better concurrency
             AsyncAzureCosmosMongoDB._client = AsyncIOMotorClient(
                 self.__connection_string,
-                tlsCAFile=certifi.where()
+                tlsCAFile=certifi.where(),
+                maxPoolSize=20,  # Increase max pool size for better concurrency
+                minPoolSize=5,   # Keep minimum connections ready
+                maxIdleTimeMS=120000,  # Keep connections alive for 2 minutes
+                connectTimeoutMS=20000,  # 20 second connection timeout
+                serverSelectionTimeoutMS=10000  # 10 second server selection timeout
             )
         
 
@@ -207,7 +213,7 @@ class AsyncAzureCosmosMongoDBCollection(BaseDocumentCollection):
                 return None, 0
             result = await self.__collection.bulk_write(fomrat_bulk_update)
             return result, result.modified_count
-        result = await self.__collection.update_many(query, update_data)
+        result = await self.__collection.update_many(query, update_data, upsert=True)
         return result, result.modified_count
     
     def delete(

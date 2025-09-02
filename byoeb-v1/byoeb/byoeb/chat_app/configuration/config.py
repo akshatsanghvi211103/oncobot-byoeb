@@ -37,3 +37,11 @@ env_openai_org_id = os.getenv("OPENAI_ORG_ID")
 
 # Azure cosmos db
 env_mongo_db_connection_string = os.getenv("MONGO_DB_CONNECTION_STRING")
+
+# Azure Storage
+env_azure_storage_connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+
+# Azure Speech Services
+env_azure_speech_key = os.getenv("AZURE_SPEECH_KEY")
+env_azure_speech_region = os.getenv("AZURE_SPEECH_REGION")
+env_azure_speech_endpoint = os.getenv("AZURE_SPEECH_ENDPOINT")

@@ -7,7 +7,7 @@ from byoeb_core.vector_stores.base import BaseVectorStore
 from byoeb_core.llms.base import BaseLLM
 from azure.search.documents import SearchClient, SearchIndexingBufferedSender
 from azure.search.documents.indexes import SearchIndexClient
-from azure.search.documents.models import VectorizableTextQuery, IndexAction
+from azure.search.documents.models import VectorizedQuery, IndexAction
 from byoeb_core.models.vector_stores.azure.azure_search import AzureSearchNode, Metadata
 from byoeb_integrations.vector_stores.related_questions import aget_related_questions
 from byoeb_core.models.vector_stores.chunk import Chunk, Chunk_metadata
@@ -190,8 +190,10 @@ class AzureVectorStore(BaseVectorStore):
                 top=k
             )
         elif search_type == AzureVectorSearchType.DENSE.value:
-            vector_query = VectorizableTextQuery(
-                text=query_text,
+            # Get embedding for the query text
+            embedding = await self.__embedding_function.aget_text_embedding(query_text)
+            vector_query = VectorizedQuery(
+                vector=embedding,
                 k_nearest_neighbors=10,
                 fields=vector_field
             )
@@ -201,8 +203,10 @@ class AzureVectorStore(BaseVectorStore):
                 top=k
             )
         elif search_type == AzureVectorSearchType.HYBRID.value:
-            vector_query = VectorizableTextQuery(
-                text=query_text,
+            # Get embedding for the query text
+            embedding = await self.__embedding_function.aget_text_embedding(query_text)
+            vector_query = VectorizedQuery(
+                vector=embedding,
                 k_nearest_neighbors=10,
                 fields=vector_field
             )
@@ -216,7 +220,19 @@ class AzureVectorStore(BaseVectorStore):
             raise ValueError("Invalid search type")
 
         for result in results:
-            azure_search_result = AzureSearchNode(**result)
+            # Map Azure Search fields to AzureSearchNode expected fields
+            mapped_result = {
+                "id": result.get("id"),
+                "text": result.get("combined_text") or result.get("answer") or "",  # Use combined_text or answer as text
+                "text_vector_3072": result.get("text_vector_3072"),
+                "metadata": {
+                    "source": result.get("source"),
+                    "creation_timestamp": None,
+                    "update_timestamp": None
+                },
+                "related_questions": {}  # Empty for now, could be enhanced later
+            }
+            azure_search_result = AzureSearchNode(**mapped_result)
             chunk = Chunk(
                 chunk_id=azure_search_result.id,
                 text=azure_search_result.text,

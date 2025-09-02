@@ -74,6 +74,27 @@ class QikchatClient:
                 self.logger.error(f"Unexpected error sending message: {str(e)}")
                 raise
     
+    async def send_audio_message(self, to_contact: str, audio_url: str) -> Dict[str, Any]:
+        """
+        Send an audio message via Qikchat API.
+        
+        Args:
+            to_contact: The recipient's contact ID
+            audio_url: The direct URL to the audio file
+        
+        Returns:
+            Response from Qikchat API
+        """
+        message_data = {
+            "to_contact": to_contact,
+            "type": "audio",
+            "audio": {
+                "link": audio_url
+            }
+        }
+        
+        return await self.send_message(message_data)
+    
     async def send_batch_messages(self, messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Send multiple messages.
@@ -137,19 +158,31 @@ class QikchatClient:
         Download media file by ID.
         
         Key Differences from WhatsApp:
-        1. Different media endpoint structure
-        2. May have different authentication requirements
+        1. For Qikchat, media_id might be a full URL or just an ID
+        2. Different media endpoint structure
+        3. May have different authentication requirements
         """
-        endpoint = f"{self.base_url}/media/{media_id}"
+        # Check if media_id is a full URL or just an ID
+        if media_id.startswith('http://') or media_id.startswith('https://'):
+            # media_id is a full URL, use it directly
+            endpoint = media_id
+            self.logger.info(f"Media ID is a full URL: {endpoint}")
+        else:
+            # media_id is just an ID, construct the endpoint
+            endpoint = f"{self.base_url}/media/{media_id}"
+            self.logger.info(f"Media ID is an ID, constructed endpoint: {endpoint}")
         
         self.logger.info(f"Attempting to download media from: {endpoint}")
         self.logger.info(f"Using headers: {self.headers}")
         
         async with aiohttp.ClientSession() as session:
             try:
+                # For direct URLs, we might not need authentication headers
+                headers = self.headers if not media_id.startswith('http') else {}
+                
                 async with session.get(
                     endpoint,
-                    headers=self.headers
+                    headers=headers
                 ) as response:
                     self.logger.info(f"Media download response status: {response.status}")
                     self.logger.info(f"Media download response headers: {dict(response.headers)}")
@@ -168,6 +201,32 @@ class QikchatClient:
             except Exception as e:
                 self.logger.error(f"Error downloading media: {str(e)}")
                 raise
+    
+    async def adownload_media(self, media_id: str):
+        """
+        Download media file by ID and return in the format expected by the byoeb system.
+        Returns: (status, MediaData, error)
+        """
+        try:
+            # Use the existing get_media method
+            media_data = await self.get_media(media_id)
+            
+            # For Qikchat, we use audio/wav as default based on the convert_message.py
+            mime_type = "audio/wav"  # Default for Qikchat audio messages
+            
+            # Create MediaData object (we'll create a simple version since import is having issues)
+            from typing import NamedTuple
+            
+            class MediaData(NamedTuple):
+                data: bytes
+                mime_type: str
+            
+            media_obj = MediaData(data=media_data, mime_type=mime_type)
+            return 200, media_obj, None
+            
+        except Exception as e:
+            self.logger.error(f"Error in adownload_media: {str(e)}")
+            return 500, None, str(e)
     
     async def upload_media(self, media_data: bytes, mime_type: str, filename: str) -> Dict[str, Any]:
         """

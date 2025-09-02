@@ -87,102 +87,70 @@ class QueueConsumer:
     async def listen(
         self
     ):
-        await self.initialize()
-        
-        # Choose message consumer based on configuration
-        message_consumer_type = self._config.get("app", {}).get("message_consumer", "simple")
-        
-        if message_consumer_type == "trapi":
-            # Use TRAPI message consumer for LLM-enhanced responses
+        # print("=== MESSAGE CONSUMER LISTEN STARTED ===")
+        try:
+            await self.initialize()
+            
+            # Use original message consumer selection logic
             if self._user_db_service is not None and self._message_db_service is not None:
-                # Use TRAPI with conversation history tracking
-                try:
-                    from byoeb.services.chat.trapi_message_consumer_with_history import TRAPIMessageConsumerServiceWithHistory
-                    
-                    # Import translators from dependency setup
-                    from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
-                    
-                    message_consumer_svc = TRAPIMessageConsumerServiceWithHistory(
-                        config=self._config,
-                        channel_client_factory=self._channel_client_factory,
-                        user_db_service=self._user_db_service,
-                        message_db_service=self._message_db_service,
-                        speech_translator=speech_translator_whisper,
-                        text_translator=text_translator
-                    )
-                    self._logger.info("Using TRAPI message consumer with conversation history tracking")
-                except ImportError as e:
-                    self._logger.error(f"Failed to import TRAPI consumer with history: {e}")
-                    # Fallback to standard TRAPI
-                    from byoeb.services.chat.trapi_message_consumer import TRAPIMessageConsumerService
-                    from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
-                    
-                    message_consumer_svc = TRAPIMessageConsumerService(
-                        config=self._config,
-                        channel_client_factory=self._channel_client_factory,
-                        speech_translator=speech_translator_whisper,
-                        text_translator=text_translator
-                    )
-                    self._logger.info("Fallback: Using standard TRAPI message consumer")
-            else:
-                # Use standard TRAPI without conversation history
-                from byoeb.services.chat.trapi_message_consumer import TRAPIMessageConsumerService
-                
-                # Import translators from dependency setup
-                from byoeb.chat_app.configuration.dependency_setup import speech_translator_whisper, text_translator
-                
-                message_consumer_svc = TRAPIMessageConsumerService(
+                # Use full message consumer with database
+                message_consumer_svc = MessageConsmerService(
                     config=self._config,
-                    channel_client_factory=self._channel_client_factory,
-                    speech_translator=speech_translator_whisper,
-                    text_translator=text_translator
+                    user_db_service=self._user_db_service,
+                    message_db_service=self._message_db_service,
+                    channel_client_factory=self._channel_client_factory
                 )
-                self._logger.info("Using TRAPI message consumer with O3 LLM and voice support (no conversation history)")
-        elif self._user_db_service is not None and self._message_db_service is not None:
-            # Use full message consumer with database
-            message_consumer_svc = MessageConsmerService(
-                config=self._config,
-                user_db_service=self._user_db_service,
-                message_db_service=self._message_db_service,
-                channel_client_factory=self._channel_client_factory
-            )
-            print("Using full message consumer with database")
-        else:
-            # For now, create a simple service that can handle KB queries without database
-            from byoeb.services.chat.simple_message_consumer import SimpleMessageConsumerService
-            message_consumer_svc = SimpleMessageConsumerService(
-                config=self._config,
-                channel_client_factory=self._channel_client_factory
-            )
-            print("Using simple message consumer without database")
-        self._logger.info(f"Queue info: {self._az_storage_queue}")
-        while True:
-            time_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self._logger.info(f"Listening for messages at: {time_now}")
-            start_time = datetime.now()
-            messages = await self.__areceive()
-            message_content = []
-            for message in messages:
-                message_content.append(message.content)
-            if len(messages) == 0:
-                self._logger.info("No messages received")
+                # print("Using full message consumer with database")
+            else:
+                # For now, create a simple service that can handle KB queries without database
+                from byoeb.services.chat.simple_message_consumer import SimpleMessageConsumerService
+                message_consumer_svc = SimpleMessageConsumerService(
+                    config=self._config,
+                    channel_client_factory=self._channel_client_factory
+                )
+                print("Using simple message consumer without database")
+            self._logger.info(f"Queue info: {self._az_storage_queue}")
+            # print("=== STARTING MESSAGE LISTEN LOOP ===")
+            while True:
+                # time_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # self._logger.info(f"Listening for messages at: {time_now}")
+                # print(f"[DEBUG] Listening for messages at: {time_now}")
+                start_time = datetime.now()
+                messages = await self.__areceive()
+                message_content = []
+                for message in messages:
+                    message_content.append(message.content)
+                if len(messages) == 0:
+                    # self._logger.info("No messages received")
+                    # print(f"[DEBUG] No messages received")
+                    await asyncio.sleep(0.5)
+                    continue
+                try:
+                    self._logger.info(f"Received {len(messages)} messages")
+                    successfully_processed_messages =  await message_consumer_svc.consume(message_content)
+                    utils.log_to_text_file(f"Successfully processed {len(successfully_processed_messages)} messages")
+                    processed_ids = {message.message_context.message_id for message in successfully_processed_messages}
+                    remove_messages = [msg for msg in messages if any(processed_id in msg.content for processed_id in processed_ids)]
+                    await self.__delete_message(remove_messages)
+                    self._logger.info(f"Deleted {len(remove_messages)} successfully processed messages")
+                except Exception as e:
+                    self._logger.error(f"Error consuming messages: {e}")
+                    print(f"[DEBUG] Error consuming messages: {e}")
+                    # CRITICAL FIX: Delete ALL messages to prevent infinite reprocessing
+                    # Even failed messages should be deleted to avoid queue poisoning
+                    print(f"🚨 DELETING ALL {len(messages)} MESSAGES TO PREVENT INFINITE REPROCESSING")
+                    await self.__delete_message(messages)
+                    self._logger.info(f"Deleted {len(messages)} messages after processing failure to prevent reprocessing")
+                end_time = datetime.now()
+                duration = (end_time - start_time).seconds
+                self._logger.info(f"Processing time: {duration} seconds")
+                utils.log_to_text_file(f"Processed {len(messages)} message in: {duration} seconds")
                 await asyncio.sleep(0.5)
-                continue
-            try:
-                self._logger.info(f"Received {len(messages)} messages")
-                successfully_processed_messages =  await message_consumer_svc.consume(message_content)
-                utils.log_to_text_file(f"Successfully processed {len(successfully_processed_messages)} messages")
-                processed_ids = {message.message_context.message_id for message in successfully_processed_messages}
-                remove_messages = [msg for msg in messages if any(processed_id in msg.content for processed_id in processed_ids)]
-                await self.__delete_message(remove_messages)
-                self._logger.info(f"Deleted {len(remove_messages)} messages")
-            except Exception as e:
-                self._logger.error(f"Error consuming messages: {e}")
-            end_time = datetime.now()
-            duration = (end_time - start_time).seconds
-            self._logger.info(f"Processing time: {duration} seconds")
-            utils.log_to_text_file(f"Processed {len(messages)} message in: {duration} seconds")
-            await asyncio.sleep(0.5)
+        except Exception as e:
+            print(f"=== FATAL ERROR IN MESSAGE CONSUMER LISTEN: {e} ===")
+            self._logger.error(f"Fatal error in listen: {e}")
+            import traceback
+            traceback.print_exc()
     
     async def close(
         self

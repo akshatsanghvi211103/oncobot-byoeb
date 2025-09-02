@@ -36,8 +36,16 @@ async def lifespan(app: FastAPI):
         queue_producer_factory
     )
     await message_consumer.initialize()
-    asyncio.create_task(message_consumer.listen())
+    # Store reference to the task to prevent garbage collection
+    listen_task = asyncio.create_task(message_consumer.listen())
+    # print("Message consumer listen task created")
     yield
+    # Cancel the listen task during shutdown
+    listen_task.cancel()
+    try:
+        await listen_task
+    except asyncio.CancelledError:
+        print("Message consumer listen task cancelled")
     await channel_client_factory.close()
     await message_consumer.close()
     await queue_producer_factory.close()

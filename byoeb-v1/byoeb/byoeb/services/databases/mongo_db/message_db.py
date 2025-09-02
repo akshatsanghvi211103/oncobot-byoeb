@@ -91,6 +91,14 @@ class MessageMongoDBService(BaseMongoDBService):
         """Generate create queries for messages."""
         if not byoeb_messages:
             return []
+        
+        # Debug: Check what types we're actually getting
+        for i, message in enumerate(byoeb_messages):
+            if not hasattr(message, 'message_context'):
+                print(f"❌ ERROR: Item {i} in byoeb_messages is type {type(message)}, not ByoebMessageContext")
+                print(f"   Content: {message}")
+                raise TypeError(f"Expected ByoebMessageContext, got {type(message)} at index {i}")
+        
         return [
             {
                 "_id": message.message_context.message_id,
