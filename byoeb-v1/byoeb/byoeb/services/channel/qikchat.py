@@ -150,6 +150,11 @@ class QikchatService(BaseChannelService):
         from byoeb.chat_app.configuration.dependency_setup import channel_client_factory
         client = await channel_client_factory.get(self.__client_type)
         
+        print(f"\n=== QIKCHAT SEND_REQUESTS DEBUG ===")
+        print(f"📤 Sending {len(requests)} requests")
+        for i, request in enumerate(requests):
+            print(f"📤 Request {i+1}: {request}")
+        
         tasks = []
         for request in requests:
             # Qikchat uses single send_message method for all types
@@ -157,20 +162,38 @@ class QikchatService(BaseChannelService):
         
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
+        print(f"📤 Got {len(results)} results")
+        for i, result in enumerate(results):
+            print(f"📤 Result {i+1}: {result}")
+        
         # Extract successful responses and message IDs
         responses = []
         message_ids = []
         
-        for result in results:
+        for i, result in enumerate(results):
             if isinstance(result, Exception):
+                print(f"❌ Exception in result {i+1}: {result}")
                 self.logger.error(f"Failed to send message: {result}")
                 responses.append({"error": str(result)})
                 message_ids.append(None)
             else:
                 responses.append(result)
                 # Extract message ID from Qikchat response
-                message_id = result.get("message_id") or result.get("id")
+                # Qikchat returns: {"status": True, "data": [{"id": "message_id", ...}]}
+                message_id = None
+                if result and isinstance(result, dict):
+                    # First try the top level
+                    message_id = result.get("message_id") or result.get("id")
+                    
+                    # If not found, check in the data array
+                    if not message_id and "data" in result and isinstance(result["data"], list) and len(result["data"]) > 0:
+                        message_id = result["data"][0].get("id")
+                
+                print(f"📤 Extracted message_id for result {i+1}: {message_id}")
                 message_ids.append(message_id)
+        
+        print(f"📤 Final message_ids: {message_ids}")
+        print("=== END QIKCHAT SEND_REQUESTS DEBUG ===\n")
         
         return responses, message_ids
     

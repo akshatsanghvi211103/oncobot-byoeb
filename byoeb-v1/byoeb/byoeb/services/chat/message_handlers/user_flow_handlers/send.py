@@ -206,7 +206,7 @@ class ByoebUserSendResponse(Handler):
                 message_id=message_id,
                 phone_number_id=user_message_context.user.phone_number_id
             )
-            for message_id in message_ids if message_id is not None
+            for message_id in message_ids if message_id is not None and pending_emoji is not None
         ]
         reaction_requests = channel_service.prepare_reaction_requests(message_reactions)
         await channel_service.send_requests(reaction_requests)

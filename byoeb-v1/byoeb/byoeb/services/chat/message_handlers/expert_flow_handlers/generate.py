@@ -24,6 +24,7 @@ class ByoebExpertGenerateResponse(Handler):
 
     USER_VERIFIED_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["verified_answer"]
     USER_WRONG_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["wrong_answer"]
+    USER_WAITING_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["waiting_answer"]
     USER_CORRECTED_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["corrected_answer"]
 
     USER_VERIFIED_EMOJI = app_config["channel"]["reaction"]["user"]["verified"]
@@ -280,7 +281,8 @@ class ByoebExpertGenerateResponse(Handler):
                     message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
                     user=user,
                     message_context=message_context,
-                    reply_context=reply_context
+                    reply_context=reply_context,
+                    cross_conversation_context=byoeb_message.cross_conversation_context
                 )
                 new_user_messages.append(new_user_message)
                 # print(f"✅ DEBUG: Successfully created user message {i+1}")
@@ -428,6 +430,10 @@ class ByoebExpertGenerateResponse(Handler):
             parsed_message = self.__parse_message(reply_context.reply_english_text)
             bot_answer = parsed_message["Bot_Answer"]
             
+            print(f"🔧 DEBUG: Parsed verification message: {parsed_message}")
+            print(f"🔧 DEBUG: Extracted bot_answer: '{bot_answer}'")
+            print(f"🔧 DEBUG: Expert thank you message: '{self.EXPERT_THANK_YOU_MESSAGE}'")
+            
             # Get related questions from expert verification message if available
             related_questions = reply_context.additional_info.get(constants.RELATED_QUESTIONS, {})
             
@@ -439,6 +445,8 @@ class ByoebExpertGenerateResponse(Handler):
                 constants.VERIFIED
             )
             
+            print(f"🔧 DEBUG: Created expert message with text: '{self.EXPERT_THANK_YOU_MESSAGE}'")
+            
             # NEW FLOW: Send approved answer to user
             byoeb_user_messages = await self.__create_user_message(
                 bot_answer,
@@ -446,6 +454,8 @@ class ByoebExpertGenerateResponse(Handler):
                 None,  # Remove emoji reactions as requested
                 constants.VERIFIED
             )
+            
+            print(f"🔧 DEBUG: Created user message with bot_answer: '{bot_answer}'")
 
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.PENDING
@@ -484,16 +494,16 @@ class ByoebExpertGenerateResponse(Handler):
                 raise e
             
             print(f"🔧 DEBUG: About to create user message")
-            print(f"🔧 DEBUG: USER_WRONG_ANSWER_MESSAGES = {self.USER_WRONG_ANSWER_MESSAGES}")
+            print(f"🔧 DEBUG: USER_WAITING_ANSWER_MESSAGES = {self.USER_WAITING_ANSWER_MESSAGES}")
             print(f"🔧 DEBUG: user_lang = {user_lang}")
-            print(f"🔧 DEBUG: Message for user = {self.USER_WRONG_ANSWER_MESSAGES.get(user_lang)}")
+            print(f"🔧 DEBUG: Message for user = {self.USER_WAITING_ANSWER_MESSAGES.get(user_lang)}")
             
             try:
                 byoeb_user_messages = await self.__create_user_message(
-                    self.USER_WRONG_ANSWER_MESSAGES.get(user_lang),
+                    self.USER_WAITING_ANSWER_MESSAGES.get(user_lang),
                     message,
                     None,  # Remove emoji reactions as requested
-                    constants.WRONG
+                    constants.WAITING  # Changed from constants.WRONG to constants.WAITING
                 )
                 print(f"✅ DEBUG: User message created successfully: {type(byoeb_user_messages)}")
             except Exception as e:

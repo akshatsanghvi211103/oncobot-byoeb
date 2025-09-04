@@ -73,9 +73,19 @@ class MessageMongoDBService(BaseMongoDBService):
     ):
         for byoeb_user_message in byoeb_user_messages:
             reply_context = byoeb_user_message.reply_context
-            update_id = reply_context.additional_info.get(constants.UPDATE_ID)
-            reply_context.reply_id = update_id
-            byoeb_user_message.reply_context = reply_context
+            if reply_context and reply_context.additional_info:
+                update_id = reply_context.additional_info.get(constants.UPDATE_ID)
+                if update_id:
+                    reply_context.reply_id = update_id
+                    byoeb_user_message.reply_context = reply_context
+            else:
+                print(f"🗄️ Skipping user message correction update - no reply_context or additional_info")
+        
+        # Check if expert message has proper reply context for updates
+        if not (byoeb_expert_message.reply_context and byoeb_expert_message.reply_context.additional_info):
+            print(f"🗄️ Expert message has no reply_context or additional_info, skipping correction updates")
+            return []
+            
         update_data = {
             "$set":{
                 "message_data.message_context.additional_info.correction_en_text": byoeb_expert_message.reply_context.additional_info.get(constants.CORRECTION_EN),
@@ -85,6 +95,10 @@ class MessageMongoDBService(BaseMongoDBService):
         expert_update_queries = [({"_id": byoeb_expert_message.reply_context.reply_id}, update_data)]
         user_update_queries = []
         for byoeb_user_message in byoeb_user_messages:
+            # Skip if reply_context is None
+            if not byoeb_user_message.reply_context:
+                continue
+                
             update_data = {
                 "$set":{
                     "message_data.message_context.additional_info.corrected_en_text": byoeb_user_message.message_context.message_english_text,
@@ -101,24 +115,50 @@ class MessageMongoDBService(BaseMongoDBService):
     ):
         for byoeb_user_message in byoeb_user_messages:
             reply_context = byoeb_user_message.reply_context
-            update_id = reply_context.additional_info.get(constants.UPDATE_ID)
-            reply_context.reply_id = update_id
-            byoeb_user_message.reply_context = reply_context
+            if reply_context and reply_context.additional_info:
+                update_id = reply_context.additional_info.get(constants.UPDATE_ID)
+                if update_id:
+                    reply_context.reply_id = update_id
+                    byoeb_user_message.reply_context = reply_context
+            else:
+                print(f"🗄️ Skipping user message verification update - no reply_context or additional_info")
+        
+        # Check if expert message has proper reply context for updates
+        if not (byoeb_expert_message.reply_context and byoeb_expert_message.reply_context.additional_info):
+            print(f"🗄️ Expert message has no reply_context or additional_info, skipping verification updates")
+            return []
+            
         verification_status_param = constants.VERIFICATION_STATUS
         expert_verification_status = byoeb_expert_message.reply_context.additional_info.get(verification_status_param)
         expert_modified_timestamp = byoeb_expert_message.reply_context.additional_info.get(constants.MODIFIED_TIMESTAMP)
-        user_verification_status = byoeb_user_messages[0].reply_context.additional_info.get(verification_status_param)
-        user_modified_timestamp = byoeb_user_messages[0].reply_context.additional_info.get(constants.MODIFIED_TIMESTAMP)
+        
+        # Check if user messages have reply context for verification status
+        user_verification_status = None
+        user_modified_timestamp = None
+        if (byoeb_user_messages and 
+            byoeb_user_messages[0].reply_context and 
+            byoeb_user_messages[0].reply_context.additional_info):
+            user_verification_status = byoeb_user_messages[0].reply_context.additional_info.get(verification_status_param)
+            user_modified_timestamp = byoeb_user_messages[0].reply_context.additional_info.get(constants.MODIFIED_TIMESTAMP)
+        
         update_data = {
             "$set":{
                 "message_data.message_context.additional_info.verification_status": expert_verification_status,
                 "message_data.message_context.additional_info.modified_timestamp": expert_modified_timestamp,
-                "message_data.cross_conversation_context.messages_context.$[].message_context.additional_info.verification_status": user_verification_status
             }
         }
+        
+        # Only add user verification status update if we have valid data
+        if user_verification_status is not None:
+            update_data["$set"]["message_data.cross_conversation_context.messages_context.$[].message_context.additional_info.verification_status"] = user_verification_status
+            
         expert_update_queries = [({"_id": byoeb_expert_message.reply_context.reply_id}, update_data)]
         user_update_queries = []
         for byoeb_user_message in byoeb_user_messages:
+            # Skip if reply_context is None
+            if not byoeb_user_message.reply_context:
+                continue
+                
             update_data = {
                 "$set":{
                     "message_data.message_context.additional_info.verification_status": user_verification_status,
