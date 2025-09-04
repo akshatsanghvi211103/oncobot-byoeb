@@ -285,6 +285,42 @@ class QikchatService(BaseChannelService):
             )
             user_messages_context.append(user_message_context)
         
+        # Process expert responses and update expert message with returned message ID
+        print(f"🔧 CREATE_CROSS_CONV: Processing {len(expert_responses)} expert responses")
+        for i, expert_response in enumerate(expert_responses):
+            print(f"🔧 CREATE_CROSS_CONV: Expert response {i+1}: {expert_response}")
+            
+            if "error" in expert_response:
+                print(f"❌ CREATE_CROSS_CONV: Expert response {i+1} contains error, skipping")
+                continue
+                
+            # Extract message ID from expert response
+            expert_message_id = expert_response.get("message_id") or expert_response.get("id")
+            print(f"🔧 CREATE_CROSS_CONV: Top-level message ID: {expert_message_id}")
+            
+            # If not found at top level, check in data array (Qikchat format)
+            if expert_message_id is None and "data" in expert_response:
+                data_array = expert_response.get("data", [])
+                print(f"🔧 CREATE_CROSS_CONV: Checking data array with {len(data_array)} items")
+                if data_array and len(data_array) > 0:
+                    first_data_item = data_array[0]
+                    expert_message_id = first_data_item.get("id") or first_data_item.get("message_id")
+                    print(f"🔧 CREATE_CROSS_CONV: Found message ID in data[0]: {expert_message_id}")
+                    
+            print(f"🔧 CREATE_CROSS_CONV: Final extracted expert message ID: {expert_message_id}")
+            
+            if expert_message_id is not None:
+                # Store the original UUID for database update
+                original_message_id = byoeb_expert_message.message_context.message_id
+                print(f"🔧 CREATE_CROSS_CONV: Original expert message ID: {original_message_id}")
+                
+                # Update the expert message with the actual Qikchat message ID
+                byoeb_expert_message.message_context.message_id = expert_message_id
+                print(f"🔧 CREATE_CROSS_CONV: Updated expert message ID: {original_message_id} -> {expert_message_id}")
+                print(f"🔧 CREATE_CROSS_CONV: Expert message will be stored with Qikchat ID: {expert_message_id}")
+            else:
+                print(f"⚠️ CREATE_CROSS_CONV: No message ID found in expert response, will keep original UUID")
+            
         # Create cross conversation context
         cross_conversation_context = {
             constants.USER: User(
@@ -297,7 +333,20 @@ class QikchatService(BaseChannelService):
             constants.MESSAGES_CONTEXT: user_messages_context
         }
         
-        return user_messages_context
+        # Update expert message with cross conversation context
+        byoeb_expert_message.cross_conversation_context = cross_conversation_context
+        
+        # Return both user messages and updated expert message for database storage
+        result_messages = user_messages_context + [byoeb_expert_message]
+        
+        print(f"🔧 CREATE_CROSS_CONV: Returning {len(result_messages)} messages for database storage")
+        for i, msg in enumerate(result_messages):
+            msg_id = msg.message_context.message_id
+            msg_type = msg.message_context.message_type
+            msg_text = msg.message_context.message_english_text
+            print(f"   Message {i+1}: ID={msg_id}, Type={msg_type}, Text='{(msg_text or '')[:50]}...'")
+        
+        return result_messages
     
     async def download_media(
         self,

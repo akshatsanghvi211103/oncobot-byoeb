@@ -46,7 +46,7 @@ async def qikchat_webhook_alias(request: Request):
     print("=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===")
     _logger.info("=== WEBHOOK ENDPOINT HIT ===")
     try:
-        print("Attempting to parse JSON body...")
+        # print("Attempting to parse JSON body...")
         _logger.info("Attempting to parse JSON body...")
         body = await request.json()
         # print("JSON parsing successful!")
@@ -61,10 +61,10 @@ async def qikchat_webhook_alias(request: Request):
             _logger.info(f"Top-level keys: {list(body.keys())}")
         _logger.info(f"=== END PAYLOAD DEBUG ===")
         
-        print("Starting message processing...")
+        # print("Starting message processing...")
         _logger.info("Starting message processing...")
         response = await dependency_setup.message_producer_handler.handle(body)
-        print(f"Message processing completed. Response: {response}")
+        # print(f"Message processing completed. Response: {response}")
         _logger.info(f"Message processing completed. Response: {response}")
         
         # Handle the case where response.message might be an Exception object

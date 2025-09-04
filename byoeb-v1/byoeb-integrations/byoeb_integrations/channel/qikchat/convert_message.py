@@ -76,7 +76,13 @@ def convert_qikchat_regular_message(original_message: Dict[str, Any]) -> ByoebMe
     
     # Handle reply context - simpler structure
     if "context" in original_message:
-        reply_to_message_id = original_message["context"].get("message_id")
+        context_data = original_message["context"]
+        print(f"🔍 Context data found: {context_data}")
+        # Try both possible field names
+        reply_to_message_id = context_data.get("messageId") or context_data.get("id")
+        print(f"🔗 REPLY CONTEXT FOUND: reply_to_message_id = {reply_to_message_id}")
+    else:
+        print(f"🔗 NO REPLY CONTEXT: 'context' not in message keys: {list(original_message.keys())}")
     
     # Create media context if needed
     message_info = None
@@ -138,6 +144,8 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
     
     # Handle qikchat event structure - extract payload if present
     message_data = original_message
+    reply_to_message_id = None
+    
     if "payload" in original_message and "event" in original_message:
         payload = original_message.get("payload", {})
         if "message" in payload:
@@ -152,6 +160,16 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
         timestamp = original_message.get("timestamp")
         from_number = original_message.get("from")
         message_id = original_message.get("id") or str(uuid.uuid4())
+    
+    # Handle reply context - check if this is a response to another message
+    if "context" in message_data:
+        context_data = message_data["context"]
+        print(f"🔍 Interactive context data found: {context_data}")
+        # Try both possible field names  
+        reply_to_message_id = context_data.get("messageId") or context_data.get("id")
+        print(f"🔗 INTERACTIVE REPLY CONTEXT FOUND: reply_to_message_id = {reply_to_message_id}")
+    else:
+        print(f"🔗 NO INTERACTIVE REPLY CONTEXT: 'context' not in message_data keys: {list(message_data.keys())}")
     
     interactive_data = message_data.get("interactive", {})
     interactive_type = interactive_data.get("type")
@@ -201,10 +219,18 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
         timestamp=timestamp
     )
     
+    # Create reply context if available
+    reply_context = None
+    if reply_to_message_id is not None:
+        reply_context = ReplyContext(
+            reply_id=reply_to_message_id
+        )
+    
     byoeb_message = ByoebMessageContext(
         channel_type="qikchat",
         user=user,
-        message_context=message_context
+        message_context=message_context,
+        reply_context=reply_context
     )
     
     return byoeb_message
@@ -253,29 +279,48 @@ def convert_qikchat_message_to_byoeb(original_message: Dict[str, Any]) -> Option
     3. No complex validation model parsing needed
     """
     try:
+        print(f"\n=== QIKCHAT MESSAGE CONVERSION DEBUG ===")
+        print(f"📥 Converting message: {json.dumps(original_message, indent=2)}")
+        
         message_type = original_message.get("type")
+        print(f"📝 Detected message type: {message_type}")
         
         if message_type in ["text", "audio", "image", "document"]:
-            return convert_qikchat_regular_message(original_message)
-            
+            print(f"✅ Converting as regular message")
+            result = convert_qikchat_regular_message(original_message)
         elif message_type == "interactive":
+            print(f"🔘 Converting as interactive message")
             try:
                 result = convert_qikchat_interactive_message(original_message)
-                return result
+                print(f"✅ Interactive conversion successful")
             except Exception as e:
                 print(f"❌ Error in convert_qikchat_interactive_message: {e}")
                 import traceback
                 traceback.print_exc()
                 return None
-            
         elif message_type == "status":
+            print(f"📊 Status message - not converting to ByoebMessageContext")
             # Status messages don't convert to ByoebMessageContext
             return None
-            
         else:
-            print(f"Unsupported Qikchat message type: {message_type}")
+            print(f"❓ Unsupported Qikchat message type: {message_type}")
             return None
+        
+        if result:
+            print(f"✅ Conversion successful:")
+            print(f"   - Channel: {result.channel_type}")
+            print(f"   - User: {result.user.phone_number_id if result.user else 'None'}")
+            print(f"   - Message type: {result.message_context.message_type if result.message_context else 'None'}")
+            print(f"   - Message text: '{result.message_context.message_source_text if result.message_context else 'None'}'")
+            print(f"   - Has reply context: {result.reply_context is not None}")
+            if result.reply_context:
+                print(f"   - Reply ID: {result.reply_context.reply_id}")
+        print("=== END QIKCHAT MESSAGE CONVERSION DEBUG ===\n")
+        
+        return result
             
     except Exception as e:
-        print(f"Error converting Qikchat message: {str(e)}")
+        print(f"❌ Error converting Qikchat message: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return None

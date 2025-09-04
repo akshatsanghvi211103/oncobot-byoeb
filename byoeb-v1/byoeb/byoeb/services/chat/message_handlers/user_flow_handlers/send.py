@@ -277,6 +277,14 @@ class ByoebUserSendResponse(Handler):
         
         # Only create cross conv if we have expert responses
         if expert_responses:
+            # Store original expert message ID before it gets updated
+            original_expert_id = byoeb_expert_message.message_context.message_id
+            print(f"🔧 EXPERT MESSAGE ID DEBUG:")
+            print(f"   Original expert ID: {original_expert_id}")
+            print(f"   Expert responses count: {len(expert_responses)}")
+            if expert_responses:
+                print(f"   First expert response: {expert_responses[0]}")
+            
             byoeb_expert_verification_status = byoeb_expert_message.message_context.additional_info.get(verification_status)
             byoeb_expert_message.message_context.additional_info = {
                 verification_status: byoeb_expert_verification_status
@@ -287,6 +295,22 @@ class ByoebUserSendResponse(Handler):
                 user_responses,
                 expert_responses
             )
+            
+            # Update message ID in database if it changed after sending
+            new_expert_id = byoeb_expert_message.message_context.message_id
+            print(f"   Expert ID after create_cross_conv: {new_expert_id}")
+            print(f"   ID changed: {original_expert_id != new_expert_id}")
+            
+            if original_expert_id != new_expert_id:
+                print(f"🔄 Updating expert message ID in database: {original_expert_id} -> {new_expert_id}")
+                try:
+                    update_success = await self._message_db_service.update_message_id(original_expert_id, new_expert_id)
+                    print(f"   Message ID update result: {update_success}")
+                except Exception as e:
+                    print(f"   ❌ Message ID update failed: {e}")
+            else:
+                print(f"   ℹ️ Expert message ID unchanged - no database update needed")
+            
             return bot_to_user_convs + bot_to_expert_cross_convs, byoeb_user_message
         else:
             return bot_to_user_convs, byoeb_user_message

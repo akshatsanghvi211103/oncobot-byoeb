@@ -47,26 +47,26 @@ class ByoebUserGenerateResponse(Handler):
         end_time = datetime.now().timestamp()
         utils.log_to_text_file(f"Retrieved chunks in {end_time - start_time} seconds")
         
-        # Print KB context for debugging
-        print(f"\n=== KB CONTEXT RETRIEVED ({len(all_chunks)} chunks) ===")
-        print(f"Query: {text}")
-        for i, chunk in enumerate(all_chunks):
-            print(f"Chunk {i+1}:")
-            # Print source safely
-            source = "Unknown"
-            if hasattr(chunk, 'metadata') and chunk.metadata:
-                source = chunk.metadata.source or "Unknown"
-                if hasattr(chunk.metadata, 'additional_metadata') and chunk.metadata.additional_metadata:
-                    question = chunk.metadata.additional_metadata.get('question', '')
-                    if question:
-                        print(f"  Question: {question}")
-            print(f"  Source: {source}")
+        # # Print KB context for debugging
+        # print(f"\n=== KB CONTEXT RETRIEVED ({len(all_chunks)} chunks) ===")
+        # print(f"Query: {text}")
+        # for i, chunk in enumerate(all_chunks):
+        #     print(f"Chunk {i+1}:")
+        #     # Print source safely
+        #     source = "Unknown"
+        #     if hasattr(chunk, 'metadata') and chunk.metadata:
+        #         source = chunk.metadata.source or "Unknown"
+        #         if hasattr(chunk.metadata, 'additional_metadata') and chunk.metadata.additional_metadata:
+        #             question = chunk.metadata.additional_metadata.get('question', '')
+        #             if question:
+        #                 print(f"  Question: {question}")
+        #     print(f"  Source: {source}")
             
-            # Print content safely
-            if hasattr(chunk, 'text') and chunk.text:
-                print(f"  Content: {chunk.text[:200]}...")
-            print("  ---")
-        print("=== END KB CONTEXT ===\n")
+        #     # Print content safely
+        #     if hasattr(chunk, 'text') and chunk.text:
+        #         print(f"  Content: {chunk.text[:200]}...")
+        #     print("  ---")
+        # print("=== END KB CONTEXT ===\n")
         
         return all_chunks
 
@@ -174,7 +174,8 @@ class ByoebUserGenerateResponse(Handler):
         self,
         texts: List[str],
         emoji = None,
-        status = None
+        status = None,
+        related_questions = None
     ):
         additional_info = {
             constants.EMOJI: emoji,
@@ -184,6 +185,11 @@ class ByoebUserGenerateResponse(Handler):
             "template_language": "en",  # Explicitly use string, not object
             "template_parameters": texts
         }
+        
+        # Store related questions for later use when sending to user
+        if related_questions is not None:
+            additional_info[constants.RELATED_QUESTIONS] = related_questions
+            
         print(f"🔧 Expert additional_info template_language: {additional_info['template_language']} (type: {type(additional_info['template_language'])})")
         return additional_info
     
@@ -371,6 +377,7 @@ class ByoebUserGenerateResponse(Handler):
         query_type = "medical",
         emoji = None,
         status = None,
+        related_questions = None,
     ) -> ByoebMessageContext:
         
         expert_result = self.__get_expert_number_and_type(message.user.experts, query_type)
@@ -399,7 +406,8 @@ class ByoebUserGenerateResponse(Handler):
         additional_info = self.__get_expert_additional_info(
             [verification_question, verification_bot_answer],
             emoji,
-            status
+            status,
+            related_questions
         )
         expert_message = verification_question + "\n" + verification_bot_answer + "\n" + verification_footer_message
         new_expert_verification_message = ByoebMessageContext(
@@ -487,7 +495,7 @@ class ByoebUserGenerateResponse(Handler):
         tokens = llm_client.get_response_tokens(llm_response)
         utils.log_to_text_file(f"Generated answer tokens: {str(tokens)}")
         
-        print(f"Raw LLM response_text: {response_text}")
+        # print(f"Raw LLM response_text: {response_text}")
         
         parse_result = parse_response(response_text)
         if parse_result is None:
@@ -554,7 +562,7 @@ class ByoebUserGenerateResponse(Handler):
         print(f"📤 Processing message: '{message_english}'")
         print(f"👤 User: {message.user.phone_number_id} (language: {message.user.user_language})")
         
-        print(f"🔍 Retrieving relevant chunks from knowledge base...")
+        # print(f"🔍 Retrieving relevant chunks from knowledge base...")
         retrieved_chunks = await self.__aretrieve_chunks(message_english, k=3)
         
         answer, query_type = await self.agenerate_answer(message_english, retrieved_chunks)
@@ -565,14 +573,20 @@ class ByoebUserGenerateResponse(Handler):
         except Exception as e:
             # Fallback to pre-existing related questions
             related_questions = self.get_follow_up_questions(message.user.user_language, retrieved_chunks)
+        
+        # FLOW CHANGE: Send "waiting for verification" message to user instead of actual answer
+        user_lang = message.user.user_language
+        waiting_message = bot_config["template_messages"]["user"]["waiting_answer"].get(user_lang, 
+                         "Please wait while we verify the answer with our expert.")
+        
         byoeb_user_message = await self.__create_user_message(
             message=message,
-            response_text=answer,
-            emoji=self.USER_PENDING_EMOJI,
+            response_text=waiting_message,
+            emoji=None,  # Remove emoji reactions as requested
             status=constants.PENDING,
-            related_questions=related_questions
+            related_questions={}  # No related questions for waiting message
         )
-        print(f"✅ User message created (translated to {message.user.user_language})")
+        print(f"✅ Waiting message sent to user (in {message.user.user_language})")
         
         print(f"👨‍⚕️ Creating expert verification message...")
         byoeb_expert_message = self.__create_expert_verification_message(
@@ -580,12 +594,14 @@ class ByoebUserGenerateResponse(Handler):
             answer,
             query_type,
             self.EXPERT_PENDING_EMOJI,
-            constants.PENDING
+            constants.PENDING,
+            related_questions  # Pass related questions to expert message for later use
         )
         print(f"✅ Expert verification message created")
         
+        # FLOW CHANGE: Send waiting message to user + expert verification message
         result_messages = [byoeb_user_message, byoeb_expert_message, read_reciept_message]
-        print(f"🎉 Complete! Generated {len(result_messages)} messages (user response + expert verification + read receipt)")
+        print(f"🎉 Complete! Generated {len(result_messages)} messages (waiting message to user + expert verification + read receipt)")
         return result_messages
     
     async def handle(

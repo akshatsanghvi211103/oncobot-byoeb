@@ -37,6 +37,9 @@
             "wrong_answer": {
                 "en": "The answer provided is incorrect. Please wait while we get verified answer from expert."
             },
+            "waiting_answer": {
+                "en": "Please wait while we get verified answer from expert."
+            },
             "verified_answer": {
                 "en": "The answer provided is verified by expert."
             },

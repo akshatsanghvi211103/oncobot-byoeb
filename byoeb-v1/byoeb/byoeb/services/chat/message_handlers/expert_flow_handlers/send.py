@@ -23,6 +23,9 @@ class ByoebExpertSendResponse(Handler):
         if channel_type == "whatsapp":
             from byoeb.services.channel.whatsapp import WhatsAppService
             return WhatsAppService()
+        elif channel_type == "qikchat":
+            from byoeb.services.channel.qikchat import QikchatService
+            return QikchatService()
         return None
     
     def __modify_user_messages_context(
@@ -120,8 +123,17 @@ class ByoebExpertSendResponse(Handler):
         channel_service: BaseChannelService,
         expert_message_context: ByoebMessageContext
     ):
+        # Store original expert message ID before it gets updated by sending
+        original_expert_id = expert_message_context.message_context.message_id
+        
         expert_requests = channel_service.prepare_requests(expert_message_context)
         responses, _ = await channel_service.send_requests(expert_requests)
+
+        # Update message ID in database if it changed after sending to Qikchat
+        new_expert_id = expert_message_context.message_context.message_id
+        if original_expert_id != new_expert_id:
+            print(f"🔄 Updating expert message ID in database: {original_expert_id} -> {new_expert_id}")
+            await self._message_db_service.update_message_id(original_expert_id, new_expert_id)
 
         # Check if reply_id is present
         if (expert_message_context.reply_context

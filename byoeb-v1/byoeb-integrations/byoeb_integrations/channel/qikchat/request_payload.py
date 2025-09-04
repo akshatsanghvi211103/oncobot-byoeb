@@ -140,7 +140,7 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
     
     sections = []
     # Look for row_texts (like WhatsApp implementation) instead of sections
-    if "row_texts" in additional_info:
+    if "row_texts" in additional_info and additional_info["row_texts"] is not None:
         row_texts = additional_info["row_texts"]
         rows = []
         for i, row_text in enumerate(row_texts):

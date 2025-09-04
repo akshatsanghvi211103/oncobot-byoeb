@@ -3,6 +3,7 @@ import asyncio
 import json
 import hashlib
 import byoeb.utils.utils as b_utils
+import byoeb.services.chat.constants as constants
 from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
@@ -67,7 +68,6 @@ class MessageConsmerService:
         if user_type in self._expert_user_types.values():
             return True
         return False
-            
     
     def __get_bot_message(
         self,
@@ -93,11 +93,32 @@ class MessageConsmerService:
         bot_message_ids = list(
             set(message.reply_context.reply_id for message in messages if message.reply_context is not None and message.reply_context.reply_id is not None)
         )
+        print(f"🔍 Bot message IDs being searched: {bot_message_ids}")
         bot_messages = await self._message_db_service.get_bot_messages(bot_message_ids)
+        
+        # Debug: Show available bot messages
+        print(f"🤖 Available bot messages count: {len(bot_messages)}")
+        if len(bot_messages) == 0 and len(bot_message_ids) > 0:
+            print(f"❌ No bot messages found in DB for IDs: {bot_message_ids}")
+        for i, bot_msg in enumerate(bot_messages):
+            print(f"🤖 Bot message {i}: ID={bot_msg.message_context.message_id}")
+        
         conversations = []
+        
         for message in messages:
             user, is_new_user = self.__get_user(byoeb_users,message.user.phone_number_id)
-            bot_message = self.__get_bot_message(bot_messages, message.reply_context.reply_id if message.reply_context is not None else None)
+            # Safety check: Handle case where reply_context might be None
+            reply_id = message.reply_context.reply_id if message.reply_context is not None else None
+            bot_message = self.__get_bot_message(bot_messages, reply_id)
+            
+            # Debug: Log reply context extraction status
+            if user is not None and self.__is_expert_user_type(user.user_type):
+                print(f"� Expert message debug - reply_id: {reply_id}, bot_message found: {bot_message is not None}")
+                if message.reply_context:
+                    print(f"🔍 Reply context exists: reply_id={message.reply_context.reply_id}")
+                else:
+                    print(f"� No reply context in message")
+            
             conversation = ByoebMessageContext.model_validate(message)
             if user is not None and user.user_type == self._regular_user_type:
                 conversation.message_category = MessageCategory.USER_TO_BOT.value
@@ -191,6 +212,21 @@ class MessageConsmerService:
         byoeb_message: ByoebMessageContext
     ):
         from byoeb.chat_app.configuration.dependency_setup import byoeb_expert_process
+        
+        print(f"\n=== EXPERT MESSAGE CONSUMER DEBUG ===")
+        print(f"👨‍⚕️ Processing expert message from: {byoeb_message.user.phone_number_id if byoeb_message.user else 'Unknown'}")
+        # Show both text fields for debugging
+        message_text = byoeb_message.message_context.message_english_text or byoeb_message.message_context.message_source_text
+        print(f"💬 Message text: '{message_text}'")
+        print(f"📝 Message type: {byoeb_message.message_context.message_type}")
+        print(f"🏷️ Message category: {byoeb_message.message_category}")
+        print(f"🔗 Has reply context: {byoeb_message.reply_context is not None}")
+        if byoeb_message.reply_context:
+            print(f"🔗 Reply ID: {byoeb_message.reply_context.reply_id}")
+            print(f"🔗 Reply additional info: {byoeb_message.reply_context.additional_info}")
+        print(f"🔀 Has cross conversation context: {byoeb_message.cross_conversation_context is not None}")
+        print("=== END EXPERT MESSAGE CONSUMER DEBUG ===\n")
+        
         # print("Process expert message ", json.dumps(byoeb_message.model_dump()))
         byoeb_message_copy = byoeb_message.model_copy(deep=True)
         self._logger.info(f"Process expert message: {byoeb_message}")

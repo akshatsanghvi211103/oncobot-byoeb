@@ -91,6 +91,11 @@ def get_whatsapp_interactive_list_request_from_byoeb_message(
             description=description
         )
     def get_section(row_texts):
+        if row_texts is None:
+            return wa_requests.InteractiveActionSection(
+                title="Default Section",
+                rows=[]
+            )
         rows = [get_section_row(row_text) for row_text in row_texts]
         return wa_requests.InteractiveActionSection(
             title="Default Section",
