@@ -307,12 +307,12 @@ def convert_qikchat_message_to_byoeb(original_message: Dict[str, Any]) -> Option
             return None
         
         if result:
-            print(f"✅ Conversion successful:")
-            print(f"   - Channel: {result.channel_type}")
-            print(f"   - User: {result.user.phone_number_id if result.user else 'None'}")
-            print(f"   - Message type: {result.message_context.message_type if result.message_context else 'None'}")
-            print(f"   - Message text: '{result.message_context.message_source_text if result.message_context else 'None'}'")
-            print(f"   - Has reply context: {result.reply_context is not None}")
+            # print(f"✅ Conversion successful:")
+            # print(f"   - Channel: {result.channel_type}")
+            # print(f"   - User: {result.user.phone_number_id if result.user else 'None'}")
+            # print(f"   - Message type: {result.message_context.message_type if result.message_context else 'None'}")
+            # print(f"   - Message text: '{result.message_context.message_source_text if result.message_context else 'None'}'")
+            # print(f"   - Has reply context: {result.reply_context is not None}")
             if result.reply_context:
                 print(f"   - Reply ID: {result.reply_context.reply_id}")
         print("=== END QIKCHAT MESSAGE CONVERSION DEBUG ===\n")

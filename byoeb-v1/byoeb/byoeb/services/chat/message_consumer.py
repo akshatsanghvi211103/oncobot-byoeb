@@ -93,11 +93,11 @@ class MessageConsmerService:
         bot_message_ids = list(
             set(message.reply_context.reply_id for message in messages if message.reply_context is not None and message.reply_context.reply_id is not None)
         )
-        print(f"🔍 Bot message IDs being searched: {bot_message_ids}")
+        # print(f"🔍 Bot message IDs being searched: {bot_message_ids}")
         bot_messages = await self._message_db_service.get_bot_messages(bot_message_ids)
         
         # Debug: Show available bot messages
-        print(f"🤖 Available bot messages count: {len(bot_messages)}")
+        # print(f"🤖 Available bot messages count: {len(bot_messages)}")
         if len(bot_messages) == 0 and len(bot_message_ids) > 0:
             print(f"❌ No bot messages found in DB for IDs: {bot_message_ids}")
         for i, bot_msg in enumerate(bot_messages):
@@ -219,12 +219,12 @@ class MessageConsmerService:
         message_text = byoeb_message.message_context.message_english_text or byoeb_message.message_context.message_source_text
         print(f"💬 Message text: '{message_text}'")
         print(f"📝 Message type: {byoeb_message.message_context.message_type}")
-        print(f"🏷️ Message category: {byoeb_message.message_category}")
-        print(f"🔗 Has reply context: {byoeb_message.reply_context is not None}")
+        # print(f"🏷️ Message category: {byoeb_message.message_category}")
+        # print(f"🔗 Has reply context: {byoeb_message.reply_context is not None}")
         if byoeb_message.reply_context:
             print(f"🔗 Reply ID: {byoeb_message.reply_context.reply_id}")
             print(f"🔗 Reply additional info: {byoeb_message.reply_context.additional_info}")
-        print(f"🔀 Has cross conversation context: {byoeb_message.cross_conversation_context is not None}")
+        # print(f"🔀 Has cross conversation context: {byoeb_message.cross_conversation_context is not None}")
         print("=== END EXPERT MESSAGE CONSUMER DEBUG ===\n")
         
         # print("Process expert message ", json.dumps(byoeb_message.model_dump()))

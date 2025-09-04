@@ -15,13 +15,13 @@ class MessageMongoDBService(BaseMongoDBService):
 
     async def get_bot_messages(self, bot_message_ids: List[str]) -> List[ByoebMessageContext]:
         """Fetch multiple bot messages from the database."""
-        print(f"🔍 GET_BOT_MESSAGES: Searching for {len(bot_message_ids)} message IDs")
-        for i, msg_id in enumerate(bot_message_ids):
-            print(f"   ID {i+1}: {msg_id}")
+        # print(f"🔍 GET_BOT_MESSAGES: Searching for {len(bot_message_ids)} message IDs")
+        # for i, msg_id in enumerate(bot_message_ids):
+        #     print(f"   ID {i+1}: {msg_id}")
             
         message_collection_client = await self._get_collection_client(self.collection_name)
         
-        print(f"🔍 GET_BOT_MESSAGES: Executing database query with filter: {{'_id': {{'$in': {bot_message_ids}}}}}")
+        # print(f"🔍 GET_BOT_MESSAGES: Executing database query with filter: {{'_id': {{'$in': {bot_message_ids}}}}}")
         
         try:
             messages_obj = await message_collection_client.afetch_all({"_id": {"$in": bot_message_ids}})
@@ -53,7 +53,7 @@ class MessageMongoDBService(BaseMongoDBService):
                     print(f"   Found {i+1}: ID={stored_id}")
             
             result = [ByoebMessageContext(**msg_obj["message_data"]) for msg_obj in messages_obj]
-            print(f"🔍 GET_BOT_MESSAGES: Returning {len(result)} ByoebMessageContext objects")
+            # print(f"🔍 GET_BOT_MESSAGES: Returning {len(result)} ByoebMessageContext objects")
             return result
             
         except Exception as e:
@@ -220,16 +220,16 @@ class MessageMongoDBService(BaseMongoDBService):
                 
         if queries.get("update"):
             update_queries = queries["update"]
-            print(f"🔍 EXECUTE_QUERIES: Executing {len(update_queries)} UPDATE operations")
+            # print(f"🔍 EXECUTE_QUERIES: Executing {len(update_queries)} UPDATE operations")
             try:
                 result = await message_client.aupdate(bulk_queries=update_queries)
-                print(f"✅ EXECUTE_QUERIES: UPDATE operations completed successfully")
-                print(f"   Result: {result}")
+                # print(f"✅ EXECUTE_QUERIES: UPDATE operations completed successfully")
+                # print(f"   Result: {result}")
             except Exception as e:
                 print(f"❌ EXECUTE_QUERIES: UPDATE operations failed: {e}")
                 raise
                 
-        print(f"🔍 EXECUTE_QUERIES: All database operations completed")
+        # print(f"🔍 EXECUTE_QUERIES: All database operations completed") # TODO
 
     async def update_message_id(self, old_message_id: str, new_message_id: str):
         """Update a message's ID in the database after sending to external service."""

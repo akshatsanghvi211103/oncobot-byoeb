@@ -141,8 +141,8 @@ class ByoebExpertGenerateResponse(Handler):
         user.user_type = self._regular_user_type
         reply_to_user_messages_context = byoeb_message.cross_conversation_context.get(constants.MESSAGES_CONTEXT)
         
-        print(f"🔧 DEBUG: reply_to_user_messages_context type: {type(reply_to_user_messages_context)}")
-        print(f"🔧 DEBUG: reply_to_user_messages_context value: {reply_to_user_messages_context}")
+        # print(f"🔧 DEBUG: reply_to_user_messages_context type: {type(reply_to_user_messages_context)}")
+        # print(f"🔧 DEBUG: reply_to_user_messages_context value: {reply_to_user_messages_context}")
         
         # Check if reply_to_user_messages_context is None or empty
         if not reply_to_user_messages_context:
@@ -154,15 +154,15 @@ class ByoebExpertGenerateResponse(Handler):
         media_additiona_info = {}
         message_en_text = None
         
-        print(f"🔧 DEBUG: Creating user message with status: {status}")
-        print(f"🔧 DEBUG: Verification status from reply context: {byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) if byoeb_message.reply_context and byoeb_message.reply_context.additional_info else 'None'}")
+        # print(f"🔧 DEBUG: Creating user message with status: {status}")
+        # print(f"🔧 DEBUG: Verification status from reply context: {byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) if byoeb_message.reply_context and byoeb_message.reply_context.additional_info else 'None'}")
         
         if (status == constants.VERIFIED
             and byoeb_message.reply_context 
             and byoeb_message.reply_context.additional_info
             and byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING
         ):
-            print("🔧 DEBUG: Expert correction case - preparing corrected message")
+            # print("🔧 DEBUG: Expert correction case - preparing corrected message")
             message_en_text = text_message
             
             # For expert corrections, translate the corrected response to user's language
@@ -176,8 +176,8 @@ class ByoebExpertGenerateResponse(Handler):
             corrected_template = self.USER_CORRECTED_ANSWER_MESSAGES.get(user.user_language, self.USER_CORRECTED_ANSWER_MESSAGES.get("en", "<CORRECTED_ANSWER>"))
             text_message = corrected_template.replace("<CORRECTED_ANSWER>", translated_text)
             
-            print(f"🔧 DEBUG: Translated corrected text: '{translated_text}'")
-            print(f"🔧 DEBUG: Final message with template: '{text_message}'")
+            # print(f"🔧 DEBUG: Translated corrected text: '{translated_text}'")
+            # print(f"🔧 DEBUG: Final message with template: '{text_message}'")
             
             try:
                 translated_audio_message = await speech_translator.atext_to_speech(
@@ -209,7 +209,7 @@ class ByoebExpertGenerateResponse(Handler):
                     emoji,
                     status
                 )
-                print(f"✅ DEBUG: Successfully processed message context {i+1}")
+                # print(f"✅ DEBUG: Successfully processed message context {i+1}")
             except Exception as e:
                 print(f"❌ DEBUG: Error processing message context {i+1}: {e}")
                 import traceback
@@ -283,7 +283,7 @@ class ByoebExpertGenerateResponse(Handler):
                     reply_context=reply_context
                 )
                 new_user_messages.append(new_user_message)
-                print(f"✅ DEBUG: Successfully created user message {i+1}")
+                # print(f"✅ DEBUG: Successfully created user message {i+1}")
             except Exception as e:
                 print(f"❌ DEBUG: Error creating user message {i+1}: {e}")
                 import traceback
@@ -391,8 +391,8 @@ class ByoebExpertGenerateResponse(Handler):
                 print(f"🔗 Verification status: {reply_context.additional_info.get(constants.VERIFICATION_STATUS, 'Not set')}")
         
         cross_message_verification_status = self.__get_cross_conv_verification_status(message)
-        print(f"🔀 Cross conversation verification status: {cross_message_verification_status}")
-        print(f"🔀 Cross conversation context exists: {message.cross_conversation_context is not None}")
+        # print(f"🔀 Cross conversation verification status: {cross_message_verification_status}")
+        # print(f"🔀 Cross conversation context exists: {message.cross_conversation_context is not None}")
         
         byoeb_expert_messages = []
         byoeb_user_messages = []
@@ -454,8 +454,8 @@ class ByoebExpertGenerateResponse(Handler):
             
             print(f"🔧 DEBUG: About to create expert correction message")
             print(f"🔧 DEBUG: EXPERT_ASK_FOR_CORRECTION = {self.EXPERT_ASK_FOR_CORRECTION}")
-            print(f"🔧 DEBUG: message type = {type(message)}")
-            print(f"🔧 DEBUG: cross_conversation_context = {message.cross_conversation_context}")
+            # print(f"🔧 DEBUG: message type = {type(message)}")
+            # print(f"🔧 DEBUG: cross_conversation_context = {message.cross_conversation_context}")
             
             # Expert rejected the answer - ask expert for correction, notify user to wait
             try:
@@ -509,18 +509,18 @@ class ByoebExpertGenerateResponse(Handler):
             # Expert provided correction - generate corrected answer and send to user, thank expert
             correction = message.message_context.message_english_text
             verification_message = reply_context.reply_english_text
-            print(f"🔧 Correction text: '{correction}'")
             print(f"🔧 Original verification message: '{verification_message}'")
+            print(f"🔧 Correction text: '{correction}'")
             
             parsed_message = self.__parse_message(verification_message)
-            print(f"🔧 Parsed message: {parsed_message}")
+            # print(f"🔧 Parsed message: {parsed_message}")
             
             user_prompt = self.__get_user_prompt(
                 parsed_message["Question"],
                 parsed_message["Bot_Answer"],
                 correction
             )
-            print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")
+            # print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")
             
             augmented_prompts = self.__augment(user_prompt)
             llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
@@ -542,24 +542,24 @@ class ByoebExpertGenerateResponse(Handler):
                 constants.VERIFIED
             )
         else:
-            print("❓ Branch: No matching condition - sending default message")
-            print(f"❓ Reply message category: {getattr(reply_context, 'message_category', 'None') if reply_context else 'No reply context'}")
-            print(f"❓ Verification status: {reply_context.additional_info.get(constants.VERIFICATION_STATUS) if reply_context and reply_context.additional_info else 'None'}")
+            # print("❓ Branch: No matching condition - sending default message")
+            # print(f"❓ Reply message category: {getattr(reply_context, 'message_category', 'None') if reply_context else 'No reply context'}")
+            # print(f"❓ Verification status: {reply_context.additional_info.get(constants.VERIFICATION_STATUS) if reply_context and reply_context.additional_info else 'None'}")
             # Use both text fields for debugging
             message_text = message.message_context.message_english_text or message.message_context.message_source_text
-            print(f"❓ Message text: '{message_text}'")
-            print(f"❓ Message type: {message.message_context.message_type}")
-            print(f"❓ Button titles: {self.button_titles}")
+            # print(f"❓ Message text: '{message_text}'")
+            # print(f"❓ Message type: {message.message_context.message_type}")
+            # print(f"❓ Button titles: {self.button_titles}")
             byoeb_expert_messages = self.__create_expert_message(self.EXPERT_DEFAULT_MESSAGE, message)
             
-        print(f"🔧 DEBUG: About to combine messages")
-        print(f"🔧 DEBUG: byoeb_user_messages type: {type(byoeb_user_messages)}, content: {byoeb_user_messages}")
-        print(f"🔧 DEBUG: byoeb_expert_messages type: {type(byoeb_expert_messages)}, content: {byoeb_expert_messages}")
-        print(f"🔧 DEBUG: read_reciept_message type: {type(read_reciept_message)}, content: {read_reciept_message}")
+        # print(f"🔧 DEBUG: About to combine messages")
+        # print(f"🔧 DEBUG: byoeb_user_messages type: {type(byoeb_user_messages)}, content: {byoeb_user_messages}")
+        # print(f"🔧 DEBUG: byoeb_expert_messages type: {type(byoeb_expert_messages)}, content: {byoeb_expert_messages}")
+        # print(f"🔧 DEBUG: read_reciept_message type: {type(read_reciept_message)}, content: {read_reciept_message}")
         
         try:
             byoeb_messages = byoeb_user_messages + byoeb_expert_messages + [read_reciept_message]
-            print(f"✅ DEBUG: Messages combined successfully")
+            # print(f"✅ DEBUG: Messages combined successfully")
         except Exception as e:
             print(f"❌ DEBUG: Error combining messages: {e}")
             print(f"❌ DEBUG: byoeb_user_messages is None: {byoeb_user_messages is None}")

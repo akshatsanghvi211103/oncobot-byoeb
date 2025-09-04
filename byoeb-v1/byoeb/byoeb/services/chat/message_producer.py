@@ -137,7 +137,7 @@ class MessageProducerService:
                 byoeb_message.model_dump_json(),
                 time_to_live=self._config["message_queue"]["azure"]["time_to_live"])
             self._logger.info(f"Message sent: {result}")
-            print(f"Published successfully {result.id}")
+            # print(f"Published successfully {result.id}")
             return f"Published successfully {result.id}", None
         except Exception as e:
             return None, e
