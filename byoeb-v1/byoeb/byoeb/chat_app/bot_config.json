@@ -35,19 +35,94 @@
         },
         "user": {
             "wrong_answer": {
-                "en": "The answer provided is incorrect. Please wait while we get verified answer from expert."
+                "en": "The answer provided is incorrect. Please wait while we get verified answer from expert.",
+                "hi": "प्रदान किया गया उत्तर गलत है। कृपया प्रतीक्षा करें जब तक हम विशेषज्ञ से सत्यापित उत्तर प्राप्त करते हैं।",
+                "kn": "ನೀಡಿದ ಉತ್ತರ ತಪ್ಪಾಗಿದೆ. ನಾವು ತಜ್ಞರಿಂದ ಪರಿಶೀಲಿಸಿದ ಉತ್ತರವನ್ನು ಪಡೆಯುವವರೆಗೆ ದಯವಿಟ್ಟು ಕಾಯಿರಿ."
             },
             "waiting_answer": {
-                "en": "Please wait while we get verified answer from expert."
+                "en": "Please wait while we get verified answer from expert.",
+                "hi": "कृपया प्रतीक्षा करें जब तक हम विशेषज्ञ से सत्यापित उत्तर प्राप्त करते हैं।",
+                "kn": "ನಾವು ತಜ್ಞರಿಂದ ಪರಿಶೀಲಿಸಿದ ಉತ್ತರವನ್ನು ಪಡೆಯುವವರೆಗೆ ದಯವಿಟ್ಟು ಕಾಯಿರಿ."
             },
             "verified_answer": {
-                "en": "The answer provided is verified by expert."
+                "en": "The answer provided is verified by expert.",
+                "hi": "प्रदान किया गया उत्तर विशेषज्ञ द्वारा सत्यापित है।",
+                "kn": "ನೀಡಿದ ಉತ್ತರ ತಜ್ಞರಿಂದ ಪರಿಶೀಲಿಸಲ್ಪಟ್ಟಿದೆ."
             },
             "corrected_answer": {
-                "en": "Here is the correct and verified answer: <CORRECTED_ANSWER>"
+                "en": "Here is the correct and verified answer: <CORRECTED_ANSWER>",
+                "hi": "यहाँ सही और सत्यापित उत्तर है: <CORRECTED_ANSWER>",
+                "kn": "ಇಲ್ಲಿ ಸರಿಯಾದ ಮತ್ತು ಪರಿಶೀಲಿಸಿದ ಉತ್ತರವಿದೆ: <CORRECTED_ANSWER>"
             },
             "follow_up_questions_description": {
-                "en": "Related questions"
+                "en": "Related questions",
+                "hi": "संबंधित प्रश्न",
+                "kn": "ಸಂಬಂಧಿತ ಪ್ರಶ್ನೆಗಳು"
+            },
+            "onboarding": {
+                "welcome_messages": {
+                    "en": [
+                        "Hi! I'm OncoBot, your expert oncology assistant.",
+                        "I can help you with cancer-related questions and connect you with medical experts.",
+                        "Ask me anything about oncology, treatments, or procedures."
+                    ],
+                    "hi": [
+                        "नमस्ते! मैं ऑन्कोबॉट हूं, आपका विशेषज्ञ ऑन्कोलॉजी सहायक।",
+                        "मैं कैंसर संबंधी प्रश्नों में आपकी मदद कर सकता हूं और आपको चिकित्सा विशेषज्ञों से जोड़ सकता हूं।",
+                        "ऑन्कोलॉजी, उपचार या प्रक्रियाओं के बारे में मुझसे कुछ भी पूछें।"
+                    ],
+                    "kn": [
+                        "ನಮಸ್ಕಾರ! ನಾನು ಆಂಕೋಬಾಟ್, ನಿಮ್ಮ ತಜ್ಞ ಆಂಕಾಲಜಿ ಸಹಾಯಕ.",
+                        "ನಾನು ಕ್ಯಾನ್ಸರ್ ಸಂಬಂಧಿತ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ನಿಮಗೆ ಸಹಾಯ ಮಾಡಬಹುದು ಮತ್ತು ವೈದ್ಯಕೀಯ ತಜ್ಞರೊಂದಿಗೆ ಸಂಪರ್ಕಿಸಬಹುದು.",
+                        "ಆಂಕಾಲಜಿ, ಚಿಕಿತ್ಸೆಗಳು ಅಥವಾ ಕಾರ್ಯವಿಧಾನಗಳ ಬಗ್ಗೆ ನನ್ನನ್ನು ಏನು ಬೇಕಾದರೂ ಕೇಳಿ."
+                    ]
+                },
+                "language_preference": {
+                    "message": {
+                        "en": "You can change your language preference anytime.",
+                        "hi": "आप अपनी भाषा प्राथमिकता कभी भी बदल सकते हैं।",
+                        "kn": "ನೀವು ನಿಮ್ಮ ಭಾಷಾ ಆದ್ಯತೆಯನ್ನು ಯಾವಾಗ ಬೇಕಾದರೂ ಬದಲಾಯಿಸಬಹುದು."
+                    },
+                    "title": {
+                        "en": "Language Options",
+                        "hi": "भाषा विकल्प",
+                        "kn": "ಭಾಷಾ ಆಯ್ಕೆಗಳು"
+                    },
+                    "options": [
+                        {"id": "en", "title": "English"},
+                        {"id": "hi", "title": "हिंदी (Hindi)"},
+                        {"id": "kn", "title": "ಕನ್ನಡ (Kannada)"}
+                    ]
+                },
+                "initial_questions": {
+                    "title": {
+                        "en": "Getting Started",
+                        "hi": "शुरुआत करना",
+                        "kn": "ಪ್ರಾರಂಭಿಸುವುದು"
+                    },
+                    "description": {
+                        "en": "Here are some questions to get you started",
+                        "hi": "शुरुआत के लिए यहाँ कुछ प्रश्न हैं",
+                        "kn": "ಪ್ರಾರಂಭಿಸಲು ಇಲ್ಲಿ ಕೆಲವು ಪ್ರಶ್ನೆಗಳಿವೆ"
+                    },
+                    "questions": {
+                        "en": [
+                            "What types of cancer do you cover?",
+                            "How does radiation therapy work?",
+                            "What are common cancer symptoms?"
+                        ],
+                        "hi": [
+                            "आप किस प्रकार के कैंसर को कवर करते हैं?",
+                            "रेडिएशन थेरेपी कैसे काम करती है?",
+                            "कैंसर के सामान्य लक्षण क्या हैं?"
+                        ],
+                        "kn": [
+                            "ನೀವು ಯಾವ ರೀತಿಯ ಕ್ಯಾನ್ಸರ್ ಅನ್ನು ಒಳಗೊಂಡಿದ್ದೀರಿ?",
+                            "ವಿಕಿರಣ ಚಿಕಿತ್ಸೆ ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?",
+                            "ಸಾಮಾನ್ಯ ಕ್ಯಾನ್ಸರ್ ಲಕ್ಷಣಗಳು ಯಾವುವು?"
+                        ]
+                    }
+                }
             }
         }
     },

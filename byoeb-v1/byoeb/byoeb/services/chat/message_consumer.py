@@ -238,7 +238,7 @@ class MessageConsmerService:
             self._logger.error(error_message)
             print(error_message)
             return None, byoeb_message_copy, "TimeoutError"
-        except Exception as e:
-            self._logger.error(f"Error processing expert message: {e}")
-            print("Error processing expert message: ", e)
-            return None, byoeb_message_copy, e
+        # except Exception as e:
+        #     self._logger.error(f"Error processing expert message: {e}")
+        #     print("Error processing expert message: ", e)
+        #     return None, byoeb_message_copy, e

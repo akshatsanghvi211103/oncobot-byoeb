@@ -446,10 +446,22 @@ class ByoebExpertGenerateResponse(Handler):
             )
             
             print(f"🔧 DEBUG: Created expert message with text: '{self.EXPERT_THANK_YOU_MESSAGE}'")
+
+            print(f"Translating bot answer to user's language: {message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')}")
+
+            # Translate bot answer to user's language before sending
+            from byoeb.chat_app.configuration.dependency_setup import text_translator
+
+            translated_bot_answer = await text_translator.atranslate_text(
+                input_text=bot_answer,
+                source_language="en",
+                target_language=message.cross_conversation_context.get(constants.USER, {}).get("user_language", "en")
+            )
+
             
             # NEW FLOW: Send approved answer to user
             byoeb_user_messages = await self.__create_user_message(
-                bot_answer,
+                translated_bot_answer,
                 message,
                 None,  # Remove emoji reactions as requested
                 constants.VERIFIED

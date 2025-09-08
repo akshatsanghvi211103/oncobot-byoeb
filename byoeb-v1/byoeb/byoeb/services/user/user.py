@@ -6,6 +6,7 @@ from typing import List, Dict, Any
 from byoeb_core.models.byoeb.user import User
 from byoeb.services.user.base import BaseUserService
 from byoeb_core.databases.mongo_db.base import BaseDocumentCollection
+from byoeb.services.user.welcome_sender import WelcomeMessageSender
 
 class UserService(BaseUserService):
     def __init__(
@@ -259,6 +260,15 @@ class UserService(BaseUserService):
         update_queries = self.__get_add_relation_update_queries_for_affected_users(affected_users, add_relations)
         await self.__collection_client.aupdate(bulk_queries=update_queries)
         byoeb_messages.extend(messages)
+        
+        # Send welcome messages to newly registered users
+        if byoeb_users:
+            try:
+                welcome_sender = WelcomeMessageSender()
+                await welcome_sender.send_welcome_messages(byoeb_users)
+            except Exception as e:
+                print(f"Failed to send welcome messages: {str(e)}")
+        
         return byoeb_messages
     
     async def adelete(
