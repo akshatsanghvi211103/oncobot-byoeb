@@ -460,8 +460,43 @@ class ByoebExpertGenerateResponse(Handler):
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.PENDING
             and (message.message_context.message_english_text or message.message_context.message_source_text) not in self.button_titles):
-            print("❌ Branch: Invalid response to verification - sending default message")
-            byoeb_expert_messages = self.__create_expert_message(self.EXPERT_DEFAULT_MESSAGE, message)
+            print("🔄 Branch: Expert provided correction after clicking NO - generating corrected answer")
+            # Expert provided correction - generate corrected answer and send to user, thank expert
+            correction = message.message_context.message_english_text
+            verification_message = reply_context.reply_english_text
+            print(f"🔧 Original verification message: '{verification_message}'")
+            print(f"🔧 Correction text: '{correction}'")
+            
+            parsed_message = self.__parse_message(verification_message)
+            # print(f"🔧 Parsed message: {parsed_message}")
+            
+            user_prompt = self.__get_user_prompt(
+                parsed_message["Question"],
+                parsed_message["Bot_Answer"],
+                correction
+            )
+            # print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")
+            
+            augmented_prompts = self.__augment(user_prompt)
+            llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
+            print(f"🔧 LLM corrected response: '{response_text}'")
+            
+            # Send thank you message to expert
+            byoeb_expert_messages = self.__create_expert_message(
+                self.EXPERT_THANK_YOU_MESSAGE,
+                message,
+                None,  # Remove emoji reactions as requested
+                constants.VERIFIED
+            )
+            
+            # Send corrected answer to user
+            byoeb_user_messages = await self.__create_user_message(
+                response_text,
+                message,
+                None,  # Remove emoji reactions as requested
+                constants.VERIFIED,
+                []  # Empty list to suppress related questions in final verified answer
+            )
 
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.PENDING
@@ -522,7 +557,7 @@ class ByoebExpertGenerateResponse(Handler):
             # print(f"🔧 DEBUG: message type = {type(message)}")
             # print(f"🔧 DEBUG: cross_conversation_context = {message.cross_conversation_context}")
             
-            # Expert rejected the answer - ask expert for correction, notify user to wait
+            # Expert rejected the answer - ask expert for correction
             try:
                 byoeb_expert_messages = self.__create_expert_message(
                     self.EXPERT_ASK_FOR_CORRECTION,
@@ -532,37 +567,6 @@ class ByoebExpertGenerateResponse(Handler):
                 print(f"✅ DEBUG: Expert message created successfully: {type(byoeb_expert_messages)}")
             except Exception as e:
                 print(f"❌ DEBUG: Error creating expert message: {e}")
-                import traceback
-                traceback.print_exc()
-                raise e
-            
-            print(f"🔧 DEBUG: About to get user language")
-            try:
-                user_lang = self.__get_user_language(
-                    message.cross_conversation_context.get(constants.USER)
-                )
-                print(f"✅ DEBUG: User language obtained: {user_lang}")
-            except Exception as e:
-                print(f"❌ DEBUG: Error getting user language: {e}")
-                import traceback
-                traceback.print_exc()
-                raise e
-            
-            print(f"🔧 DEBUG: About to create user message")
-            print(f"🔧 DEBUG: USER_WAITING_ANSWER_MESSAGES = {self.USER_WAITING_ANSWER_MESSAGES}")
-            print(f"🔧 DEBUG: user_lang = {user_lang}")
-            print(f"🔧 DEBUG: Message for user = {self.USER_WAITING_ANSWER_MESSAGES.get(user_lang)}")
-            
-            try:
-                byoeb_user_messages = await self.__create_user_message(
-                    self.USER_WAITING_ANSWER_MESSAGES.get(user_lang),
-                    message,
-                    None,  # Remove emoji reactions as requested
-                    constants.WAITING  # Changed from constants.WRONG to constants.WAITING
-                )
-                print(f"✅ DEBUG: User message created successfully: {type(byoeb_user_messages)}")
-            except Exception as e:
-                print(f"❌ DEBUG: Error creating user message: {e}")
                 import traceback
                 traceback.print_exc()
                 raise e
