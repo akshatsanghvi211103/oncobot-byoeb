@@ -35,8 +35,9 @@ class ByoebUserGenerateResponse(Handler):
         """
         Retrieve chunks from all 3 knowledge bases:
         - KB1: Q&A pairs (source='oncobot_knowledge_base') - 3 results
-        - KB2 & KB3: Markdown sections (source='markdown_knowledge_base') - 4 results
-        Total: 7 results combining all knowledge bases
+        - KB2: Markdown content (source='kb2_content') - 2 results  
+        - KB3: Markdown content (source='kb3_content') - 2 results
+        Total: 7 results combining all knowledge bases using vector search only
         """
         from byoeb.chat_app.configuration.dependency_setup import vector_store
         start_time = datetime.now().timestamp()
@@ -47,41 +48,47 @@ class ByoebUserGenerateResponse(Handler):
         end_time = datetime.now().timestamp()
         utils.log_to_text_file(f"Retrieved chunks in {end_time - start_time} seconds")
         
-        # # Print KB context for debugging
-        # print(f"\n=== KB CONTEXT RETRIEVED ({len(all_chunks)} chunks) ===")
-        # print(f"Query: {text}")
-        # for i, chunk in enumerate(all_chunks):
-        #     print(f"Chunk {i+1}:")
-        #     # Print source safely
-        #     source = "Unknown"
-        #     if hasattr(chunk, 'metadata') and chunk.metadata:
-        #         source = chunk.metadata.source or "Unknown"
-        #         if hasattr(chunk.metadata, 'additional_metadata') and chunk.metadata.additional_metadata:
-        #             question = chunk.metadata.additional_metadata.get('question', '')
-        #             if question:
-        #                 print(f"  Question: {question}")
-        #     print(f"  Source: {source}")
+        # Print KB context for debugging
+        print(f"\n=== KB CONTEXT RETRIEVED ({len(all_chunks)} chunks) ===")
+        print(f"Query: {text}")
+        for i, chunk in enumerate(all_chunks):
+            print(f"Chunk {i+1}:")
+            # Print source safely
+            source = "Unknown"
+            if hasattr(chunk, 'metadata') and chunk.metadata:
+                source = chunk.metadata.source or "Unknown"
+                if hasattr(chunk.metadata, 'additional_metadata') and chunk.metadata.additional_metadata:
+                    question = chunk.metadata.additional_metadata.get('question', '')
+                    if question:
+                        print(f"  Question: {question}")
+            print(f"  Source: {source}")
             
-        #     # Print content safely
-        #     if hasattr(chunk, 'text') and chunk.text:
-        #         print(f"  Content: {chunk.text[:200]}...")
-        #     print("  ---")
-        # print("=== END KB CONTEXT ===\n")
+            # Print content safely
+            if hasattr(chunk, 'text') and chunk.text:
+                print(f"  Content: {chunk.text[:200]}...")
+            print("  ---")
+        print("=== END KB CONTEXT ===\n")
         
         return all_chunks
 
     async def __retrieve_from_all_knowledge_bases(self, vector_store, query_text):
         """
         Retrieve from all knowledge bases with specific distribution:
-        - 3 from Q&A pairs (KB1)
-        - 4 from markdown sections (KB2 & KB3)
+        - 3 from Q&A pairs (KB1: oncobot_knowledge_base)
+        - 2 from KB2 markdown content (kb2_content)
+        - 2 from KB3 markdown content (kb3_content)
+        Total: 7 chunks using vector search only
         """
         all_chunks = []
         
         try:
+            print(f"\n🔍 MULTI-KB SEARCH DEBUG:")
+            print(f"🔍 Query: '{query_text}'")
+            print(f"🔍 Searching 3 knowledge bases...")
+            
             # Get the Azure Search client directly for filtered searches
             search_client = vector_store.search_client
-            embedding_function = vector_store._AzureVectorSearchStore__embedding_function
+            embedding_function = vector_store._AzureVectorStore__embedding_function
             
             # Get query embedding
             query_embedding = await embedding_function.aget_text_embedding(query_text)
@@ -94,8 +101,9 @@ class ByoebUserGenerateResponse(Handler):
             )
             
             # Search KB1: Q&A pairs (3 results)
+            print(f"🔍 Searching KB1 (Q&A pairs) with filter: source eq 'oncobot_knowledge_base'")
             qa_results = search_client.search(
-                search_text=query_text,
+                search_text=None,  # Vector search only
                 vector_queries=[vector_query],
                 top=3,
                 filter="source eq 'oncobot_knowledge_base'",
@@ -103,28 +111,58 @@ class ByoebUserGenerateResponse(Handler):
             )
             
             # Convert Q&A results to chunks
+            qa_count = 0
             for result in qa_results:
                 chunk = self.__convert_search_result_to_chunk(result)
                 if chunk:
                     all_chunks.append(chunk)
+                    qa_count += 1
+            print(f"🔍 KB1 returned {qa_count} Q&A results")
             
-            # Search KB2 & KB3: Markdown sections (4 results)
-            md_results = search_client.search(
-                search_text=query_text,
+            # Search KB2: Markdown content (2 results)
+            print(f"🔍 Searching KB2 (Markdown) with filter: source eq 'kb2_content'")
+            kb2_results = search_client.search(
+                search_text=None,  # Vector search only
                 vector_queries=[vector_query],
-                top=4,
-                filter="source eq 'markdown_knowledge_base'",
+                top=2,
+                filter="source eq 'kb2_content'",
                 select=['id', 'combined_text', 'source', 'question', 'answer']
             )
             
-            # Convert markdown results to chunks
-            for result in md_results:
+            # Convert KB2 results to chunks
+            kb2_count = 0
+            for result in kb2_results:
                 chunk = self.__convert_search_result_to_chunk(result)
                 if chunk:
                     all_chunks.append(chunk)
+                    kb2_count += 1
+            print(f"🔍 KB2 returned {kb2_count} Markdown results")
+            
+            # Search KB3: Markdown content (2 results)
+            print(f"🔍 Searching KB3 (Markdown) with filter: source eq 'kb3_content'")
+            kb3_results = search_client.search(
+                search_text=None,  # Vector search only
+                vector_queries=[vector_query],
+                top=2,
+                filter="source eq 'kb3_content'",
+                select=['id', 'combined_text', 'source', 'question', 'answer']
+            )
+            
+            # Convert KB3 results to chunks
+            kb3_count = 0
+            for result in kb3_results:
+                chunk = self.__convert_search_result_to_chunk(result)
+                if chunk:
+                    all_chunks.append(chunk)
+                    kb3_count += 1
+            print(f"🔍 KB3 returned {kb3_count} Markdown results")
+            print(f"🔍 Total chunks retrieved: {len(all_chunks)} (KB1: {qa_count}, KB2: {kb2_count}, KB3: {kb3_count})")
+                    
                     
         except Exception as e:
             # Fallback to original method if filtering fails
+            print(f"❌ Error in multi-KB search: {e}")
+            print(f"🔄 Falling back to original search method...")
             utils.log_to_text_file(f"Error in multi-KB search: {e}, falling back to original search")
             all_chunks = await vector_store.aretrieve_top_k_chunks(
                 query_text,
@@ -133,6 +171,7 @@ class ByoebUserGenerateResponse(Handler):
                 select=["id", "combined_text", "source", "question", "answer"],
                 vector_field="text_vector_3072"
             )
+            print(f"🔄 Fallback search returned {len(all_chunks)} chunks")
         
         return all_chunks
 
