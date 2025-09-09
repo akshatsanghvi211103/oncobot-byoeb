@@ -97,10 +97,11 @@ class ByoebExpertGenerateResponse(Handler):
             constants.MODIFIED_TIMESTAMP: str(int(datetime.now().timestamp()))
         }
         if (status == constants.VERIFIED
-            and byoeb_message.reply_context is not None
-            and byoeb_message.reply_context.additional_info is not None
-            and byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING
+            and cross_conv_message.reply_context is not None
+            and cross_conv_message.reply_context.additional_info is not None
+            and cross_conv_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING
         ):
+            # For verified answers, reply to the original user question (not the waiting message)
             reply_id = cross_conv_message.reply_context.reply_id
             reply_type = None
             reply_additional_info = {
@@ -134,6 +135,7 @@ class ByoebExpertGenerateResponse(Handler):
         byoeb_message: ByoebMessageContext,
         emoji = None,
         status = None,
+        related_questions = None,
     ):
         from byoeb.chat_app.configuration.dependency_setup import speech_translator
         from byoeb.chat_app.configuration.dependency_setup import text_translator
@@ -232,37 +234,77 @@ class ByoebExpertGenerateResponse(Handler):
             elif (reply_to_user_message_context.message_context.message_type == MessageTypes.INTERACTIVE_LIST.value or
                   reply_to_user_message_context.message_context.message_type == "interactive_list_reply"):
                 print("🔧 DEBUG: Creating INTERACTIVE_LIST/INTERACTIVE_LIST_REPLY message context")
-                description = bot_config["template_messages"]["user"]["follow_up_questions_description"][user.user_language]
-                related_questions = reply_to_user_message_context.message_context.additional_info.get(constants.RELATED_QUESTIONS)
                 
-                # Only include row_texts if related_questions is not None and not empty
-                additional_info_dict = {
-                    **message_reaction_additional_info,
-                    constants.DESCRIPTION: description,
-                }
-                if related_questions is not None:
-                    additional_info_dict[constants.ROW_TEXTS] = related_questions
+                # If related_questions is explicitly passed as empty list, don't include any questions (for verified answers)
+                if related_questions is not None and len(related_questions) == 0:
+                    print("🔧 DEBUG: related_questions is empty list - creating regular text message without questions")
+                    message_context = MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.REGULAR_TEXT.value,
+                        message_english_text=message_en_text,
+                        message_source_text=text_message,
+                        additional_info={
+                            **message_reaction_additional_info
+                        }
+                    )
+                else:
+                    # For all other cases, include follow-up questions
+                    description = bot_config["template_messages"]["user"]["follow_up_questions_description"][user.user_language]
                     
-                message_context = MessageContext(
-                    message_id=str(uuid.uuid4()),  # Generate unique message ID
-                    message_type=MessageTypes.REGULAR_TEXT.value,
-                    message_english_text=message_en_text,
-                    message_source_text=text_message,
-                    additional_info=additional_info_dict
+                    # Use the passed related_questions parameter if provided, otherwise fall back to existing data
+                    if related_questions is not None:
+                        questions_to_use = related_questions
+                    else:
+                        questions_to_use = reply_to_user_message_context.message_context.additional_info.get(constants.RELATED_QUESTIONS)
+                    
+                    # Only include row_texts and description if questions_to_use is not None and not empty
+                    additional_info_dict = {
+                        **message_reaction_additional_info,
+                    }
+                    if questions_to_use is not None and len(questions_to_use) > 0:
+                        additional_info_dict[constants.DESCRIPTION] = description
+                        additional_info_dict[constants.ROW_TEXTS] = questions_to_use
+                        additional_info_dict["has_follow_up_questions"] = True
+                        
+                    message_context = MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.REGULAR_TEXT.value,
+                        message_english_text=message_en_text,
+                        message_source_text=text_message,
+                        additional_info=additional_info_dict
                 )
             else:
                 print(f"🔧 DEBUG: Creating default REGULAR_TEXT message context for type: {reply_to_user_message_context.message_context.message_type}")
                 # Default case for any other message type (including regular_text)
-                message_context = MessageContext(
-                    message_id=str(uuid.uuid4()),  # Generate unique message ID
-                    message_type=MessageTypes.REGULAR_TEXT.value,
-                    message_english_text=message_en_text,
-                    message_source_text=text_message,
-                    additional_info={
-                        **message_reaction_additional_info,
-                        **media_additiona_info
-                    }
-                )
+                
+                # If we have related_questions, create an interactive list, otherwise regular text
+                if related_questions and len(related_questions) > 0:
+                    print("🔧 DEBUG: Adding follow-up questions to regular text message")
+                    description = bot_config["template_messages"]["user"]["follow_up_questions_description"][user.user_language]
+                    message_context = MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.INTERACTIVE_LIST.value,
+                        message_english_text=message_en_text,
+                        message_source_text=text_message,
+                        additional_info={
+                            **message_reaction_additional_info,
+                            **media_additiona_info,
+                            constants.DESCRIPTION: description,
+                            constants.ROW_TEXTS: related_questions,
+                            "has_follow_up_questions": True
+                        }
+                    )
+                else:
+                    message_context = MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.REGULAR_TEXT.value,
+                        message_english_text=message_en_text,
+                        message_source_text=text_message,
+                        additional_info={
+                            **message_reaction_additional_info,
+                            **media_additiona_info
+                        }
+                    )
             
             print(f"🔧 DEBUG: Created message_context: {message_context is not None}")
             if message_context:
@@ -464,7 +506,8 @@ class ByoebExpertGenerateResponse(Handler):
                 translated_bot_answer,
                 message,
                 None,  # Remove emoji reactions as requested
-                constants.VERIFIED
+                constants.VERIFIED,
+                []  # Empty list to suppress related questions in final verified answer
             )
             
             print(f"🔧 DEBUG: Created user message with bot_answer: '{bot_answer}'")
@@ -561,7 +604,8 @@ class ByoebExpertGenerateResponse(Handler):
                 response_text,
                 message,
                 None,  # Remove emoji reactions as requested
-                constants.VERIFIED
+                constants.VERIFIED,
+                []  # Empty list to suppress related questions in final verified answer
             )
         else:
             # print("❓ Branch: No matching condition - sending default message")

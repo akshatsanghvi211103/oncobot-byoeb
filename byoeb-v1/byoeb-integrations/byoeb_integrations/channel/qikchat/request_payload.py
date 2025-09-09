@@ -146,7 +146,7 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
         for i, row_text in enumerate(row_texts):
             rows.append({
                 "id": f"option_{i}",
-                "title": row_text[:24],  # Limit title length for Qikchat
+                "title": row_text[:20],  # Limit title length to 20 for Qikchat
                 "description": row_text if len(row_text) <= 72 else row_text[:69] + "..."  # Limit description
             })
         
@@ -170,8 +170,10 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
                 "rows": rows
             })
     
-    # Get description for button text
+    # Get description for button text - truncate to 20 chars max
     button_text = additional_info.get("description", "Select an option")
+    if len(button_text) > 20:
+        button_text = button_text[:17] + "..."  # Truncate and add ellipsis
     
     qikchat_message = {
         "to_contact": phone_number,

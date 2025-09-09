@@ -584,7 +584,7 @@ class ByoebUserGenerateResponse(Handler):
             response_text=waiting_message,
             emoji=None,  # Remove emoji reactions as requested
             status=constants.PENDING,
-            related_questions={}  # No related questions for waiting message
+            related_questions=related_questions  # Add related questions to waiting message
         )
         print(f"✅ Waiting message sent to user (in {message.user.user_language})")
         
