@@ -31,7 +31,8 @@ class AsyncLLamaIndexAzureOpenAILLM(BaseLLM):
         if model is None:
             raise ValueError("model must be provided")
         token_counter = TokenCountingHandler(
-            tokenizer=tiktoken.encoding_for_model(model).encode
+            # tokenizer=tiktoken.encoding_for_model(model).encode
+            tiktoken.get_encoding("cl100k_base").encode
         )
         if deployment_name is None:
             raise ValueError("deployment_name must be provided")
