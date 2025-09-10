@@ -113,12 +113,12 @@ tts_blob_storage = AsyncAzureBlobStorage(
     connection_string=None
 )
 
-# Create TTS service
-tts_service = TTSService(
-    speech_key=env_config.env_azure_speech_key,
-    speech_region=env_config.env_azure_speech_region,
-    blob_storage=tts_blob_storage
-)
+# Create TTS service # TODO removed to fix error during deployment
+# tts_service = TTSService(
+#     speech_key=env_config.env_azure_speech_key,
+#     speech_region=env_config.env_azure_speech_region,
+#     blob_storage=tts_blob_storage
+# )
 
 # vector store
 import os
