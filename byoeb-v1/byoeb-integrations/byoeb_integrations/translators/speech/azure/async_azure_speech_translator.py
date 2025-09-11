@@ -32,6 +32,7 @@ class AsyncAzureSpeechTranslator(BaseSpeechTranslator):
             raise ValueError("region must be provided")
         if token_provider is None and key is None:
             raise ValueError("Either token_provider or key must be provided with region")
+        print("cool", resource_id, "bruh", token_provider, "nice")
         if token_provider is not None and resource_id is None:
             raise ValueError("resource_id must be provided with token_provider")
         self.__key = key

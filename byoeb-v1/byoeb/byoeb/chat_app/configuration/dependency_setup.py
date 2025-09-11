@@ -70,14 +70,14 @@ users_handler = UsersHandler(
 # Text translator
 from byoeb_integrations.translators.text.azure.async_azure_text_translator import AsyncAzureTextTranslator
 from byoeb_integrations.translators.speech.azure.async_azure_speech_translator import AsyncAzureSpeechTranslator
-from azure.identity import get_bearer_token_provider, AzureCliCredential
+from azure.identity import get_bearer_token_provider, DefaultAzureCredential
 
 token_provider = get_bearer_token_provider(
-    AzureCliCredential(), app_config["app"]["azure_cognitive_endpoint"]
+    DefaultAzureCredential(), app_config["app"]["azure_cognitive_endpoint"]
 )
 # TODO: factory implementation
 text_translator = AsyncAzureTextTranslator(
-    credential=AzureCliCredential(),
+    credential=DefaultAzureCredential(),
     region=app_config["translators"]["text"]["azure_cognitive"]["region"],
     resource_id=app_config["translators"]["text"]["azure_cognitive"]["resource_id"],
 )
@@ -109,16 +109,18 @@ from byoeb_integrations.media_storage.azure.async_azure_blob_storage import Asyn
 tts_blob_storage = AsyncAzureBlobStorage(
     container_name=app_config["media_storage"]["azure"]["container_name"],
     account_url=app_config["media_storage"]["azure"]["account_url"],
-    credentials=AzureCliCredential(),
+    credentials=DefaultAzureCredential(),
     connection_string=None
 )
 
 # Create TTS service # TODO removed to fix error during deployment
-# tts_service = TTSService(
-#     speech_key=env_config.env_azure_speech_key,
-#     speech_region=env_config.env_azure_speech_region,
-#     blob_storage=tts_blob_storage
-# )
+tts_service = TTSService(
+    # speech_key=env_config.env_azure_speech_key,
+    token_provider=token_provider,
+    speech_region=app_config["translators"]["speech"]["azure_cognitive"]["region"],
+    resource_id=app_config["translators"]["speech"]["azure_cognitive"]["resource_id"],
+    blob_storage=tts_blob_storage
+)
 
 # vector store
 import os
@@ -150,7 +152,7 @@ vector_store = AzureVectorStore(
     service_name=azure_search_service_name,
     index_name=azure_search_doc_index_name,
     embedding_function=embedding_fn,
-    credential=AzureCliCredential()
+    credential=DefaultAzureCredential()
 )
 
 # llm

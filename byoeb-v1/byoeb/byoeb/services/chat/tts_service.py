@@ -4,6 +4,7 @@ import tempfile
 import uuid
 from typing import Optional, Tuple
 import logging
+from azure.identity import DefaultAzureCredential
 
 from byoeb_integrations.translators.speech.azure.async_azure_speech_translator import AsyncAzureSpeechTranslator
 from byoeb_integrations.media_storage.azure.async_azure_blob_storage import AsyncAzureBlobStorage
@@ -12,8 +13,9 @@ from byoeb_integrations.media_storage.azure.async_azure_blob_storage import Asyn
 class TTSService:
     def __init__(
         self,
-        speech_key: str,
+        token_provider,
         speech_region: str,
+        resource_id: str,
         blob_storage: AsyncAzureBlobStorage,
     ):
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -29,8 +31,10 @@ class TTSService:
             "fr": "fr-FR-DeniseNeural"
         }
         self.speech_translator = AsyncAzureSpeechTranslator(
-            key=speech_key,  # Use 'key' parameter instead of 'speech_key'
+            # key=speech_key,  # Use 'key' parameter instead of 'speech_key'
             region=speech_region,
+            resource_id=resource_id,  # Ensure resource_id is passed here
+            token_provider=token_provider,
             speech_voice="en-US-JennyNeural"  # Default voice, will be overridden per request
         )
         self.blob_storage = blob_storage
