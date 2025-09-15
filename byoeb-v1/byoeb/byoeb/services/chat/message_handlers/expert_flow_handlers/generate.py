@@ -160,41 +160,62 @@ class ByoebExpertGenerateResponse(Handler):
         # print(f"🔧 DEBUG: Creating user message with status: {status}")
         # print(f"🔧 DEBUG: Verification status from reply context: {byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) if byoeb_message.reply_context and byoeb_message.reply_context.additional_info else 'None'}")
         
-        if (status == constants.VERIFIED
-            and byoeb_message.reply_context 
-            and byoeb_message.reply_context.additional_info
-            and byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING
-        ):
-            # print("🔧 DEBUG: Expert correction case - preparing corrected message")
+        # Generate audio for all verified answers (both corrections and approvals)
+        if status == constants.VERIFIED:
             message_en_text = text_message
             
-            # For expert corrections, translate the corrected response to user's language
-            translated_text = await text_translator.atranslate_text(
-                input_text=text_message,
-                source_language="en",
-                target_language=user.user_language
-            )
+            # Check if this is an expert correction case
+            is_correction = (byoeb_message.reply_context 
+                           and byoeb_message.reply_context.additional_info
+                           and byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING)
             
-            # Use the corrected answer template with the translated corrected response
-            corrected_template = self.USER_CORRECTED_ANSWER_MESSAGES.get(user.user_language, self.USER_CORRECTED_ANSWER_MESSAGES.get("en", "<CORRECTED_ANSWER>"))
-            text_message = corrected_template.replace("<CORRECTED_ANSWER>", translated_text)
-            
-            # print(f"🔧 DEBUG: Translated corrected text: '{translated_text}'")
-            # print(f"🔧 DEBUG: Final message with template: '{text_message}'")
-            
-            try:
-                translated_audio_message = await speech_translator.atext_to_speech(
+            if is_correction:
+                print("🔧 DEBUG: Expert correction case - preparing corrected message")
+                # For expert corrections, translate the corrected response to user's language
+                translated_text = await text_translator.atranslate_text(
                     input_text=text_message,
-                    source_language=user.user_language,
+                    source_language="en",
+                    target_language=user.user_language
                 )
-                media_additiona_info = {
-                    constants.DATA: translated_audio_message,
-                    constants.MIME_TYPE: "audio/wav"
-                }
-                print("🔧 DEBUG: Audio message generated successfully")
+                
+                # Use the corrected answer template with the translated corrected response
+                corrected_template = self.USER_CORRECTED_ANSWER_MESSAGES.get(user.user_language, self.USER_CORRECTED_ANSWER_MESSAGES.get("en", "<CORRECTED_ANSWER>"))
+                text_message = corrected_template.replace("<CORRECTED_ANSWER>", translated_text)
+            else:
+                print("🔧 DEBUG: Expert approval case - preparing verified message")
+                # For expert approvals, use the verified answer template with the translated response
+                translated_text = await text_translator.atranslate_text(
+                    input_text=text_message if message_en_text else text_message,
+                    source_language="en",
+                    target_language=user.user_language
+                )
+                
+                # Use the verified answer template
+                verified_template = self.USER_VERIFIED_ANSWER_MESSAGES.get(user.user_language, self.USER_VERIFIED_ANSWER_MESSAGES.get("en", "<VERIFIED_ANSWER>"))
+                text_message = verified_template.replace("<VERIFIED_ANSWER>", translated_text)
+            
+            print(f"🔧 DEBUG: Final message text: '{text_message[:100]}...'")
+            
+            # Generate TTS audio using User Delegation SAS URLs
+            try:
+                from byoeb.chat_app.configuration.dependency_setup import tts_service
+                audio_url = await tts_service.generate_audio_url(
+                    text=text_message,
+                    language=user.user_language,
+                )
+                if audio_url:
+                    media_additiona_info = {
+                        "audio_url": audio_url,  # Store SAS URL for QikChat
+                        constants.MIME_TYPE: "audio/wav"
+                    }
+                    print(f"🔧 DEBUG: Audio message generated successfully with SAS URL")
+                else:
+                    media_additiona_info = {}
+                    print(f"⚠️ DEBUG: TTS service returned no audio URL")
             except Exception as e:
                 print(f"❌ DEBUG: Error generating audio message: {e}")
                 # Continue without audio if TTS fails
+                media_additiona_info = {}
                 
             message_reaction_additional_info = {
                 constants.EMOJI: emoji,

@@ -93,6 +93,9 @@ class AsyncAzureSpeechTranslator(BaseSpeechTranslator):
     ) -> bytes:
         speech_config = self.__get_speech_config()
         speech_config.speech_synthesis_voice_name = self.__voice_dict[self.__speech_voice][source_language + self.__country_code]
+        
+        # Set output format to MP3 for QikChat compatibility (48KHz 96KBitRate)
+        speech_config.set_speech_synthesis_output_format(speechsdk.SpeechSynthesisOutputFormat.Audio48Khz96KBitRateMonoMp3)
 
         # Create a pull audio output stream
         pull_stream = speechsdk.audio.PullAudioOutputStream()

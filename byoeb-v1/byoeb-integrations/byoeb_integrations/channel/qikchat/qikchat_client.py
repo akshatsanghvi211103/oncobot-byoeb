@@ -255,14 +255,26 @@ class QikchatClient:
                     headers=headers,
                     data=data
                 ) as response:
-                    response_data = await response.json()
-                    
                     if response.status == 200:
-                        self.logger.info(f"Media uploaded successfully: {response_data.get('media_id')}")
-                        return response_data
+                        try:
+                            response_data = await response.json()
+                            self.logger.info(f"Media uploaded successfully: {response_data.get('media_id')}")
+                            return response_data
+                        except Exception as json_err:
+                            response_text = await response.text()
+                            self.logger.error(f"Failed to parse successful response as JSON: {json_err}")
+                            self.logger.error(f"Response text: {response_text[:200]}...")
+                            raise Exception(f"Media upload succeeded but response parsing failed: {json_err}")
                     else:
-                        self.logger.error(f"Failed to upload media: {response_data}")
-                        raise Exception(f"Media upload failed: {response_data}")
+                        try:
+                            response_data = await response.json()
+                            error_msg = f"Status: {response.status}, Response: {response_data}"
+                        except Exception:
+                            response_text = await response.text()
+                            error_msg = f"Status: {response.status}, HTML Response: {response_text[:200]}..."
+                        
+                        self.logger.error(f"Failed to upload media: {error_msg}")
+                        raise Exception(f"Media upload failed: {error_msg}")
                         
             except Exception as e:
                 self.logger.error(f"Error uploading media: {str(e)}")

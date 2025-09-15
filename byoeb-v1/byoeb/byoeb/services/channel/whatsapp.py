@@ -37,7 +37,7 @@ class WhatsAppService(BaseChannelService):
             reactions.append(reaction_request)
         return reactions
     
-    def prepare_requests(
+    async def prepare_requests(
         self,
         byoeb_message: ByoebMessageContext
     ) -> List[Dict[str, Any]]:

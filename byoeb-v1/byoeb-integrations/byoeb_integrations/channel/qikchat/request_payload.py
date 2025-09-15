@@ -34,7 +34,7 @@ def get_qikchat_text_request_from_byoeb_message(
     
     return qikchat_message
 
-def get_qikchat_audio_request_from_byoeb_message(
+async def get_qikchat_audio_request_from_byoeb_message(
     byoeb_message: ByoebMessageContext
 ) -> Dict[str, Any]:
     """
@@ -43,32 +43,75 @@ def get_qikchat_audio_request_from_byoeb_message(
     Key Differences from WhatsApp:
     1. Uses 'to_contact' field
     2. Different audio structure - supports both URLs and IDs
-    3. May need media upload first
+    3. Uploads audio data first if needed to get a URL/ID
     """
     phone_number = byoeb_message.user.phone_number_id
     additional_info = byoeb_message.message_context.additional_info
     
-    # Check if we have an audio URL (for TTS-generated audio)
+    # Check if we have an audio URL (for SAS-enabled audio)
     if "audio_url" in additional_info:
         audio_url = additional_info["audio_url"]
+        print(f"🎵 Using audio URL: {audio_url[:50]}..." if audio_url else "🎵 Empty audio URL")
         qikchat_message = {
             "to_contact": phone_number,
             "type": "audio",
             "audio": {
-                "link": audio_url  # Use link for direct URL
+                "link": audio_url  # Use SAS URL for direct access
             }
         }
-    else:
-        # Fallback to original implementation for uploaded audio
+    elif "data" in additional_info:
+        # For TTS-generated audio data, we need to upload it first
         audio_data = additional_info["data"]
-        qikchat_message = {
-            "to_contact": phone_number,
-            "type": "audio",
-            "audio": {
-                "id": audio_data,  # Assumes audio_data is a media ID
-                "mime_type": "audio/wav"
-            }
-        }
+        mime_type = additional_info.get("mime_type", "audio/wav")
+        
+        # Import the client to upload media
+        from byoeb.chat_app.configuration.dependency_setup import channel_client_factory
+        
+        try:
+            client = await channel_client_factory.get("qikchat")
+            
+            # Upload the audio data
+            upload_response = await client.upload_media(
+                media_data=audio_data,
+                mime_type=mime_type,
+                filename="audio_message.wav"
+            )
+            
+            # Extract media ID or URL from upload response
+            media_id = upload_response.get("media_id") or upload_response.get("id")
+            media_url = upload_response.get("url") or upload_response.get("link")
+            
+            if media_url:
+                # Use URL if available
+                qikchat_message = {
+                    "to_contact": phone_number,
+                    "type": "audio",
+                    "audio": {
+                        "link": media_url
+                    }
+                }
+            elif media_id:
+                # Use media ID if URL not available
+                qikchat_message = {
+                    "to_contact": phone_number,
+                    "type": "audio",
+                    "audio": {
+                        "id": media_id
+                    }
+                }
+            else:
+                # Upload failed - return None to skip audio message
+                print(f"⚠️ Media upload failed: No media_id or media_url in response")
+                return None
+                
+        except Exception as e:
+            print(f"❌ Error uploading audio media: {e}")
+            # Upload failed - return None to skip audio message
+            print(f"⚠️ Skipping audio message due to upload failure")
+            return None
+    else:
+        # No audio data available - shouldn't happen
+        raise ValueError("No audio data or URL provided for audio message")
     
     # Add reply context if available
     if byoeb_message.reply_context is not None:

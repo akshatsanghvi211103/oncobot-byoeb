@@ -58,7 +58,7 @@ class QikchatService(BaseChannelService):
             reactions.append(reaction_request)
         return reactions
     
-    def prepare_requests(
+    async def prepare_requests(
         self,
         byoeb_message: ByoebMessageContext
     ) -> List[Dict[str, Any]]:
@@ -69,6 +69,7 @@ class QikchatService(BaseChannelService):
         1. Uses Qikchat-specific request payload functions
         2. Simpler request structure
         3. Different function names (qikchat vs whatsapp prefixes)
+        4. Audio requests are now async due to media upload
         """
         qik_requests = []
         
@@ -89,10 +90,15 @@ class QikchatService(BaseChannelService):
             qik_text_message = qik_req_payload.get_qikchat_text_request_from_byoeb_message(byoeb_message)
             qik_requests.append(qik_text_message)
         
-        # Handle audio messages
+        # Handle audio messages (now async)
         if utils.has_audio_additional_info(byoeb_message):
-            qik_audio_message = qik_req_payload.get_qikchat_audio_request_from_byoeb_message(byoeb_message)
-            qik_requests.append(qik_audio_message)
+            print(f"🎵 Preparing audio message request (async)...")
+            qik_audio_message = await qik_req_payload.get_qikchat_audio_request_from_byoeb_message(byoeb_message)
+            if qik_audio_message is not None:
+                qik_requests.append(qik_audio_message)
+                print(f"🎵 Audio message request prepared")
+            else:
+                print(f"⚠️ Audio message skipped (upload failed)")
             
         # Handle template messages
         if utils.has_template_additional_info(byoeb_message):

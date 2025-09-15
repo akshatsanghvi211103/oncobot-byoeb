@@ -264,7 +264,8 @@ class ByoebUserGenerateResponse(Handler):
         related_questions: List[str] = None,
         emoji = None,
         status = None,
-    ) -> ByoebMessageContext:
+        generate_audio: bool = False,
+    ) -> List[ByoebMessageContext]:
         from byoeb.chat_app.configuration.dependency_setup import text_translator
         from byoeb.chat_app.configuration.dependency_setup import speech_translator
         user_language = message.user.user_language
@@ -397,6 +398,65 @@ class ByoebUserGenerateResponse(Handler):
             if follow_up_message:
                 setattr(follow_up_message, "_is_new_user", getattr(message, "_is_new_user"))
         
+        # Create audio message if TTS is requested
+        messages_to_return = [user_message]
+        
+        if generate_audio:
+            print(f"🎵 Generating TTS audio for message...")
+            try:
+                # Generate audio URL using TTS service with User Delegation SAS
+                from byoeb.chat_app.configuration.dependency_setup import tts_service
+                audio_url = await tts_service.generate_audio_url(
+                    text=message_source_text,
+                    language=user_language
+                )
+                
+                if audio_url:
+                    # Create separate audio message with URL for QikChat
+                    audio_message = ByoebMessageContext(
+                        channel_type=message.channel_type,
+                        message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
+                        user=User(
+                            user_id=message.user.user_id,
+                            user_language=user_language,
+                            user_type=self._regular_user_type,
+                            phone_number_id=message.user.phone_number_id,
+                            last_conversations=message.user.last_conversations
+                        ),
+                        message_context=MessageContext(
+                            message_id=str(uuid.uuid4()),  # Generate unique message ID
+                            message_type=MessageTypes.REGULAR_AUDIO.value,
+                            message_source_text=message_source_text,
+                            message_english_text=response_text,
+                            additional_info={
+                                "audio_url": audio_url,  # Store SAS URL for QikChat
+                                constants.MIME_TYPE: "audio/wav",
+                                **status_info
+                            }
+                        ),
+                        reply_context=ReplyContext(
+                            reply_id=message.message_context.message_id,
+                            reply_type=message.message_context.message_type,
+                            reply_english_text=message.message_context.message_english_text,
+                            reply_source_text=message.message_context.message_source_text,
+                            media_info=message.message_context.media_info
+                        ),
+                        incoming_timestamp=message.incoming_timestamp,
+                    )
+                    
+                    # Preserve _is_new_user flag if present
+                    if hasattr(message, "_is_new_user"):
+                        setattr(audio_message, "_is_new_user", getattr(message, "_is_new_user"))
+                    
+                    messages_to_return.append(audio_message)
+                    print(f"🎵 TTS audio message generated successfully with SAS URL")
+                else:
+                    print(f"⚠️ TTS service returned no audio URL")
+                
+            except Exception as e:
+                print(f"❌ Error generating TTS audio: {e}")
+                # Continue without audio if TTS fails
+        
         # For now, return only the primary message to avoid breaking the chain
         # TODO: Implement proper multi-message handling in the future
         if follow_up_message:
@@ -406,8 +466,8 @@ class ByoebUserGenerateResponse(Handler):
             user_message.message_context.additional_info["has_follow_up_questions"] = True
             user_message.message_context.additional_info[constants.ROW_TEXTS] = interactive_list_additional_info.get(constants.ROW_TEXTS, [])
         
-        print(f"💬 Returning message: {user_message.message_context.message_type}")
-        return user_message
+        print(f"💬 Returning {len(messages_to_return)} messages: {[msg.message_context.message_type for msg in messages_to_return]}")
+        return messages_to_return
     
     def __create_expert_verification_message(
         self,
@@ -618,14 +678,15 @@ class ByoebUserGenerateResponse(Handler):
         waiting_message = bot_config["template_messages"]["user"]["waiting_answer"].get(user_lang, 
                          "Please wait while we verify the answer with our expert.")
         
-        byoeb_user_message = await self.__create_user_message(
+        byoeb_user_messages = await self.__create_user_message(
             message=message,
             response_text=waiting_message,
             emoji=None,  # Remove emoji reactions as requested
             status=constants.PENDING,
-            related_questions=related_questions  # Add related questions to waiting message
+            related_questions=related_questions,  # Add related questions to waiting message
+            generate_audio=True  # Generate TTS audio for waiting message
         )
-        print(f"✅ Waiting message sent to user (in {message.user.user_language})")
+        print(f"✅ Waiting message{'s' if len(byoeb_user_messages) > 1 else ''} sent to user (in {message.user.user_language})")
         
         print(f"👨‍⚕️ Creating expert verification message...")
         byoeb_expert_message = self.__create_expert_verification_message(
@@ -638,9 +699,9 @@ class ByoebUserGenerateResponse(Handler):
         )
         print(f"✅ Expert verification message created")
         
-        # FLOW CHANGE: Send waiting message to user + expert verification message
-        result_messages = [byoeb_user_message, byoeb_expert_message, read_reciept_message]
-        print(f"🎉 Complete! Generated {len(result_messages)} messages (waiting message to user + expert verification + read receipt)")
+        # FLOW CHANGE: Send waiting message(s) to user + expert verification message
+        result_messages = byoeb_user_messages + [byoeb_expert_message, read_reciept_message]
+        print(f"🎉 Complete! Generated {len(result_messages)} messages (waiting message{'s' if len(byoeb_user_messages) > 1 else ''} to user + expert verification + read receipt)")
         return result_messages
     
     async def handle(

@@ -10,7 +10,7 @@ class MessageReaction(BaseModel):
 
 class BaseChannelService(ABC):
     @abstractmethod
-    def prepare_requests(
+    async def prepare_requests(
         self,
         byoeb_message: Any
     ) -> List[Dict[str, Any]]:

@@ -35,7 +35,7 @@ class TTSService:
             region=speech_region,
             resource_id=resource_id,  # Ensure resource_id is passed here
             token_provider=token_provider,
-            speech_voice="en-US-JennyNeural"  # Default voice, will be overridden per request
+            # speech_voice="en-US-JennyNeural"  # Default voice, will be overridden per request
         )
         self.blob_storage = blob_storage
         
@@ -56,7 +56,7 @@ class TTSService:
             self.logger.info(f"🎙️ Using voice: {voice} for language: {language}")
             
             # Update speech translator voice for this request
-            self.speech_translator.speech_voice = voice
+            # self.speech_translator.speech_voice = voice
             
             # Generate audio bytes using Azure Speech Services
             audio_bytes = await self.speech_translator.atext_to_speech(
@@ -68,21 +68,33 @@ class TTSService:
                 self.logger.error("Failed to generate audio bytes")
                 return None
                 
-            self.logger.info(f"✅ Generated {len(audio_bytes)} bytes of audio")
+            self.logger.info(f"✅ Generated {len(audio_bytes)} bytes of MP3 audio")
             
-            # Generate unique filename
-            audio_filename = f"tts_audio_{uuid.uuid4().hex}.wav"
+            # Generate unique filename with MP3 extension for QikChat compatibility
+            audio_filename = f"tts_audio_{uuid.uuid4().hex}.mp3"
             
             # Upload to blob storage
             status_code, error = await self.blob_storage.aupload_bytes(
                 file_name=audio_filename,
                 data=audio_bytes,
-                file_type=".wav"
+                file_type=".mp3"
             )
             
             if status_code == 201:  # Created
-                audio_url = self.blob_storage.get_blob_url(audio_filename)
-                self.logger.info(f"✅ Audio uploaded successfully: {audio_url}")
+                # TEMPORARY WORKAROUND: Try using a proxy URL for QikChat compatibility
+                # Check if we have a proxy server configured
+                import os
+                proxy_base_url = os.environ.get("QIKCHAT_AUDIO_PROXY_URL")
+                
+                if proxy_base_url:
+                    # Use proxy URL format: http://proxy-server/audio/filename.mp3
+                    audio_url = f"{proxy_base_url.rstrip('/')}/audio/{audio_filename}"
+                    self.logger.info(f"✅ Audio uploaded, using proxy URL: {audio_url}")
+                else:
+                    # Generate shorter SAS URL with minimal expiry for QikChat compatibility
+                    audio_url = await self.blob_storage.get_blob_sas_url(audio_filename, expiry_hours=1)
+                    self.logger.info(f"✅ Audio uploaded successfully with SAS URL: {audio_url}")
+                
                 return audio_url
             else:
                 self.logger.error(f"Failed to upload audio to blob storage: {error}")
@@ -107,3 +119,95 @@ class TTSService:
             pass
         except Exception as e:
             self.logger.error(f"Error cleaning up audio files: {e}")
+
+    async def generate_audio_data(
+        self,
+        text: str,
+        language: str = "en-US",
+    ) -> Optional[bytes]:
+        """
+        Generate audio from text and return raw audio data.
+        Returns the audio bytes directly without uploading to blob storage.
+        This is useful when the audio will be uploaded to QikChat directly.
+        """
+        try:
+            self.logger.info(f"🔊 Generating TTS audio data for text: {text[:50]}...")
+            
+            # Select appropriate voice based on language
+            voice = self.voice_map.get(language, "en-US-JennyNeural")
+            self.logger.info(f"🎙️ Using voice: {voice} for language: {language}")
+            
+            # Generate audio bytes using Azure Speech Services
+            audio_bytes = await self.speech_translator.atext_to_speech(
+                input_text=text,
+                source_language=language
+            )
+            
+            if not audio_bytes:
+                self.logger.error("Failed to generate audio bytes")
+                return None
+                
+            self.logger.info(f"✅ Generated {len(audio_bytes)} bytes of audio data")
+            return audio_bytes
+                
+        except Exception as e:
+            self.logger.error(f"Error in generate_audio_data: {e}")
+            # Add more specific error details
+            import traceback
+            self.logger.error(f"TTS Error Details: {traceback.format_exc()}")
+            print(f"🔧 TTS Debug - text: '{text[:50]}...', language: '{language}', voice: '{voice if 'voice' in locals() else 'not_set'}'")
+            return None
+            
+    async def generate_audio_file_url(
+        self,
+        text: str,
+        language: str = "en-US",
+        base_url: str = None
+    ) -> Optional[str]:
+        """
+        Generate audio from text, save to local file, and return a public URL.
+        This creates a temporary file that can be served by the web server.
+        """
+        try:
+            self.logger.info(f"🔊 Generating TTS audio file for text: {text[:50]}...")
+            
+            # Generate audio bytes
+            audio_bytes = await self.generate_audio_data(text, language)
+            if not audio_bytes:
+                return None
+            
+            # Create a temporary audio file
+            import tempfile
+            import os
+            
+            # Generate unique filename
+            audio_filename = f"tts_audio_{uuid.uuid4().hex}.wav"
+            
+            # Create temp directory if it doesn't exist
+            temp_dir = os.path.join(tempfile.gettempdir(), "oncobot_audio")
+            os.makedirs(temp_dir, exist_ok=True)
+            
+            # Save audio file locally
+            audio_file_path = os.path.join(temp_dir, audio_filename)
+            with open(audio_file_path, 'wb') as f:
+                f.write(audio_bytes)
+            
+            # For now, return a placeholder URL
+            # TODO: Replace with actual web server URL when available
+            if not base_url:
+                base_url = "http://localhost:8000"  # Default fallback
+                
+            public_url = f"{base_url}/audio/{audio_filename}"
+            
+            self.logger.info(f"✅ Audio file saved locally: {audio_file_path}")
+            self.logger.info(f"📡 Public URL would be: {public_url}")
+            
+            # Since we don't have a working public URL yet, return None for now
+            # This will cause the system to skip audio messages gracefully
+            return None
+                
+        except Exception as e:
+            self.logger.error(f"Error in generate_audio_file_url: {e}")
+            import traceback
+            self.logger.error(f"TTS Error Details: {traceback.format_exc()}")
+            return None

@@ -110,7 +110,7 @@ class ByoebUserSendResponse(Handler):
         is_active_user = await self.is_active_user(expert_message_context.user.user_id)
         print(f"🔧 Expert is_active_user: {is_active_user}")
         
-        expert_requests = channel_service.prepare_requests(expert_message_context)
+        expert_requests = await channel_service.prepare_requests(expert_message_context)
         interactive_button_message = expert_requests[0]
         template_verification_message = expert_requests[1]
         
@@ -146,7 +146,9 @@ class ByoebUserSendResponse(Handler):
         # ]
         # return responses
         message_ids = []
-        user_requests = channel_service.prepare_requests(user_message_context)
+        print(f"🔍 HANDLE_USER: Processing {user_message_context.message_context.message_type}")
+        user_requests = await channel_service.prepare_requests(user_message_context)
+        print(f"🔍 HANDLE_USER: Prepared {len(user_requests)} requests")
         
         if user_message_context.message_context.message_type == MessageTypes.REGULAR_AUDIO.value:
             print(f"🎵 Sending audio message...")
@@ -161,7 +163,7 @@ class ByoebUserSendResponse(Handler):
                 # Send audio message first
                 user_message_copy = user_message_context.__deepcopy__()
                 user_message_copy.reply_context = None
-                audio_requests = channel_service.prepare_requests(user_message_copy)
+                audio_requests = await channel_service.prepare_requests(user_message_copy)
                 response_audio, message_id_audio = await channel_service.send_requests(audio_requests)
                 
                 # Create and send interactive list for follow-up questions (TEXT ONLY)
@@ -176,7 +178,7 @@ class ByoebUserSendResponse(Handler):
                     follow_up_context.message_context.additional_info.pop('tts_audio_url', None)
                     follow_up_context.message_context.additional_info.pop('has_audio_additional_info', None)
                 
-                follow_up_requests = channel_service.prepare_requests(follow_up_context)
+                follow_up_requests = await channel_service.prepare_requests(follow_up_context)
                 response_followup, message_id_followup = await channel_service.send_requests(follow_up_requests)
                 
                 responses = response_audio + response_followup
@@ -187,7 +189,7 @@ class ByoebUserSendResponse(Handler):
                 # Standard audio handling - send audio and text
                 user_message_copy = user_message_context.__deepcopy__()
                 user_message_copy.reply_context = None
-                user_requests_no_tag = channel_service.prepare_requests(user_message_copy)
+                user_requests_no_tag = await channel_service.prepare_requests(user_message_copy)
                 audio_tag_message = user_requests[1]
                 text_no_tag_message = user_requests_no_tag[0]
                 response_audio, message_id_audio = await channel_service.send_requests([audio_tag_message])
@@ -221,6 +223,11 @@ class ByoebUserSendResponse(Handler):
         byoeb_user_messages = utils.get_user_byoeb_messages(messages)
         byoeb_expert_messages = utils.get_expert_byoeb_messages(messages)
         
+        # Debug: Show message breakdown
+        print(f"🔍 MESSAGE BREAKDOWN: Total={len(messages)}, User={len(byoeb_user_messages)}, Expert={len(byoeb_expert_messages)}, ReadReceipt={len(read_receipt_messages)}")
+        for i, user_msg in enumerate(byoeb_user_messages):
+            print(f"🔍 User message {i+1}: Type={user_msg.message_context.message_type}, ID={user_msg.message_context.message_id}")
+        
         if len(byoeb_user_messages) == 0:
             raise Exception("No user messages found")
             
@@ -243,15 +250,33 @@ class ByoebUserSendResponse(Handler):
             if byoeb_user_message.channel_type != byoeb_expert_message.channel_type:
                 raise Exception("Channel type mismatch")
                 
-            user_task = self.__handle_user(channel_service, byoeb_user_message)
-            expert_task = self.__handle_expert(channel_service, byoeb_expert_message)
-            user_responses, expert_responses = await asyncio.gather(user_task, expert_task)
-            print(f"✅ Sent messages to both user and expert verifier!")
+            # Process each user message individually to maintain order and context
+            user_responses = []
+            for i, user_msg in enumerate(byoeb_user_messages):
+                print(f"📤 Processing user message {i+1}/{len(byoeb_user_messages)}: {user_msg.message_context.message_type}")
+                response = await self.__handle_user(channel_service, user_msg)
+                if isinstance(response, list):
+                    user_responses.extend(response)
+                else:
+                    user_responses.append(response)
+                    
+            expert_responses = await self.__handle_expert(channel_service, byoeb_expert_message)
+            print(f"✅ Sent {len(byoeb_user_messages)} user messages and expert verifier message!")
             
         else:
             # Handle user-only workflow (most common case)
-            print("📝 No expert messages found - handling user-only workflow")
-            user_responses = await self.__handle_user(channel_service, byoeb_user_message)
+            print(f"📝 No expert messages found - handling {len(byoeb_user_messages)} user messages")
+            
+            # Process each user message individually to maintain order and context
+            user_responses = []
+            for i, user_msg in enumerate(byoeb_user_messages):
+                print(f"📤 Processing user message {i+1}/{len(byoeb_user_messages)}: {user_msg.message_context.message_type}")
+                response = await self.__handle_user(channel_service, user_msg)
+                if isinstance(response, list):
+                    user_responses.extend(response)
+                else:
+                    user_responses.append(response)
+                    
             expert_responses = []
             # Create a mock expert message for the create_conv logic
             byoeb_expert_message = byoeb_user_message.__deepcopy__()

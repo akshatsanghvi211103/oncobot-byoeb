@@ -164,7 +164,7 @@ class ByoebExpertSendResponse(Handler):
                 print(f"📤 Reply ID: {user_message.reply_context.reply_id}")
             
             try:
-                requests = channel_service.prepare_requests(user_message)
+                requests = await channel_service.prepare_requests(user_message)
                 print(f"📤 Successfully prepared {len(requests)} requests for message {i+1}")
                 response, message_id = await channel_service.send_requests(requests)
                 print(f"📤 Successfully sent message {i+1}, got response: {len(response) if response else 0} items, message_id: {message_id}")
@@ -206,7 +206,7 @@ class ByoebExpertSendResponse(Handler):
         # Store original expert message ID before it gets updated by sending
         original_expert_id = expert_message_context.message_context.message_id
         
-        expert_requests = channel_service.prepare_requests(expert_message_context)
+        expert_requests = await channel_service.prepare_requests(expert_message_context)
         responses, _ = await channel_service.send_requests(expert_requests)
 
         # Update message ID in database if it changed after sending to Qikchat

@@ -107,7 +107,7 @@ class WelcomeMessageSender:
             
             # Create and send welcome message
             welcome_message = self._create_welcome_message(user)
-            welcome_requests = self.channel_service.prepare_requests(welcome_message)
+            welcome_requests = await self.channel_service.prepare_requests(welcome_message)
             
             if welcome_requests:
                 welcome_responses = await self.channel_service.send_requests(welcome_requests)
@@ -118,7 +118,7 @@ class WelcomeMessageSender:
             
             # Create and send follow-up questions message
             follow_up_message = self._create_follow_up_questions_message(user)
-            follow_up_requests = self.channel_service.prepare_requests(follow_up_message)
+            follow_up_requests = await self.channel_service.prepare_requests(follow_up_message)
             
             if follow_up_requests:
                 follow_up_responses = await self.channel_service.send_requests(follow_up_requests)
