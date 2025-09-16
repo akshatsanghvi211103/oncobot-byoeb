@@ -178,9 +178,8 @@ class ByoebExpertGenerateResponse(Handler):
                     target_language=user.user_language
                 )
                 
-                # Use the corrected answer template with the translated corrected response
-                corrected_template = self.USER_CORRECTED_ANSWER_MESSAGES.get(user.user_language, self.USER_CORRECTED_ANSWER_MESSAGES.get("en", "<CORRECTED_ANSWER>"))
-                text_message = corrected_template.replace("<CORRECTED_ANSWER>", translated_text)
+                # For expert corrections, send the actual corrected answer directly
+                text_message = translated_text
             else:
                 print("🔧 DEBUG: Expert approval case - preparing verified message")
                 # For expert approvals, use the verified answer template with the translated response
@@ -190,9 +189,8 @@ class ByoebExpertGenerateResponse(Handler):
                     target_language=user.user_language
                 )
                 
-                # Use the verified answer template
-                verified_template = self.USER_VERIFIED_ANSWER_MESSAGES.get(user.user_language, self.USER_VERIFIED_ANSWER_MESSAGES.get("en", "<VERIFIED_ANSWER>"))
-                text_message = verified_template.replace("<VERIFIED_ANSWER>", translated_text)
+                # For expert approvals, send the actual translated answer directly
+                text_message = translated_text
             
             print(f"🔧 DEBUG: Final message text: '{text_message[:100]}...'")
             
@@ -223,8 +221,18 @@ class ByoebExpertGenerateResponse(Handler):
             }
         new_user_messages = []
         print(f"🔧 DEBUG: About to iterate over {len(reply_to_user_messages_context)} message contexts")
-        for i, message_context_dict in enumerate(reply_to_user_messages_context):
-            print(f"🔧 DEBUG: Processing message context {i+1}/{len(reply_to_user_messages_context)}")
+        
+        # For verified answers, only send one response message to the most recent user message
+        if status == constants.VERIFIED:
+            print("🔧 DEBUG: Status is VERIFIED - sending single response to most recent message only")
+            # Get the most recent message (usually the last one in the list)
+            message_contexts_to_process = [reply_to_user_messages_context[-1]]
+        else:
+            # For other statuses, process all messages as before
+            message_contexts_to_process = reply_to_user_messages_context
+            
+        for i, message_context_dict in enumerate(message_contexts_to_process):
+            print(f"🔧 DEBUG: Processing message context {i+1}/{len(message_contexts_to_process)}")
             try:
                 reply_to_user_message_context = ByoebMessageContext.model_validate(message_context_dict)
                 reply_context = self.__create_user_reply_context(
@@ -256,8 +264,21 @@ class ByoebExpertGenerateResponse(Handler):
                   reply_to_user_message_context.message_context.message_type == "interactive_list_reply"):
                 print("🔧 DEBUG: Creating INTERACTIVE_LIST/INTERACTIVE_LIST_REPLY message context")
                 
+                # For verified answers (status == constants.VERIFIED), always send as regular text without interactive elements
+                if status == constants.VERIFIED:
+                    print("🔧 DEBUG: Status is VERIFIED - creating regular text message without questions")
+                    message_context = MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.REGULAR_TEXT.value,
+                        message_english_text=message_en_text,
+                        message_source_text=text_message,
+                        additional_info={
+                            **message_reaction_additional_info,
+                            **media_additiona_info
+                        }
+                    )
                 # If related_questions is explicitly passed as empty list, don't include any questions (for verified answers)
-                if related_questions is not None and len(related_questions) == 0:
+                elif related_questions is not None and len(related_questions) == 0:
                     print("🔧 DEBUG: related_questions is empty list - creating regular text message without questions")
                     message_context = MessageContext(
                         message_id=str(uuid.uuid4()),  # Generate unique message ID
@@ -298,8 +319,21 @@ class ByoebExpertGenerateResponse(Handler):
                 print(f"🔧 DEBUG: Creating default REGULAR_TEXT message context for type: {reply_to_user_message_context.message_context.message_type}")
                 # Default case for any other message type (including regular_text)
                 
+                # For verified answers, always send as regular text without interactive elements
+                if status == constants.VERIFIED:
+                    print("🔧 DEBUG: Status is VERIFIED - creating regular text message without questions")
+                    message_context = MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.REGULAR_TEXT.value,
+                        message_english_text=message_en_text,
+                        message_source_text=text_message,
+                        additional_info={
+                            **message_reaction_additional_info,
+                            **media_additiona_info
+                        }
+                    )
                 # If we have related_questions, create an interactive list, otherwise regular text
-                if related_questions and len(related_questions) > 0:
+                elif related_questions and len(related_questions) > 0:
                     print("🔧 DEBUG: Adding follow-up questions to regular text message")
                     description = bot_config["template_messages"]["user"]["follow_up_questions_description"][user.user_language]
                     message_context = MessageContext(
