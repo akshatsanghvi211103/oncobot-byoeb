@@ -91,40 +91,113 @@ class AsyncAzureSpeechTranslator(BaseSpeechTranslator):
         source_language: str,
         **kwargs
     ) -> bytes:
-        speech_config = self.__get_speech_config()
-        speech_config.speech_synthesis_voice_name = self.__voice_dict[self.__speech_voice][source_language + self.__country_code]
-        
-        # Set output format to MP3 for QikChat compatibility (48KHz 96KBitRate)
-        speech_config.set_speech_synthesis_output_format(speechsdk.SpeechSynthesisOutputFormat.Audio48Khz96KBitRateMonoMp3)
-
-        # Create a pull audio output stream
-        pull_stream = speechsdk.audio.PullAudioOutputStream()
-
-        # Configure the audio output to use the pull stream
-        audio_config = speechsdk.audio.AudioOutputConfig(stream=pull_stream)
-
-        # Create the speech synthesizer
-        speech_synthesizer = speechsdk.SpeechSynthesizer(
-            speech_config=speech_config, audio_config=audio_config
-        )
-
         try:
+            print(f"🔧 SPEECH DEBUG - Starting TTS synthesis")
+            print(f"🔧 SPEECH DEBUG - Input text: '{input_text[:100]}...' (length: {len(input_text)})")
+            print(f"🔧 SPEECH DEBUG - Source language: '{source_language}'")
+            print(f"🔧 SPEECH DEBUG - Speech voice: '{self.__speech_voice}'")
+            print(f"🔧 SPEECH DEBUG - Country code: '{self.__country_code}'")
+            
+            speech_config = self.__get_speech_config()
+            print(f"🔧 SPEECH DEBUG - Got speech config")
+            
+            # Build the voice key
+            voice_key = source_language + self.__country_code
+            print(f"🔧 SPEECH DEBUG - Voice key: '{voice_key}'")
+            print(f"🔧 SPEECH DEBUG - Available voices in dict: {list(self.__voice_dict.get(self.__speech_voice, {}).keys())}")
+            
+            if self.__speech_voice not in self.__voice_dict:
+                print(f"🔧 SPEECH DEBUG - ERROR: Speech voice '{self.__speech_voice}' not found in voice dict")
+                raise ValueError(f"Speech voice '{self.__speech_voice}' not found")
+            
+            if voice_key not in self.__voice_dict[self.__speech_voice]:
+                print(f"🔧 SPEECH DEBUG - ERROR: Voice key '{voice_key}' not found for speech voice '{self.__speech_voice}'")
+                print(f"🔧 SPEECH DEBUG - Available keys: {list(self.__voice_dict[self.__speech_voice].keys())}")
+                raise ValueError(f"Voice key '{voice_key}' not found for speech voice '{self.__speech_voice}'")
+            
+            selected_voice = self.__voice_dict[self.__speech_voice][voice_key]
+            print(f"🔧 SPEECH DEBUG - Selected voice: '{selected_voice}'")
+            
+            speech_config.speech_synthesis_voice_name = selected_voice
+            print(f"🔧 SPEECH DEBUG - Set voice name in config")
+            
+            # Set output format to MP3 for QikChat compatibility (48KHz 96KBitRate)
+            speech_config.set_speech_synthesis_output_format(speechsdk.SpeechSynthesisOutputFormat.Audio48Khz96KBitRateMonoMp3)
+            print(f"🔧 SPEECH DEBUG - Set output format to MP3")
+
+            # Create a pull audio output stream
+            pull_stream = speechsdk.audio.PullAudioOutputStream()
+            print(f"🔧 SPEECH DEBUG - Created pull stream")
+
+            # Configure the audio output to use the pull stream
+            audio_config = speechsdk.audio.AudioOutputConfig(stream=pull_stream)
+            print(f"🔧 SPEECH DEBUG - Created audio config")
+
+            # Create the speech synthesizer
+            speech_synthesizer = speechsdk.SpeechSynthesizer(
+                speech_config=speech_config, audio_config=audio_config
+            )
+            print(f"🔧 SPEECH DEBUG - Created speech synthesizer")
+
             # Perform text-to-speech synthesis
+            print(f"🔧 SPEECH DEBUG - Starting synthesis...")
             result = speech_synthesizer.speak_text_async(input_text).get()
-            audio_bytes: bytes = result.audio_data
-            return audio_bytes
+            print(f"🔧 SPEECH DEBUG - Synthesis completed")
+            print(f"🔧 SPEECH DEBUG - Result reason: {result.reason}")
+            print(f"🔧 SPEECH DEBUG - Result audio data length: {len(result.audio_data) if result.audio_data else 'None'}")
+            
+            if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
+                audio_bytes: bytes = result.audio_data
+                print(f"🔧 SPEECH DEBUG - SUCCESS: Generated {len(audio_bytes)} bytes of audio")
+                return audio_bytes
+            elif result.reason == speechsdk.ResultReason.Canceled:
+                cancellation_details = speechsdk.CancellationDetails.from_result(result)
+                print(f"🔧 SPEECH DEBUG - ERROR: Speech synthesis canceled: {cancellation_details.reason}")
+                if cancellation_details.reason == speechsdk.CancellationReason.Error:
+                    print(f"🔧 SPEECH DEBUG - ERROR: Error details: {cancellation_details.error_details}")
+                raise RuntimeError(f"Speech synthesis canceled: {cancellation_details.reason} - {cancellation_details.error_details}")
+            else:
+                print(f"🔧 SPEECH DEBUG - ERROR: Unexpected result reason: {result.reason}")
+                raise RuntimeError(f"Unexpected synthesis result: {result.reason}")
+                
         except Exception as e:
+            print(f"🔧 SPEECH DEBUG - EXCEPTION in atext_to_speech: {type(e).__name__}: {e}")
+            import traceback
+            print(f"🔧 SPEECH DEBUG - Traceback: {traceback.format_exc()}")
             raise RuntimeError(f"Error in text-to-speech: {e}")
     
     def __get_speech_config(self):
+        print(f"🔧 AUTH DEBUG - Getting speech config...")
+        print(f"🔧 AUTH DEBUG - Region: '{self.__region}'")
+        print(f"🔧 AUTH DEBUG - Has token provider: {self.__token_provider is not None}")
+        print(f"🔧 AUTH DEBUG - Has key: {self.__key is not None}")
+        print(f"🔧 AUTH DEBUG - Resource ID: '{self.__resource_id}'")
+        
         if self.__token_provider is not None:
-            auth_token = "aad#" + self.__resource_id + "#" + self.__token_provider()
-            return speechsdk.SpeechConfig(
-                auth_token=auth_token, region=self.__region
+            try:
+                print(f"🔧 AUTH DEBUG - Using token provider authentication")
+                token = self.__token_provider()
+                print(f"🔧 AUTH DEBUG - Got token from provider (length: {len(token) if token else 'None'})")
+                auth_token = "aad#" + self.__resource_id + "#" + token
+                print(f"🔧 AUTH DEBUG - Built auth token (length: {len(auth_token)})")
+                config = speechsdk.SpeechConfig(
+                    auth_token=auth_token, region=self.__region
+                )
+                print(f"🔧 AUTH DEBUG - Created SpeechConfig with token auth")
+                return config
+            except Exception as e:
+                print(f"🔧 AUTH DEBUG - ERROR getting token: {type(e).__name__}: {e}")
+                raise
+        else:
+            print(f"🔧 AUTH DEBUG - Using key authentication")
+            if not self.__key:
+                print(f"🔧 AUTH DEBUG - ERROR: No key provided!")
+                raise ValueError("No authentication key provided")
+            config = speechsdk.SpeechConfig(
+                subscription=self.__key, region=self.__region
             )
-        return speechsdk.SpeechConfig(
-            subscription=self.__key, region=self.__region
-        )
+            print(f"🔧 AUTH DEBUG - Created SpeechConfig with key auth")
+            return config
     def change_speech_voice(
         self,
         speech_voice: str
