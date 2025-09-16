@@ -299,7 +299,6 @@ class ByoebUserGenerateResponse(Handler):
         follow_up_message = None
         
         # Create appropriate message type based on whether we have follow-up questions
-        # Create appropriate message type based on whether we have follow-up questions
         if related_questions and len(related_questions) > 0:
             user_message = ByoebMessageContext(
                 channel_type=message.channel_type,
@@ -413,6 +412,7 @@ class ByoebUserGenerateResponse(Handler):
                 
                 if audio_url:
                     # Create separate audio message with URL for QikChat
+                    # Set text fields to empty to avoid displaying text for audio-only message
                     audio_message = ByoebMessageContext(
                         channel_type=message.channel_type,
                         message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
@@ -426,11 +426,12 @@ class ByoebUserGenerateResponse(Handler):
                         message_context=MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_AUDIO.value,
-                            message_source_text=message_source_text,
-                            message_english_text=response_text,
+                            message_source_text="",  # Empty to avoid duplicate text display
+                            message_english_text="",  # Empty to avoid duplicate text display
                             additional_info={
                                 "audio_url": audio_url,  # Store SAS URL for QikChat
                                 constants.MIME_TYPE: "audio/wav",
+                                "audio_text": message_source_text,  # Store original text for reference if needed
                                 **status_info
                             }
                         ),
