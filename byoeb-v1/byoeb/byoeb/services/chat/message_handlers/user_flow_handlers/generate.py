@@ -402,60 +402,63 @@ class ByoebUserGenerateResponse(Handler):
         
         if generate_audio:
             print(f"🎵 Generating TTS audio for message...")
-            try:
-                # Generate audio URL using TTS service with User Delegation SAS
-                from byoeb.chat_app.configuration.dependency_setup import tts_service
-                audio_url = await tts_service.generate_audio_url(
-                    text=message_source_text,
-                    language=user_language
+            # try:
+            # Generate audio URL using TTS service with User Delegation SAS
+            print("running tts now")
+            from byoeb.chat_app.configuration.dependency_setup import tts_service
+            print("running tts now again")
+            audio_url = await tts_service.generate_audio_url(
+                text=message_source_text,
+                language=user_language
+            )
+            print("running tts now again 2")
+            
+            if audio_url:
+                # Create separate audio message with URL for QikChat
+                # Set text fields to empty to avoid displaying text for audio-only message
+                audio_message = ByoebMessageContext(
+                    channel_type=message.channel_type,
+                    message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
+                    user=User(
+                        user_id=message.user.user_id,
+                        user_language=user_language,
+                        user_type=self._regular_user_type,
+                        phone_number_id=message.user.phone_number_id,
+                        last_conversations=message.user.last_conversations
+                    ),
+                    message_context=MessageContext(
+                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_type=MessageTypes.REGULAR_AUDIO.value,
+                        message_source_text="",  # Empty to avoid duplicate text display
+                        message_english_text="",  # Empty to avoid duplicate text display
+                        additional_info={
+                            "audio_url": audio_url,  # Store SAS URL for QikChat
+                            constants.MIME_TYPE: "audio/wav",
+                            "audio_text": message_source_text,  # Store original text for reference if needed
+                            **status_info
+                        }
+                    ),
+                    reply_context=ReplyContext(
+                        reply_id=message.message_context.message_id,
+                        reply_type=message.message_context.message_type,
+                        reply_english_text=message.message_context.message_english_text,
+                        reply_source_text=message.message_context.message_source_text,
+                        media_info=message.message_context.media_info
+                    ),
+                    incoming_timestamp=message.incoming_timestamp,
                 )
                 
-                if audio_url:
-                    # Create separate audio message with URL for QikChat
-                    # Set text fields to empty to avoid displaying text for audio-only message
-                    audio_message = ByoebMessageContext(
-                        channel_type=message.channel_type,
-                        message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
-                        user=User(
-                            user_id=message.user.user_id,
-                            user_language=user_language,
-                            user_type=self._regular_user_type,
-                            phone_number_id=message.user.phone_number_id,
-                            last_conversations=message.user.last_conversations
-                        ),
-                        message_context=MessageContext(
-                            message_id=str(uuid.uuid4()),  # Generate unique message ID
-                            message_type=MessageTypes.REGULAR_AUDIO.value,
-                            message_source_text="",  # Empty to avoid duplicate text display
-                            message_english_text="",  # Empty to avoid duplicate text display
-                            additional_info={
-                                "audio_url": audio_url,  # Store SAS URL for QikChat
-                                constants.MIME_TYPE: "audio/wav",
-                                "audio_text": message_source_text,  # Store original text for reference if needed
-                                **status_info
-                            }
-                        ),
-                        reply_context=ReplyContext(
-                            reply_id=message.message_context.message_id,
-                            reply_type=message.message_context.message_type,
-                            reply_english_text=message.message_context.message_english_text,
-                            reply_source_text=message.message_context.message_source_text,
-                            media_info=message.message_context.media_info
-                        ),
-                        incoming_timestamp=message.incoming_timestamp,
-                    )
-                    
-                    # Preserve _is_new_user flag if present
-                    if hasattr(message, "_is_new_user"):
-                        setattr(audio_message, "_is_new_user", getattr(message, "_is_new_user"))
-                    
-                    messages_to_return.append(audio_message)
-                    print(f"🎵 TTS audio message generated successfully with SAS URL")
-                else:
-                    print(f"⚠️ TTS service returned no audio URL")
+                # Preserve _is_new_user flag if present
+                if hasattr(message, "_is_new_user"):
+                    setattr(audio_message, "_is_new_user", getattr(message, "_is_new_user"))
                 
-            except Exception as e:
-                print(f"❌ Error generating TTS audio: {e}")
+                messages_to_return.append(audio_message)
+                print(f"🎵 TTS audio message generated successfully with SAS URL")
+            else:
+                print(f"⚠️ TTS service returned no audio URL")
+                
+            # except Exception as e:
+            #     print(f"❌ Error generating TTS audio: {e}")
                 # Continue without audio if TTS fails
         
         # For now, return only the primary message to avoid breaking the chain
