@@ -50,6 +50,8 @@ class TTSService:
         """
         try:
             print(f"🔧 TTS DEBUG - Starting TTS generation")
+            self.logger.debug(f"🔧 TTS DEBUG - Starting TTS generation")
+            self.logger.info(f"🔧 TTS DEBUG - Starting TTS generation")
             print(f"🔧 TTS DEBUG - Input text: '{text[:100]}...' (length: {len(text)})")
             print(f"🔧 TTS DEBUG - Input language: '{language}'")
             self.logger.info(f"🔊 Generating TTS audio for text: {text[:50]}...")

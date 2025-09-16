@@ -97,6 +97,7 @@ class AsyncAzureSpeechTranslator(BaseSpeechTranslator):
             print(f"🔧 SPEECH DEBUG - Source language: '{source_language}'")
             print(f"🔧 SPEECH DEBUG - Speech voice: '{self.__speech_voice}'")
             print(f"🔧 SPEECH DEBUG - Country code: '{self.__country_code}'")
+            self.logger.info(f"🔊 Generating TTS audio for text: {input_text[:50]}...")
             
             speech_config = self.__get_speech_config()
             print(f"🔧 SPEECH DEBUG - Got speech config")
@@ -124,6 +125,7 @@ class AsyncAzureSpeechTranslator(BaseSpeechTranslator):
             # Set output format to MP3 for QikChat compatibility (48KHz 96KBitRate)
             speech_config.set_speech_synthesis_output_format(speechsdk.SpeechSynthesisOutputFormat.Audio48Khz96KBitRateMonoMp3)
             print(f"🔧 SPEECH DEBUG - Set output format to MP3")
+            self.logger.info(f"🔧 SPEECH DEBUG - Set output format to MP3")
 
             # Create a pull audio output stream
             pull_stream = speechsdk.audio.PullAudioOutputStream()
