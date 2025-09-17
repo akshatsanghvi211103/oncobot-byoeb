@@ -50,11 +50,8 @@ class TTSService:
         """
         try:
             print(f"🔧 TTS DEBUG - Starting TTS generation")
-            self.logger.debug(f"🔧 TTS DEBUG - Starting TTS generation")
-            self.logger.info(f"🔧 TTS DEBUG - Starting TTS generation")
             print(f"🔧 TTS DEBUG - Input text: '{text[:100]}...' (length: {len(text)})")
             print(f"🔧 TTS DEBUG - Input language: '{language}'")
-            self.logger.info(f"🔊 Generating TTS audio for text: {text[:50]}...")
             
             # Map input language to supported Azure Speech Service language codes
             # The Azure Speech Translator only supports Indian locales
@@ -78,7 +75,6 @@ class TTSService:
             # Select appropriate voice based on language (this is for logging purposes)
             voice = self.voice_map.get(language, "en-US-JennyNeural")
             print(f"🔧 TTS DEBUG - Selected voice: '{voice}' for language: '{language}'")
-            self.logger.info(f"🎙️ Using voice: {voice} for language: {language}")
             
             print(f"🔧 TTS DEBUG - Calling speech_translator.atext_to_speech...")
             print(f"🔧 TTS DEBUG - Speech translator config - Region: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__region', 'unknown')}")
@@ -98,7 +94,6 @@ class TTSService:
                 self.logger.error("Failed to generate audio bytes")
                 return None
                 
-            self.logger.info(f"✅ Generated {len(audio_bytes)} bytes of MP3 audio")
             
             # Generate unique filename with MP3 extension for QikChat compatibility
             audio_filename = f"tts_audio_{uuid.uuid4().hex}.mp3"
@@ -119,11 +114,9 @@ class TTSService:
                 if proxy_base_url:
                     # Use proxy URL format: http://proxy-server/audio/filename.mp3
                     audio_url = f"{proxy_base_url.rstrip('/')}/audio/{audio_filename}"
-                    self.logger.info(f"✅ Audio uploaded, using proxy URL: {audio_url}")
                 else:
                     # Generate shorter SAS URL with minimal expiry for QikChat compatibility
                     audio_url = await self.blob_storage.get_blob_sas_url(audio_filename, expiry_hours=1)
-                    self.logger.info(f"✅ Audio uploaded successfully with SAS URL: {audio_url}")
                 
                 return audio_url
             else:
@@ -161,11 +154,9 @@ class TTSService:
         This is useful when the audio will be uploaded to QikChat directly.
         """
         try:
-            self.logger.info(f"🔊 Generating TTS audio data for text: {text[:50]}...")
             
             # Select appropriate voice based on language
             voice = self.voice_map.get(language, "en-US-JennyNeural")
-            self.logger.info(f"🎙️ Using voice: {voice} for language: {language}")
             
             # Generate audio bytes using Azure Speech Services
             audio_bytes = await self.speech_translator.atext_to_speech(
@@ -177,7 +168,6 @@ class TTSService:
                 self.logger.error("Failed to generate audio bytes")
                 return None
                 
-            self.logger.info(f"✅ Generated {len(audio_bytes)} bytes of audio data")
             return audio_bytes
                 
         except Exception as e:
@@ -199,7 +189,6 @@ class TTSService:
         This creates a temporary file that can be served by the web server.
         """
         try:
-            self.logger.info(f"🔊 Generating TTS audio file for text: {text[:50]}...")
             
             # Generate audio bytes
             audio_bytes = await self.generate_audio_data(text, language)
@@ -229,8 +218,6 @@ class TTSService:
                 
             public_url = f"{base_url}/audio/{audio_filename}"
             
-            self.logger.info(f"✅ Audio file saved locally: {audio_file_path}")
-            self.logger.info(f"📡 Public URL would be: {public_url}")
             
             # Since we don't have a working public URL yet, return None for now
             # This will cause the system to skip audio messages gracefully
