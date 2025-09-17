@@ -12,7 +12,6 @@
 *.wav
 *.ipynb
 **/*.ipynb
-*.txt
 # anything in scratch
 scratch/
 
