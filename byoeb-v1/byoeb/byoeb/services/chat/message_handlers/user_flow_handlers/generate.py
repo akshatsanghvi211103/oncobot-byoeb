@@ -401,7 +401,7 @@ class ByoebUserGenerateResponse(Handler):
         messages_to_return = [user_message]
         
         if generate_audio:
-            print(f"🎵 Generating TTS audio for message...")
+            print(f"🎵 Generating TTS audio again for message...")
             # try:
             # Generate audio URL using TTS service with User Delegation SAS
             print("running tts now")
