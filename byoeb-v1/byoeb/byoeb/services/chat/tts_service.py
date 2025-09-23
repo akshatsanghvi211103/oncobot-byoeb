@@ -42,7 +42,7 @@ class TTSService:
     async def generate_audio_url(
         self,
         text: str,
-        language: str = "en-US",
+        language: str = "en",
     ) -> Optional[str]:
         """
         Generate audio from text and upload to Azure Blob Storage.
@@ -52,27 +52,6 @@ class TTSService:
             print(f"🔧 TTS DEBUG - Starting TTS generation")
             print(f"🔧 TTS DEBUG - Input text: '{text[:100]}...' (length: {len(text)})")
             print(f"🔧 TTS DEBUG - Input language: '{language}'")
-            
-            # Map input language to supported Azure Speech Service language codes
-            # The Azure Speech Translator only supports Indian locales
-            language_mapping = {
-                "en": "en-IN",
-                "en-US": "en-IN", 
-                "en-GB": "en-IN",
-                "hi": "hi-IN",
-                "hi-IN": "hi-IN",
-                "kn": "kn-IN", 
-                "kn-IN": "kn-IN",
-                "ta": "ta-IN",
-                "ta-IN": "ta-IN", 
-                "te": "te-IN",
-                "te-IN": "te-IN"
-            }
-            
-            mapped_language = language_mapping.get(language, "en-IN")  # Default to English-India
-            print(f"🔧 TTS DEBUG - Mapped language '{language}' to '{mapped_language}'")
-            
-            # Select appropriate voice based on language (this is for logging purposes)
             voice = self.voice_map.get(language, "en-US-JennyNeural")
             print(f"🔧 TTS DEBUG - Selected voice: '{voice}' for language: '{language}'")
             
@@ -81,10 +60,10 @@ class TTSService:
             print(f"🔧 TTS DEBUG - Speech translator config - Resource ID: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__resource_id', 'unknown')}")
             print(f"🔧 TTS DEBUG - Speech translator config - Has token provider: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__token_provider', None) is not None}")
             
-            # Generate audio bytes using Azure Speech Services with mapped language
+            # Generate audio bytes using Azure Speech Services
             audio_bytes = await self.speech_translator.atext_to_speech(
                 input_text=text,
-                source_language=mapped_language  # Use mapped language instead of original
+                source_language=language
             )
             
             print(f"🔧 TTS DEBUG - Received audio_bytes: {type(audio_bytes)}, length: {len(audio_bytes) if audio_bytes else 'None'}")
