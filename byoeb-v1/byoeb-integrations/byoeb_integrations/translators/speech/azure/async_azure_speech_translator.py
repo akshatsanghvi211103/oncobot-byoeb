@@ -153,14 +153,22 @@ class AsyncAzureSpeechTranslator(BaseSpeechTranslator):
                 print(f"🔧 SPEECH DEBUG - SUCCESS: Generated {len(audio_bytes)} bytes of audio")
                 return audio_bytes
             elif result.reason == speechsdk.ResultReason.Canceled:
-                cancellation_details = speechsdk.CancellationDetails.from_result(result)
-                print(f"🔧 SPEECH DEBUG - ERROR: Speech synthesis canceled: {cancellation_details.reason}")
-                if cancellation_details.reason == speechsdk.CancellationReason.Error:
-                    print(f"🔧 SPEECH DEBUG - ERROR: Error details: {cancellation_details.error_details}")
-                raise RuntimeError(f"Speech synthesis canceled: {cancellation_details.reason} - {cancellation_details.error_details}")
+                # Handle cancellation more safely
+                print(f"🔧 SPEECH DEBUG - ERROR: Speech synthesis canceled")
+                try:
+                    # Try to get error details from the result properties
+                    error_details = getattr(result, 'error_details', 'No error details available')
+                    print(f"🔧 SPEECH DEBUG - ERROR: Error details: {error_details}")
+                    raise RuntimeError(f"Speech synthesis canceled - {error_details}")
+                except Exception as detail_error:
+                    print(f"🔧 SPEECH DEBUG - ERROR: Could not get cancellation details: {detail_error}")
+                    raise RuntimeError(f"Speech synthesis canceled - unable to get error details")
             else:
                 print(f"🔧 SPEECH DEBUG - ERROR: Unexpected result reason: {result.reason}")
-                raise RuntimeError(f"Unexpected synthesis result: {result.reason}")
+                # Try to get any available error information
+                error_info = getattr(result, 'error_details', f'Unknown error with reason: {result.reason}')
+                print(f"🔧 SPEECH DEBUG - ERROR: Additional info: {error_info}")
+                raise RuntimeError(f"Unexpected synthesis result: {result.reason} - {error_info}")
                 
         except Exception as e:
             print(f"🔧 SPEECH DEBUG - EXCEPTION in atext_to_speech: {type(e).__name__}: {e}")
