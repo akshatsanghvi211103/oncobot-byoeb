@@ -124,3 +124,21 @@ Conversations created in: 0.5668268203735352 seconds
 DB queries executed in: 0.5490069389343262 seconds
 Successfully processed 1 messages
 Processed 1 message in: 6 seconds
+Processed 1 message in: 11 seconds
+Conversations created in: 4.539018869400024 seconds
+Retrieved chunks in 12.678723096847534 seconds
+Generated answer tokens: {'total_tokens': 1264, 'completion_tokens': 48, 'prompt_tokens': 1216}
+Generated answer tokens: {'total_tokens': 1041, 'completion_tokens': 70, 'prompt_tokens': 971}
+Generated answer and related questions in 22.006549835205078 seconds
+Successfully send the message to the user and expert in 3.0094540119171143 seconds
+DB queries executed in: 0.6686129570007324 seconds
+Successfully processed 1 messages
+Conversations created in: 4.54927396774292 seconds
+Retrieved chunks in 8.919389009475708 seconds
+Generated answer tokens: {'total_tokens': 1121, 'completion_tokens': 44, 'prompt_tokens': 1077}
+Generated answer tokens: {'total_tokens': 902, 'completion_tokens': 65, 'prompt_tokens': 837}
+Generated answer and related questions in 18.050361156463623 seconds
+Successfully send the message to the user and expert in 2.4100210666656494 seconds
+DB queries executed in: 0.7045800685882568 seconds
+Successfully processed 1 messages
+Processed 1 message in: 26 seconds
