@@ -25,10 +25,8 @@ class TTSService:
             "en": "en-US-JennyNeural", 
             "hi-IN": "hi-IN-SwaraNeural",
             "hi": "hi-IN-SwaraNeural",
-            "es-ES": "es-ES-ElviraNeural",
-            "es": "es-ES-ElviraNeural",
-            "fr-FR": "fr-FR-DeniseNeural", 
-            "fr": "fr-FR-DeniseNeural"
+            "kn-IN": "kn-IN-ShrutiNeural",
+            "kn": "kn-IN-ShrutiNeural",
         }
         self.speech_translator = AsyncAzureSpeechTranslator(
             # key=speech_key,  # Use 'key' parameter instead of 'speech_key'
