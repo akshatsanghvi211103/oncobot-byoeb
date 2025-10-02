@@ -204,12 +204,11 @@ class UserService(BaseUserService):
                 byoeb_messages.append(user_utils.get_register_message(user, message))
                 delete_queries.append(delete_query)
             elif update_query is not None:
-                message = f"Successfully Registered. Skipped adding, users not found, in user relation {missing_numbers}"
-                byoeb_messages.append(user_utils.get_register_message(user, message))
+                # Skip text message - template message will be sent instead
                 update_queries.append(update_query)
             else:
-                message = "Successfully Registered"
-                byoeb_messages.append(user_utils.get_register_message(user, message))
+                # Skip text message - template message will be sent instead
+                pass
         return byoeb_messages, update_queries, delete_queries
     
     async def __get_users_data(

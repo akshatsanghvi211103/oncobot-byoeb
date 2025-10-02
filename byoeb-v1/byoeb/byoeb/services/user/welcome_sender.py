@@ -99,12 +99,10 @@ class WelcomeMessageSender:
     async def send_welcome_message(self, user: User) -> bool:
         """Send welcome message and follow-up questions to a newly registered user."""
         try:
-            # Only send welcome messages to regular users
-            if user.user_type != "byoebuser":
-                self.logger.info(f"Skipping welcome message for expert user: {user.phone_number_id}")
-                return True
+            # Send welcome messages to both regular users and experts
+            user_type_label = "byoebexpert" if user.user_type != "byoebuser" else "user"
                 
-            self.logger.info(f"Sending template welcome message to user: {user.phone_number_id}")
+            self.logger.info(f"Sending template welcome message to {user_type_label}: {user.phone_number_id}")
             
             # Create and send welcome message (using approved template)
             welcome_message = self._create_welcome_message(user)
@@ -112,9 +110,9 @@ class WelcomeMessageSender:
             
             if welcome_requests:
                 welcome_responses = await self.channel_service.send_requests(welcome_requests)
-                self.logger.info(f"Template welcome message sent to {user.phone_number_id}: {welcome_responses}")
+                self.logger.info(f"Template welcome message sent to {user_type_label} {user.phone_number_id}: {welcome_responses}")
             else:
-                self.logger.warning(f"No welcome requests generated for {user.phone_number_id}")
+                self.logger.warning(f"No welcome requests generated for {user_type_label} {user.phone_number_id}")
                 return False
             
             # Create and send follow-up questions message
@@ -123,10 +121,10 @@ class WelcomeMessageSender:
             
             if follow_up_requests:
                 follow_up_responses = await self.channel_service.send_requests(follow_up_requests)
-                self.logger.info(f"Follow-up questions sent to {user.phone_number_id}: {follow_up_responses}")
+                self.logger.info(f"Follow-up questions sent to {user_type_label} {user.phone_number_id}: {follow_up_responses}")
                 return True
             else:
-                self.logger.warning(f"No follow-up requests generated for {user.phone_number_id}")
+                self.logger.warning(f"No follow-up requests generated for {user_type_label} {user.phone_number_id}")
                 return False
                 
         except Exception as e:
