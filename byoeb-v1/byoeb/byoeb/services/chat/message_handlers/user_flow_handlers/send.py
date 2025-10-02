@@ -123,16 +123,21 @@ class ByoebUserSendResponse(Handler):
             responses, message_ids = await channel_service.send_requests([interactive_button_message])
         print("responses", responses)
         pending_emoji = expert_message_context.message_context.additional_info.get(constants.EMOJI)
-        message_reactions = [
-            MessageReaction(
-                reaction=pending_emoji,
-                message_id=message_id,
-                phone_number_id=expert_message_context.user.phone_number_id
-            )
-            for message_id in message_ids if message_id is not None
-        ]
-
-        reaction_requests = channel_service.prepare_reaction_requests(message_reactions)
+        
+        # Only create reactions if emoji is not None
+        if pending_emoji is not None:
+            message_reactions = [
+                MessageReaction(
+                    reaction=pending_emoji,
+                    message_id=message_id,
+                    phone_number_id=expert_message_context.user.phone_number_id
+                )
+                for message_id in message_ids if message_id is not None
+            ]
+            reaction_requests = channel_service.prepare_reaction_requests(message_reactions)
+        else:
+            print("📌 Skipping emoji reaction (emoji is None)")
+            reaction_requests = []
         await channel_service.send_requests(reaction_requests)
         return responses
 

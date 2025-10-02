@@ -232,7 +232,7 @@ class ByoebUserGenerateResponse(Handler):
         print(f"🔧 Expert additional_info template_language: {additional_info['template_language']} (type: {type(additional_info['template_language'])})")
         return additional_info
     
-    def __get_expert_number_and_type(
+    def __get_expert_number_and_type( # TODO here do logistical vs medical
         self,
         experts: Dict[str, List[Any]],
         query_type = "medical"
@@ -595,6 +595,7 @@ class ByoebUserGenerateResponse(Handler):
         # print("=== END FULL LLM INPUT ===\n")
         
         llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
+        print("nice bro", llm_response)
         tokens = llm_client.get_response_tokens(llm_response)
         utils.log_to_text_file(f"Generated answer tokens: {str(tokens)}")
         
@@ -677,36 +678,50 @@ class ByoebUserGenerateResponse(Handler):
             # Fallback to pre-existing related questions
             related_questions = self.get_follow_up_questions(message.user.user_language, retrieved_chunks)
         
-        # FLOW CHANGE: Send "waiting for verification" message to user instead of actual answer
-        user_lang = message.user.user_language
-        waiting_message = bot_config["template_messages"]["user"]["waiting_answer"].get(user_lang, 
-                         "Please wait while we verify the answer with our expert.")
-        
-        byoeb_user_messages = await self.__create_user_message(
-            message=message,
-            response_text=waiting_message,
-            emoji=None,  # Remove emoji reactions as requested
-            status=constants.PENDING,
-            related_questions=related_questions,  # Add related questions to waiting message
-            generate_audio=True  # Generate TTS audio for waiting message
-        )
-        print(f"✅ Waiting message{'s' if len(byoeb_user_messages) > 1 else ''} sent to user (in {message.user.user_language})")
-        
-        print(f"👨‍⚕️ Creating expert verification message...")
-        byoeb_expert_message = self.__create_expert_verification_message(
-            message,
-            answer,
-            query_type,
-            None,  # Remove emoji to avoid random failures
-            constants.PENDING,
-            related_questions  # Pass related questions to expert message for later use
-        )
-        print(f"✅ Expert verification message created")
-        
-        # FLOW CHANGE: Send waiting message(s) to user + expert verification message
-        result_messages = byoeb_user_messages + [byoeb_expert_message, read_reciept_message]
-        print(f"🎉 Complete! Generated {len(result_messages)} messages (waiting message{'s' if len(byoeb_user_messages) > 1 else ''} to user + expert verification + read receipt)")
-        return result_messages
+        # FLOW CHANGE: Handle small-talk vs medical/logistical queries differently
+        if query_type == "small-talk":
+            # For small-talk, send direct answer without expert verification
+            byoeb_user_messages = await self.__create_user_message(
+                message=message,
+                response_text=answer,  # Send the actual LLM answer directly
+                emoji=None,
+                status=None,
+                related_questions=related_questions,
+                generate_audio=True
+            )
+            print(f"✅ Small-talk answer sent directly to user (no expert verification needed)")
+            return byoeb_user_messages + [read_reciept_message]
+        else:
+            # For medical/logistical queries, send waiting message and get expert verification
+            user_lang = message.user.user_language
+            waiting_message = bot_config["template_messages"]["user"]["waiting_answer"].get(user_lang, 
+                             "Please wait while we verify the answer with our expert.")
+            
+            byoeb_user_messages = await self.__create_user_message(
+                message=message,
+                response_text=waiting_message,
+                emoji=None,  # Remove emoji reactions as requested
+                status=constants.PENDING,
+                related_questions=related_questions,  # Add related questions to waiting message
+                generate_audio=True  # Generate TTS audio for waiting message
+            )
+            print(f"✅ Waiting message{'s' if len(byoeb_user_messages) > 1 else ''} sent to user (in {message.user.user_language})")
+            
+            print(f"👨‍⚕️ Creating expert verification message...")
+            byoeb_expert_message = self.__create_expert_verification_message(
+                message,
+                answer,
+                query_type,
+                None,  # Remove emoji to avoid random failures
+                constants.PENDING,
+                related_questions  # Pass related questions to expert message for later use
+            )
+            print(f"✅ Expert verification message created")
+            
+            # FLOW CHANGE: Send waiting message(s) to user + expert verification message
+            result_messages = byoeb_user_messages + [byoeb_expert_message, read_reciept_message]
+            print(f"🎉 Complete! Generated {len(result_messages)} messages (waiting message{'s' if len(byoeb_user_messages) > 1 else ''} to user + expert verification + read receipt)")
+            return result_messages
     
     async def handle(
         self,

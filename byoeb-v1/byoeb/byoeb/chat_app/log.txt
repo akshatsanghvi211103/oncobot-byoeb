@@ -317,3 +317,151 @@ Visit https://aka.ms/azsdk/python/identity/environmentcredential/troubleshoot to
 	AzurePowerShellCredential: Az.Account module >= 2.2.0 is not installed
 	AzureDeveloperCliCredential: Azure Developer CLI could not be found. Please visit https://aka.ms/azure-dev for installation instructions and then,once installed, authenticate to your Azure account using 'azd auth login'.
 To mitigate this issue, please refer to the troubleshooting guidelines here at https://aka.ms/azsdk/python/identity/defaultazurecredential/troubleshoot.
+Conversations created in: 4.954749822616577 seconds
+Retrieved chunks in 17.784941911697388 seconds
+Generated answer tokens: {'total_tokens': 1371, 'completion_tokens': 33, 'prompt_tokens': 1338}
+Generated answer tokens: {'total_tokens': 1159, 'completion_tokens': 66, 'prompt_tokens': 1093}
+Generated answer and related questions in 27.103578090667725 seconds
+Successfully send the message to the user and expert in 0.7363169193267822 seconds
+DB queries executed in: 0.6344242095947266 seconds
+Successfully processed 1 messages
+Conversations created in: 5.446068048477173 seconds
+Retrieved chunks in 8.093471050262451 seconds
+Generated answer tokens: {'total_tokens': 1318, 'completion_tokens': 45, 'prompt_tokens': 1273}
+Generated answer tokens: {'total_tokens': 1092, 'completion_tokens': 64, 'prompt_tokens': 1028}
+Generated answer and related questions in 16.97258687019348 seconds
+Successfully send the message to the user and expert in 0.6876249313354492 seconds
+DB queries executed in: 0.7723190784454346 seconds
+Successfully processed 1 messages
+Processed 1 message in: 24 seconds
+Conversations created in: 1.0632739067077637 seconds
+Retrieved chunks in 3.802182197570801 seconds
+Generated answer tokens: {'total_tokens': 1371, 'completion_tokens': 33, 'prompt_tokens': 1338}
+Generated answer tokens: {'total_tokens': 1157, 'completion_tokens': 64, 'prompt_tokens': 1093}
+Generated answer and related questions in 10.608235836029053 seconds
+Successfully send the message to the user and expert in 0.5648479461669922 seconds
+DB queries executed in: 0.6539671421051025 seconds
+Successfully processed 1 messages
+Processed 1 message in: 13 seconds
+Conversations created in: 1.1529209613800049 seconds
+Retrieved chunks in 6.669661998748779 seconds
+Generated answer tokens: {'total_tokens': 1710, 'completion_tokens': 212, 'prompt_tokens': 1498}
+Generated answer tokens: {'total_tokens': 1319, 'completion_tokens': 67, 'prompt_tokens': 1252}
+Generated answer and related questions in 17.269668102264404 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0025157928466796875 seconds
+Successfully processed 0 messages
+Processed 1 message in: 20 seconds
+Conversations created in: 1.0167779922485352 seconds
+Retrieved chunks in 3.6818251609802246 seconds
+Conversations created in: 5.233043909072876 seconds
+Retrieved chunks in 10.372620105743408 seconds
+Generated answer tokens: {'total_tokens': 1750, 'completion_tokens': 113, 'prompt_tokens': 1637}
+Generated answer tokens: {'total_tokens': 1456, 'completion_tokens': 66, 'prompt_tokens': 1390}
+Generated answer and related questions in 21.17847204208374 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.007580995559692383 seconds
+Successfully processed 0 messages
+Processed 1 message in: 28 seconds
+Conversations created in: 1.009626865386963 seconds
+DB queries executed in: 0.676908016204834 seconds
+Successfully processed 1 messages
+Processed 1 message in: 2 seconds
+Conversations created in: 1.0536980628967285 seconds
+Retrieved chunks in 4.452285051345825 seconds
+Generated answer tokens: {'total_tokens': 1754, 'completion_tokens': 102, 'prompt_tokens': 1652}
+Generated answer tokens: {'total_tokens': 1472, 'completion_tokens': 68, 'prompt_tokens': 1404}
+Generated answer and related questions in 12.5921471118927 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0010001659393310547 seconds
+Successfully processed 0 messages
+Processed 1 message in: 14 seconds
+Conversations created in: 4.8631432056427 seconds
+Retrieved chunks in 13.44173002243042 seconds
+Generated answer tokens: {'total_tokens': 1814, 'completion_tokens': 115, 'prompt_tokens': 1699}
+Generated answer tokens: {'total_tokens': 1517, 'completion_tokens': 66, 'prompt_tokens': 1451}
+Generated answer and related questions in 25.21277618408203 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.006006002426147461 seconds
+Successfully processed 0 messages
+Processed 1 message in: 31 seconds
+Conversations created in: 1.034433126449585 seconds
+Retrieved chunks in 4.357812881469727 seconds
+Generated answer tokens: {'total_tokens': 1812, 'completion_tokens': 113, 'prompt_tokens': 1699}
+Generated answer tokens: {'total_tokens': 1517, 'completion_tokens': 66, 'prompt_tokens': 1451}
+Generated answer and related questions in 11.436635971069336 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0 seconds
+Successfully processed 0 messages
+Processed 1 message in: 13 seconds
+Conversations created in: 1.0348880290985107 seconds
+DB queries executed in: 0.6024019718170166 seconds
+Successfully processed 1 messages
+Processed 1 message in: 2 seconds
+Conversations created in: 4.920619010925293 seconds
+Retrieved chunks in 7.99791407585144 seconds
+Generated answer tokens: {'total_tokens': 1760, 'completion_tokens': 124, 'prompt_tokens': 1636}
+Generated answer tokens: {'total_tokens': 1460, 'completion_tokens': 70, 'prompt_tokens': 1390}
+Generated answer and related questions in 19.504120111465454 seconds
+Successfully send the message to the user and expert in 1.587460994720459 seconds
+DB queries executed in: 0.5899941921234131 seconds
+Successfully processed 1 messages
+Processed 1 message in: 27 seconds
+Conversations created in: 0.7136800289154053 seconds
+DB queries executed in: 0.7775988578796387 seconds
+Successfully processed 1 messages
+Processed 1 message in: 5 seconds
+Conversations created in: 1.0862810611724854 seconds
+Retrieved chunks in 3.15185809135437 seconds
+Generated answer tokens: {'total_tokens': 1793, 'completion_tokens': 85, 'prompt_tokens': 1708}
+Generated answer tokens: {'total_tokens': 1526, 'completion_tokens': 66, 'prompt_tokens': 1460}
+Generated answer and related questions in 10.462871074676514 seconds
+Successfully send the message to the user and expert in 1.2195451259613037 seconds
+DB queries executed in: 0.563209056854248 seconds
+Successfully processed 1 messages
+Processed 1 message in: 13 seconds
+Conversations created in: 0.6073551177978516 seconds
+DB queries executed in: 0.6157610416412354 seconds
+Successfully processed 1 messages
+Processed 1 message in: 5 seconds
+Conversations created in: 1.2666099071502686 seconds
+Retrieved chunks in 2.912611961364746 seconds
+Generated answer tokens: {'total_tokens': 1361, 'completion_tokens': 30, 'prompt_tokens': 1331}
+Generated answer tokens: {'total_tokens': 1156, 'completion_tokens': 70, 'prompt_tokens': 1086}
+Generated answer and related questions in 10.392217874526978 seconds
+Successfully send the message to the user and expert in 0.4533560276031494 seconds
+DB queries executed in: 0.7522530555725098 seconds
+Successfully processed 1 messages
+Processed 1 message in: 13 seconds
+Conversations created in: 1.3773109912872314 seconds
+Retrieved chunks in 3.0746049880981445 seconds
+Generated answer tokens: {'total_tokens': 1424, 'completion_tokens': 162, 'prompt_tokens': 1262}
+Generated answer tokens: {'total_tokens': 1077, 'completion_tokens': 63, 'prompt_tokens': 1014}
+Generated answer and related questions in 11.466179132461548 seconds
+Successfully send the message to the user and expert in 1.3127729892730713 seconds
+DB queries executed in: 0.6826112270355225 seconds
+Successfully processed 1 messages
+Processed 1 message in: 15 seconds
+Conversations created in: 0.8345441818237305 seconds
+DB queries executed in: 0.6600420475006104 seconds
+Successfully processed 1 messages
+Processed 1 message in: 2 seconds
+Conversations created in: 0.6490159034729004 seconds
+DB queries executed in: 0.5880999565124512 seconds
+Successfully processed 1 messages
+Processed 1 message in: 8 seconds
