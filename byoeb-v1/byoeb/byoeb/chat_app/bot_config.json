@@ -129,6 +129,9 @@
     "channel_templates": { 
         "expert": {
             "verification": "verification"
+        },
+        "user": {
+            "onboarding": "testing"
         }
     }
 }

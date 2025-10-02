@@ -697,7 +697,7 @@ class ByoebUserGenerateResponse(Handler):
             message,
             answer,
             query_type,
-            self.EXPERT_PENDING_EMOJI,
+            None,  # Remove emoji to avoid random failures
             constants.PENDING,
             related_questions  # Pass related questions to expert message for later use
         )

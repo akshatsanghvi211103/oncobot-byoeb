@@ -142,3 +142,157 @@ Successfully send the message to the user and expert in 2.4100210666656494 secon
 DB queries executed in: 0.7045800685882568 seconds
 Successfully processed 1 messages
 Processed 1 message in: 26 seconds
+Conversations created in: 5.659754991531372 seconds
+Retrieved chunks in 16.31273102760315 seconds
+Generated answer tokens: {'total_tokens': 1267, 'completion_tokens': 45, 'prompt_tokens': 1222}
+Generated answer tokens: {'total_tokens': 1036, 'completion_tokens': 70, 'prompt_tokens': 966}
+Generated answer and related questions in 28.331290006637573 seconds
+Successfully send the message to the user and expert in 1.9088759422302246 seconds
+DB queries executed in: 0.7592599391937256 seconds
+Successfully processed 1 messages
+Processed 1 message in: 42 seconds
+Conversations created in: 0.6543841361999512 seconds
+DB queries executed in: 0.7202408313751221 seconds
+Successfully processed 1 messages
+Processed 1 message in: 8 seconds
+Conversations created in: 0.9328608512878418 seconds
+Retrieved chunks in 11.662110090255737 seconds
+Generated answer tokens: {'total_tokens': 1350, 'completion_tokens': 55, 'prompt_tokens': 1295}
+Generated answer tokens: {'total_tokens': 1115, 'completion_tokens': 62, 'prompt_tokens': 1053}
+Generated answer and related questions in 24.325363874435425 seconds
+Successfully send the message to the user and expert in 1.0047600269317627 seconds
+DB queries executed in: 0.6907229423522949 seconds
+Successfully processed 1 messages
+Processed 1 message in: 31 seconds
+Conversations created in: 1.0654058456420898 seconds
+Retrieved chunks in 3.9500579833984375 seconds
+Generated answer tokens: {'total_tokens': 1350, 'completion_tokens': 55, 'prompt_tokens': 1295}
+Generated answer tokens: {'total_tokens': 1115, 'completion_tokens': 62, 'prompt_tokens': 1053}
+Generated answer and related questions in 12.590476036071777 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0009949207305908203 seconds
+Successfully processed 0 messages
+Processed 1 message in: 16 seconds
+Conversations created in: 1.0273241996765137 seconds
+DB queries executed in: 0.6272139549255371 seconds
+Successfully processed 1 messages
+Processed 1 message in: 2 seconds
+Conversations created in: 0.9986860752105713 seconds
+Retrieved chunks in 4.190408945083618 seconds
+Generated answer tokens: {'total_tokens': 1350, 'completion_tokens': 55, 'prompt_tokens': 1295}
+Generated answer tokens: {'total_tokens': 1115, 'completion_tokens': 62, 'prompt_tokens': 1053}
+Generated answer and related questions in 12.685568809509277 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0009670257568359375 seconds
+Successfully processed 0 messages
+Processed 1 message in: 15 seconds
+Conversations created in: 0.9149069786071777 seconds
+Retrieved chunks in 4.525030136108398 seconds
+Generated answer tokens: {'total_tokens': 1350, 'completion_tokens': 55, 'prompt_tokens': 1295}
+Generated answer tokens: {'total_tokens': 1115, 'completion_tokens': 62, 'prompt_tokens': 1053}
+Generated answer and related questions in 12.732745885848999 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0010190010070800781 seconds
+Successfully processed 0 messages
+Processed 1 message in: 16 seconds
+Conversations created in: 0.9564290046691895 seconds
+Retrieved chunks in 3.0209109783172607 seconds
+Generated answer tokens: {'total_tokens': 1350, 'completion_tokens': 55, 'prompt_tokens': 1295}
+Generated answer tokens: {'total_tokens': 1115, 'completion_tokens': 62, 'prompt_tokens': 1053}
+Generated answer and related questions in 11.503530979156494 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0009169578552246094 seconds
+Successfully processed 0 messages
+Processed 1 message in: 13 seconds
+Conversations created in: 1.0351510047912598 seconds
+Retrieved chunks in 3.4285888671875 seconds
+Generated answer tokens: {'total_tokens': 1350, 'completion_tokens': 55, 'prompt_tokens': 1295}
+Generated answer tokens: {'total_tokens': 1115, 'completion_tokens': 62, 'prompt_tokens': 1053}
+Generated answer and related questions in 11.726601123809814 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.000993967056274414 seconds
+Successfully processed 0 messages
+Processed 1 message in: 14 seconds
+Conversations created in: 4.929192066192627 seconds
+Retrieved chunks in 12.099586963653564 seconds
+Generated answer tokens: {'total_tokens': 1425, 'completion_tokens': 140, 'prompt_tokens': 1285}
+Generated answer tokens: {'total_tokens': 1106, 'completion_tokens': 62, 'prompt_tokens': 1044}
+Generated answer and related questions in 24.982115030288696 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0010120868682861328 seconds
+Successfully processed 0 messages
+Processed 1 message in: 34 seconds
+Conversations created in: 0.9332759380340576 seconds
+Retrieved chunks in 4.255880832672119 seconds
+Generated answer tokens: {'total_tokens': 1425, 'completion_tokens': 140, 'prompt_tokens': 1285}
+Generated answer tokens: {'total_tokens': 1106, 'completion_tokens': 62, 'prompt_tokens': 1044}
+Generated answer and related questions in 12.562180995941162 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.002004861831665039 seconds
+Successfully processed 0 messages
+Processed 1 message in: 16 seconds
+Conversations created in: 0.923907995223999 seconds
+Retrieved chunks in 4.396869897842407 seconds
+Generated answer tokens: {'total_tokens': 1425, 'completion_tokens': 140, 'prompt_tokens': 1285}
+Generated answer tokens: {'total_tokens': 1106, 'completion_tokens': 62, 'prompt_tokens': 1044}
+Generated answer and related questions in 13.303635120391846 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.002418994903564453 seconds
+Successfully processed 0 messages
+Processed 1 message in: 16 seconds
+Conversations created in: 0.9517688751220703 seconds
+Retrieved chunks in 3.4483540058135986 seconds
+Generated answer tokens: {'total_tokens': 1413, 'completion_tokens': 45, 'prompt_tokens': 1368}
+Generated answer tokens: {'total_tokens': 1198, 'completion_tokens': 70, 'prompt_tokens': 1128}
+Generated answer and related questions in 9.934100866317749 seconds
+Conversations created in: 4.689093112945557 seconds
+Retrieved chunks in 8.662300825119019 seconds
+Generated answer tokens: {'total_tokens': 1413, 'completion_tokens': 45, 'prompt_tokens': 1368}
+Generated answer tokens: {'total_tokens': 1198, 'completion_tokens': 70, 'prompt_tokens': 1128}
+Generated answer and related questions in 17.35004997253418 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0010051727294921875 seconds
+Successfully processed 0 messages
+Processed 1 message in: 23 seconds
+Conversations created in: 1.081284999847412 seconds
+Retrieved chunks in 4.447196960449219 seconds
+Generated answer tokens: {'total_tokens': 1425, 'completion_tokens': 140, 'prompt_tokens': 1285}
+Generated answer tokens: {'total_tokens': 1106, 'completion_tokens': 62, 'prompt_tokens': 1044}
+Generated answer and related questions in 13.119138956069946 seconds
+Error in sending message to user and expert: 1 validation error for MessageReaction
+reaction
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+DB queries executed in: 0.0009980201721191406 seconds
+Successfully processed 0 messages
+Processed 1 message in: 18 seconds
+Conversations created in: 0.9660258293151855 seconds
+Retrieved chunks in 4.312773942947388 seconds
+Generated answer tokens: {'total_tokens': 1329, 'completion_tokens': 44, 'prompt_tokens': 1285}

@@ -10,6 +10,7 @@ from byoeb_core.models.byoeb.message_context import (
 )
 from byoeb.services.channel.qikchat import QikchatService
 from byoeb.chat_app.configuration.config import bot_config
+from byoeb.services.chat import constants
 
 class WelcomeMessageSender:
     def __init__(self):
@@ -17,21 +18,21 @@ class WelcomeMessageSender:
         self.channel_service = QikchatService()
         
     def _create_welcome_message(self, user: User) -> ByoebMessageContext:
-        """Create a welcome message for the user."""
-        # Get welcome message in user's language
-        welcome_messages = {
-            "en": "Welcome to OncoBot! 🌟\n\nI'm here to help you with oncology-related questions. Feel free to ask me anything about cancer care, treatments, or procedures.\n\nYou can ask questions in English, Hindi, or Kannada.",
-            "hi": "ऑन्कोबॉट में आपका स्वागत है! 🌟\n\nमैं ऑन्कोलॉजी संबंधी प्रश्नों में आपकी सहायता के लिए यहाँ हूँ। कैंसर की देखभाल, उपचार या प्रक्रियाओं के बारे में मुझसे कुछ भी पूछने में संकोच न करें।\n\nआप अंग्रेजी, हिंदी या कन्नड़ में प्रश्न पूछ सकते हैं।",
-            "kn": "ಆಂಕೋಬಾಟ್‌ಗೆ ಸ್ವಾಗತ! 🌟\n\nಆಂಕಾಲಜಿ ಸಂಬಂಧಿತ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ನಾನು ಇಲ್ಲಿದ್ದೇನೆ. ಕ್ಯಾನ್ಸರ್ ಆರೈಕೆ, ಚಿಕಿತ್ಸೆಗಳು ಅಥವಾ ಕಾರ್ಯವಿಧಾನಗಳ ಬಗ್ಗೆ ನನ್ನನ್ನು ಏನು ಬೇಕಾದರೂ ಕೇಳಿ।\n\nನೀವು ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ ಅಥವಾ ಕನ್ನಡದಲ್ಲಿ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಬಹುದು।"
+        """Create a welcome template message for the user."""
+        
+        # Use template message for onboarding (instead of regular text)
+        template_additional_info = {
+            constants.TEMPLATE_NAME: bot_config["channel_templates"]["user"]["onboarding"],
+            constants.TEMPLATE_LANGUAGE: "en",  # Use approved template language
+            constants.TEMPLATE_PARAMETERS: []  # No parameters needed for "testing" template
         }
         
-        welcome_text = welcome_messages.get(user.user_language, welcome_messages["en"])
-        
-        # Create message context
+        # Create message context with template
         message_context = MessageContext(
-            message_type=MessageTypes.REGULAR_TEXT.value,
-            message_source_text=welcome_text,
-            message_english_text=welcome_text
+            message_type=MessageTypes.TEMPLATE_BUTTON.value,
+            message_source_text="Hello world en",  # Template content preview
+            message_english_text="Hello world en",
+            additional_info=template_additional_info
         )
         
         # Create ByoebMessageContext
@@ -103,15 +104,15 @@ class WelcomeMessageSender:
                 self.logger.info(f"Skipping welcome message for expert user: {user.phone_number_id}")
                 return True
                 
-            self.logger.info(f"Sending welcome message to user: {user.phone_number_id}")
+            self.logger.info(f"Sending template welcome message to user: {user.phone_number_id}")
             
-            # Create and send welcome message
+            # Create and send welcome message (using approved template)
             welcome_message = self._create_welcome_message(user)
             welcome_requests = await self.channel_service.prepare_requests(welcome_message)
             
             if welcome_requests:
                 welcome_responses = await self.channel_service.send_requests(welcome_requests)
-                self.logger.info(f"Welcome message sent to {user.phone_number_id}: {welcome_responses}")
+                self.logger.info(f"Template welcome message sent to {user.phone_number_id}: {welcome_responses}")
             else:
                 self.logger.warning(f"No welcome requests generated for {user.phone_number_id}")
                 return False
