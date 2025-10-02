@@ -189,12 +189,12 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
         for i, row_text in enumerate(row_texts):
             rows.append({
                 "id": f"option_{i}",
-                "title": row_text[:20],  # Limit title length to 20 for Qikchat
-                "description": row_text if len(row_text) <= 72 else row_text[:69] + "..."  # Limit description
+                "title": f"Q{i+1}",  # Short title like "Q1", "Q2", etc. (max 20 chars)
+                "description": row_text if len(row_text) <= 72 else row_text[:69] + "..."  # Full question in description
             })
         
         sections.append({
-            "title": "Options",
+            "title": "",  # Remove section title to eliminate header
             "rows": rows
         })
     elif "sections" in additional_info:
