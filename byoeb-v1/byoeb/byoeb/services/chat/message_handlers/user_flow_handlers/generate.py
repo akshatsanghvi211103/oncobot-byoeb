@@ -483,7 +483,9 @@ class ByoebUserGenerateResponse(Handler):
         related_questions = None,
     ) -> ByoebMessageContext:
         
+        print("expert result", message.user.experts)
         expert_result = self.__get_expert_number_and_type(message.user.experts, query_type)
+        print("expert result 2", expert_result, query_type)
         if expert_result is None:
             # Create a default expert when no experts are configured
             expert_phone_number_id = "919739811075"  # Full phone number with country code

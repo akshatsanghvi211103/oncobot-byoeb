@@ -100,7 +100,14 @@ class WelcomeMessageSender:
         """Send welcome message and follow-up questions to a newly registered user."""
         try:
             # Send welcome messages to both regular users and experts
-            user_type_label = "byoebexpert" if user.user_type != "byoebuser" else "user"
+            if user.user_type == "byoebuser":
+                user_type_label = "user"
+            elif user.user_type == "byoebexpert":
+                user_type_label = "medical expert"
+            elif user.user_type == "byoebexpert2":
+                user_type_label = "logistical expert"
+            else:
+                user_type_label = "expert"  # fallback for any other expert types
                 
             self.logger.info(f"Sending template welcome message to {user_type_label}: {user.phone_number_id}")
             

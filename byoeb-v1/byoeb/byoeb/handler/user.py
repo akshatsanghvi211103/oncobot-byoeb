@@ -42,6 +42,7 @@ class UsersHandler:
         for key in keys:
             if key not in self.__expert_user_types:
                 return False
+        return True
 
     async def get_collection_client(self) -> BaseDocumentCollection:
         if self.__user_collection_client is not None:
