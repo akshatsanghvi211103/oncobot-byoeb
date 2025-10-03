@@ -635,6 +635,7 @@ class ByoebUserGenerateResponse(Handler):
         tokens = llm_client.get_response_tokens(llm_response)
         utils.log_to_text_file(f"Generated answer tokens: {str(tokens)}")
         next_questions = re.findall(r"<q_\d+>(.*?)</q_\d+>", response_text)
+        print("finding here", next_questions)
         if next_questions is None or len(next_questions) != 3:
             raise ValueError("Parsing failed, next_questions.")
         return next_questions
@@ -644,6 +645,7 @@ class ByoebUserGenerateResponse(Handler):
         user_lang_code: str,
         retrieved_chunks: List[Chunk],
     ):
+        print("Falling back to different related questions")
         random_selection = []
         for retrieved_chunk in retrieved_chunks:
             # Safely check if related_questions attribute exists
@@ -674,6 +676,21 @@ class ByoebUserGenerateResponse(Handler):
         # Use LLM-generated follow-up questions for better results
         try:
             related_questions = await self.agenerate_follow_up_questions(retrieved_chunks)
+            
+            # Translate related questions to user's language if not English
+            if message.user.user_language != "en":
+                from byoeb.chat_app.configuration.dependency_setup import text_translator
+                translated_questions = []
+                for question in related_questions:
+                    translated_question = await text_translator.atranslate_text(
+                        input_text=question,
+                        source_language="en",
+                        target_language=message.user.user_language
+                    )
+                    translated_questions.append(translated_question)
+                related_questions = translated_questions
+                print(f"✅ Translated {len(related_questions)} related questions to {message.user.user_language}")
+            
         except Exception as e:
             # Fallback to pre-existing related questions
             related_questions = self.get_follow_up_questions(message.user.user_language, retrieved_chunks)
