@@ -69,6 +69,7 @@ users_handler = UsersHandler(
 
 # Text translator
 from byoeb_integrations.translators.text.azure.async_azure_text_translator import AsyncAzureTextTranslator
+from byoeb_integrations.translators.text.azure.async_openai_text_translator import AsyncAzureOpenAITextTranslator
 from byoeb_integrations.translators.speech.azure.async_azure_speech_translator import AsyncAzureSpeechTranslator
 from azure.identity import get_bearer_token_provider, DefaultAzureCredential
 

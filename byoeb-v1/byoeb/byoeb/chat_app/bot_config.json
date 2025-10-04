@@ -20,6 +20,14 @@
             "user_prompt": "Following are the question, answer, and correction to the answer:\n Question: <QUESTION> \n Answer: <ANSWER> \n Correction: <CORRECTION>"
         }
     },
+    "llm_translation": {
+        "system_prompt": {
+            "en": "Please return the source text as it is",
+            "hi": "Please translate the provided source text to Hindi. Use simple Hindi that is spoken in everyday life. Do not use complex or uncommon Hindi words. Do not use words that are typically used only in formal or written Hindi. Also, feel free to use English words that are commonly used in Hindi, like \"लिवर\", \"इंजेक्शन\".\n Write everything in **DEVANAGARI** script. Do not use Latin script.",
+            "kn": "Please translate the provided source text to Kannada. Use simple Kannada that is spoken in everyday life. Do not use complex or uncommon Kannada words. Do not use words that are typically used only in formal or written Kannada. Also, feel free to use English words that are commonly used in Kannada.\n Write everything in **KANNADA** script. Do not use Latin script."
+        },
+        "user_prompt": "Please translate the following text: <TEXT>."
+    },
     "template_messages": {
         "expert": {
             "default": "Please follow the instructions below: \n1. Respond with \"Yes\" or \"No\" on verification message. \n2. If your response is \"No,\", click on \"No\" and then tag the verification message and provide the correction.",
