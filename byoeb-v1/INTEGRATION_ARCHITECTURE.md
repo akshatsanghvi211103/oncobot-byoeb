@@ -85,13 +85,6 @@ def query_oncology_kb(question: str) -> str:
 }
 ```
 
-### D. **API Communication**
-**Where**: `qikchat_client.py`
-```python
-headers = {"QIKCHAT-API-KEY": "04zg-Ir9t-kfaZ"}
-POST https://api.qikchat.in/v1/messages
-```
-
 ## 🧪 What Our Tests Validate
 
 ### `test_oncobot_local.py` Tests:

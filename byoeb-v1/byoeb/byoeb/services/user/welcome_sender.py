@@ -30,8 +30,8 @@ class WelcomeMessageSender:
         # Create message context with template
         message_context = MessageContext(
             message_type=MessageTypes.TEMPLATE_BUTTON.value,
-            message_source_text="Hello world en",  # Template content preview
-            message_english_text="Hello world en",
+            # message_source_text=" ",  # Template content preview
+            # message_english_text=" ",
             additional_info=template_additional_info
         )
         

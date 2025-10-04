@@ -211,8 +211,6 @@ def _should_use_template(self, phone_number: str) -> bool:
 
 ### Environment Variables (`keys.env`)
 ```
-QIKCHAT_API_KEY=04zg-Ir9t-kfaZ
-QIKCHAT_VERIFY_TOKEN=byoeb_qikchat_verify_token_2025
 ```
 
 ### Templates (Qikchat Dashboard)

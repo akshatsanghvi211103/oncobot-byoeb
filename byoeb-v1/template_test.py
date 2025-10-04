@@ -8,11 +8,10 @@ import aiohttp
 import json
 
 async def test_template_message():
-    api_key = "04zg-Ir9t-kfaZ"
     base_url = "https://api.qikchat.in/v1"
     
     headers = {
-        "QIKCHAT-API-KEY": api_key,
+        # "QIKCHAT-API-KEY": api_key,
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
@@ -79,11 +78,10 @@ async def test_template_message():
 # Also test with a different phone number format
 async def test_different_number():
     """Test with your own number or a known WhatsApp number"""
-    api_key = "04zg-Ir9t-kfaZ"
     base_url = "https://api.qikchat.in/v1"
     
     headers = {
-        "QIKCHAT-API-KEY": api_key,
+        # "QIKCHAT-API-KEY": api_key,
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
