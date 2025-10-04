@@ -274,10 +274,15 @@ class ByoebUserGenerateResponse(Handler):
             constants.VERIFICATION_STATUS: status,
         }
         # Always define message_source_text and interactive_list_additional_info
+        from byoeb.chat_app.configuration.config import bot_config
+        system_prompt = bot_config["llm_translation"]["system_prompt"][user_language]
+        user_prompt = bot_config["llm_translation"]["user_prompt"]
         message_source_text = await text_translator.atranslate_text(
             input_text=response_text,
             source_language="en",
-            target_language=user_language
+            target_language=user_language,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt
         )
         
         # Simplified to text-only responses
@@ -682,12 +687,16 @@ class ByoebUserGenerateResponse(Handler):
             # Translate related questions to user's language if not English
             if message.user.user_language != "en":
                 from byoeb.chat_app.configuration.dependency_setup import text_translator
+                system_prompt = bot_config["llm_translation"]["system_prompt"][message.user.user_language]
+                user_prompt = bot_config["llm_translation"]["user_prompt"]
                 translated_questions = []
                 for question in related_questions:
                     translated_question = await text_translator.atranslate_text(
                         input_text=question,
                         source_language="en",
-                        target_language=message.user.user_language
+                        target_language=message.user.user_language,
+                        system_prompt=system_prompt,
+                        user_prompt=user_prompt
                     )
                     translated_questions.append(translated_question)
                 related_questions = translated_questions

@@ -172,10 +172,15 @@ class ByoebExpertGenerateResponse(Handler):
             if is_correction:
                 print("🔧 DEBUG: Expert correction case - preparing corrected message")
                 # For expert corrections, translate the corrected response to user's language
+                from byoeb.chat_app.configuration.config import bot_config
+                system_prompt = bot_config["llm_translation"]["system_prompt"][user.user_language]
+                user_prompt = bot_config["llm_translation"]["user_prompt"]
                 translated_text = await text_translator.atranslate_text(
                     input_text=text_message,
                     source_language="en",
-                    target_language=user.user_language
+                    target_language=user.user_language,
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt
                 )
                 
                 # For expert corrections, send the actual corrected answer directly
@@ -186,7 +191,9 @@ class ByoebExpertGenerateResponse(Handler):
                 translated_text = await text_translator.atranslate_text(
                     input_text=text_message if message_en_text else text_message,
                     source_language="en",
-                    target_language=user.user_language
+                    target_language=user.user_language,
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt
                 )
                 
                 # For expert approvals, send the actual translated answer directly
@@ -583,11 +590,18 @@ class ByoebExpertGenerateResponse(Handler):
 
             # Translate bot answer to user's language before sending
             from byoeb.chat_app.configuration.dependency_setup import text_translator
-
+            from byoeb.chat_app.configuration.config import bot_config
+            
+            user_language = message.cross_conversation_context.get(constants.USER, {}).get("user_language", "en")
+            system_prompt = bot_config["llm_translation"]["system_prompt"][user_language]
+            user_prompt = bot_config["llm_translation"]["user_prompt"]
+            
             translated_bot_answer = await text_translator.atranslate_text(
                 input_text=bot_answer,
                 source_language="en",
-                target_language=message.cross_conversation_context.get(constants.USER, {}).get("user_language", "en")
+                target_language=user_language,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt
             )
 
             

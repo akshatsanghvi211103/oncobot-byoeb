@@ -71,16 +71,24 @@ users_handler = UsersHandler(
 from byoeb_integrations.translators.text.azure.async_azure_text_translator import AsyncAzureTextTranslator
 from byoeb_integrations.translators.text.azure.async_openai_text_translator import AsyncAzureOpenAITextTranslator
 from byoeb_integrations.translators.speech.azure.async_azure_speech_translator import AsyncAzureSpeechTranslator
+from byoeb_integrations.llms.azure_openai.async_azure_openai import AsyncAzureOpenAILLM
 from azure.identity import get_bearer_token_provider, DefaultAzureCredential
 
 token_provider = get_bearer_token_provider(
     DefaultAzureCredential(), app_config["app"]["azure_cognitive_endpoint"]
 )
-# TODO: factory implementation
-text_translator = AsyncAzureTextTranslator(
-    credential=DefaultAzureCredential(),
-    region=app_config["translators"]["text"]["azure_cognitive"]["region"],
-    resource_id=app_config["translators"]["text"]["azure_cognitive"]["resource_id"],
+
+# Create Azure OpenAI LLM client for translation
+azure_openai_llm_for_translation = AsyncAzureOpenAILLM(
+    model=app_config["llms"]["azure"]["model"],
+    azure_endpoint=app_config["llms"]["azure"]["endpoint"],
+    token_provider=token_provider,
+    api_version=app_config["llms"]["azure"]["api_version"]
+)
+
+# TODO: factory implementation - switch to OpenAI text translator
+text_translator = AsyncAzureOpenAITextTranslator(
+    llm_client=azure_openai_llm_for_translation
 )
 
 # Speech translator

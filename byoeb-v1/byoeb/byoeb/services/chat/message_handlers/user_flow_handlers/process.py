@@ -46,10 +46,15 @@ class ByoebUserProcess(Handler):
             
             # Translate to English if needed
             if source_language != "en":
+                from byoeb.chat_app.configuration.config import bot_config
+                system_prompt = bot_config["llm_translation"]["system_prompt"]["en"]
+                user_prompt = bot_config["llm_translation"]["user_prompt"]
                 translated_en_text = await text_translator.atranslate_text(
                     input_text=audio_to_text,
                     source_language=source_language,
-                    target_language="en"
+                    target_language="en",
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt
                 )
             else:
                 translated_en_text = audio_to_text
@@ -63,7 +68,9 @@ class ByoebUserProcess(Handler):
                 translated_en_text = await text_translator.atranslate_text(
                     input_text=source_text,
                     source_language=source_language,
-                    target_language="en"
+                    target_language="en",
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt
                 )
             else:
                 translated_en_text = source_text
