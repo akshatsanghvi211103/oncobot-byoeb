@@ -18,12 +18,13 @@ class AsyncAzureOpenAITextTranslator(BaseTextTranslator):
     def translate_text(self, input_text, source_language, target_language, system_prompt, **kwargs):
         raise NotImplementedError
 
-    async def atranslate_text(self, input_text, source_language, target_language, system_prompt, **kwargs):
+    async def atranslate_text(self, input_text, source_language, target_language, system_prompt, user_prompt, **kwargs):
         assert source_language == "en", "Currently only source language as English is supported"
         if source_language == target_language:
             return input_text
         prompt = [{"role": "system", "content": system_prompt}]
-        prompt.append({"role": "user", "content": input_text})
+        user_prompt = user_prompt.replace("<TEXT>", input_text)
+        prompt.append({"role": "user", "content": user_prompt})
         llm_resp, response = await self.llm_client.agenerate_response(
             prompts=prompt
         )

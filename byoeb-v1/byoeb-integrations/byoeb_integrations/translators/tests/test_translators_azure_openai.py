@@ -7,7 +7,7 @@ from byoeb_integrations import test_environment_path
 from dotenv import load_dotenv
 from azure.identity import get_bearer_token_provider, AzureCliCredential
 from byoeb_integrations.llms.azure_openai.async_azure_openai import AsyncAzureOpenAILLM
-from byoeb.chat_app.configuration.config import app_config
+from byoeb.chat_app.configuration.config import app_config, bot_config
 from byoeb_integrations.translators.text.azure.async_azure_text_translator import AsyncAzureTextTranslator
 from byoeb_integrations.translators.text.azure.async_openai_text_translator import AsyncAzureOpenAITextTranslator
 
@@ -45,7 +45,8 @@ async def aazure_translate_text_en_hi():
         llm_client=async_azure_openai_llm
     )
 
-    system_prompt = "Please translate the provided source text to Hindi. Use simple Hindi that is spoken in everyday life. Do not use complex or uncommon Hindi words. Do not use words that are typically used only in formal or written Hindi. Also, feel free to use English words that are commonly used in Hindi, like \"लिवर\", \"इंजेक्शन\".\n Write everything in **DEVANAGARI** script. Do not use Latin script."
+    system_prompt = bot_config["llm_translation"]["system_prompt"]["hi"]
+    user_prompt = bot_config["llm_translation"]["user_prompt"]
 
 
     input_text = "Hello, how are you?"
@@ -55,7 +56,8 @@ async def aazure_translate_text_en_hi():
         input_text=input_text,
         source_language=source_language,
         target_language=target_language,
-        system_prompt=system_prompt
+        system_prompt=system_prompt,
+        user_prompt=user_prompt
     )
     print(translated_text)
     assert translated_text is not None
@@ -67,8 +69,9 @@ async def aazure_translate_text_en_en():
         llm_client=async_azure_openai_llm
     )
 
-    system_prompt = "Please translate the provided source text to English. Use simple everyday English."
-
+    system_prompt = bot_config["llm_translation"]["system_prompt"]["en"]
+    user_prompt = bot_config["llm_translation"]["user_prompt"]
+    
     input_text = "Hello, how are you?"
     source_language = "en"
     target_language = "en"
@@ -76,7 +79,8 @@ async def aazure_translate_text_en_en():
         input_text=input_text,
         source_language=source_language,
         target_language=target_language,
-        system_prompt=system_prompt
+        system_prompt=system_prompt,
+        user_prompt=user_prompt
     )
     print(translated_text)
     assert translated_text is not None
