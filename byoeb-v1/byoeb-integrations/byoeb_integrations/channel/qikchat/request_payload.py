@@ -270,9 +270,11 @@ def get_qikchat_template_request_from_byoeb_message(
     # Default template for oncology bot
     template_name = additional_info.get("template_name", "hello_world")
     template_language = additional_info.get("template_language", "en")
+    template_parameters = additional_info.get("template_parameters", [])
     
     # Debug output
     print(f"🔧 Template language type: {type(template_language)}, value: {template_language}")
+    print(f"🔧 Template parameters: {template_parameters}")
     print(f"🔧 Additional info: {additional_info}")
     
     # Ensure template_language is a string
@@ -281,15 +283,32 @@ def get_qikchat_template_request_from_byoeb_message(
     elif not isinstance(template_language, str):
         template_language = str(template_language)
     
+    # Build components array for template parameters
+    components = []
+    if template_parameters and len(template_parameters) > 0:
+        # Create body component with parameters
+        parameters = []
+        for param in template_parameters:
+            parameters.append({
+                "type": "text",
+                "text": param
+            })
+        
+        components.append({
+            "type": "body",
+            "parameters": parameters
+        })
+    
     qikchat_message = {
         "to_contact": phone_number,
         "type": "template",
         "template": {
             "name": template_name,
             "language": template_language,  # QikChat expects a string, not an object
-            "components": []  # Empty components for basic templates
+            "components": components  # Include parameters in components
         }
     }
     
     print(f"🔧 Final template language in payload: {qikchat_message['template']['language']}")
+    print(f"🔧 Final template components: {qikchat_message['template']['components']}")
     return qikchat_message

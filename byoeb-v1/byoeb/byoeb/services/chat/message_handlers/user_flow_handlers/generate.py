@@ -220,16 +220,16 @@ class ByoebUserGenerateResponse(Handler):
             constants.EMOJI: emoji,
             constants.VERIFICATION_STATUS: status,
             "button_titles": bot_config["template_messages"]["expert"]["verification"]["button_titles"],
-            "template_name": bot_config["channel_templates"]["expert"]["verification"],
-            "template_language": "en",  # Explicitly use string, not object
-            "template_parameters": texts
+            constants.TEMPLATE_NAME: bot_config["channel_templates"]["expert"]["verification"],
+            constants.TEMPLATE_LANGUAGE: "en",  # Explicitly use string, not object
+            constants.TEMPLATE_PARAMETERS: texts
         }
         
         # Store related questions for later use when sending to user
         if related_questions is not None:
             additional_info[constants.RELATED_QUESTIONS] = related_questions
             
-        print(f"🔧 Expert additional_info template_language: {additional_info['template_language']} (type: {type(additional_info['template_language'])})")
+        print(f"🔧 Expert additional_info template_language: {additional_info[constants.TEMPLATE_LANGUAGE]} (type: {type(additional_info[constants.TEMPLATE_LANGUAGE])})")
         return additional_info
     
     def __get_expert_number_and_type( # TODO here do logistical vs medical
