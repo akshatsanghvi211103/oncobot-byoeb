@@ -2,9 +2,9 @@ import os
 from typing import List
 from byoeb_core.models.vector_stores.chunk import Chunk
 from byoeb_core.vector_stores.base import BaseVectorStore
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 from byoeb_integrations.vector_stores.chroma.base import ChromaDBVectorStore
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import VectorStoreIndex
