@@ -20,11 +20,29 @@ class WelcomeMessageSender:
     def _create_welcome_message(self, user: User) -> ByoebMessageContext:
         """Create a welcome template message for the user."""
         
-        # Use template message for onboarding (instead of regular text)
+        # Select template based on user type
+        if user.user_type == "byoebuser":
+            # Regular users use the user onboarding template
+            template_name = bot_config["channel_templates"]["user"]["onboarding"]
+        elif user.user_type == "byoebexpert":
+            # Medical experts use medical expert onboarding template
+            template_name = bot_config["channel_templates"]["expert"]["onboarding"]["medical"]
+        elif user.user_type == "byoebexpert2":
+            # Logistical experts use logistical expert onboarding template
+            template_name = bot_config["channel_templates"]["expert"]["onboarding"]["logistical"]
+        else:
+            # Fallback to user template for unknown types
+            template_name = bot_config["channel_templates"]["user"]["onboarding"]
+            self.logger.warning(f"Unknown user_type '{user.user_type}', using default user onboarding template")
+        
+        self.logger.info(f"Using template '{template_name}' for user_type '{user.user_type}'")
+        print(f'Using template {template_name} for user_type {user.user_type}')
+        
+        # Use template message for onboarding
         template_additional_info = {
-            constants.TEMPLATE_NAME: bot_config["channel_templates"]["user"]["onboarding"],
+            constants.TEMPLATE_NAME: template_name,
             constants.TEMPLATE_LANGUAGE: "en",  # Use approved template language
-            constants.TEMPLATE_PARAMETERS: []  # No parameters needed for "testing" template
+            constants.TEMPLATE_PARAMETERS: []  # No parameters needed for onboarding templates
         }
         
         # Create message context with template
@@ -109,7 +127,7 @@ class WelcomeMessageSender:
             else:
                 user_type_label = "expert"  # fallback for any other expert types
                 
-            self.logger.info(f"Sending template welcome message to {user_type_label}: {user.phone_number_id}")
+            self.logger.info(f"Sending onboarding message to {user_type_label} ({user.user_type}): {user.phone_number_id}")
             
             # Create and send welcome message (using approved template)
             welcome_message = self._create_welcome_message(user)
@@ -122,7 +140,12 @@ class WelcomeMessageSender:
                 self.logger.warning(f"No welcome requests generated for {user_type_label} {user.phone_number_id}")
                 return False
             
-            # Create and send follow-up questions message
+            # Skip follow-up questions for logistical experts (byoebexpert2)
+            if user.user_type == "byoebexpert" or user.user_type == "byoebexpert2":
+                self.logger.info(f"Skipping follow-up questions for logistical expert {user.phone_number_id}")
+                return True
+            
+            # Create and send follow-up questions message for other user types
             follow_up_message = self._create_follow_up_questions_message(user)
             follow_up_requests = await self.channel_service.prepare_requests(follow_up_message)
             

@@ -136,7 +136,11 @@
     },
     "channel_templates": { 
         "expert": {
-            "verification": "verification_with_button"
+            "verification": "verification_with_button",
+            "onboarding": {
+                "medical": "medical_expert_onbording",
+                "logistical": "logistical_expert_onbording"
+            }
         },
         "user": {
             "onboarding": "continue"
