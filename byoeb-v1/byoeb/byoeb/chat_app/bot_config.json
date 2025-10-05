@@ -136,10 +136,10 @@
     },
     "channel_templates": { 
         "expert": {
-            "verification": "verification"
+            "verification": "verification_with_button"
         },
         "user": {
-            "onboarding": "onboarding_oncobot_english"
+            "onboarding": "continue"
         }
     }
 }
