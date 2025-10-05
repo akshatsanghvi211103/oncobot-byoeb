@@ -909,3 +909,16 @@ Conversations created in: 0.6133120059967041 seconds
 DB queries executed in: 0.6429829597473145 seconds
 Successfully processed 1 messages
 Processed 1 message in: 4 seconds
+Conversations created in: 1.1771340370178223 seconds
+Retrieved chunks in 7.8066370487213135 seconds
+Generated answer tokens: {'total_tokens': 1705, 'completion_tokens': 111, 'prompt_tokens': 1594}
+Generated answer tokens: {'total_tokens': 1410, 'completion_tokens': 70, 'prompt_tokens': 1340}
+Generated answer and related questions in 23.426944971084595 seconds
+Successfully send the message to the user and expert in 1.5132718086242676 seconds
+DB queries executed in: 0.6497220993041992 seconds
+Successfully processed 1 messages
+Processed 1 message in: 33 seconds
+Conversations created in: 0.6172189712524414 seconds
+DB queries executed in: 0.5624558925628662 seconds
+Successfully processed 1 messages
+Processed 1 message in: 10 seconds

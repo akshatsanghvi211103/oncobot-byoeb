@@ -136,7 +136,7 @@
     },
     "channel_templates": { 
         "expert": {
-            "verification": "expert_verification"
+            "verification": "verification"
         },
         "user": {
             "onboarding": "onboarding_oncobot_english"

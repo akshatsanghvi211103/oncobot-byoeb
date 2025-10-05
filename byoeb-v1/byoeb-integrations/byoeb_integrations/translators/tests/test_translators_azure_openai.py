@@ -42,17 +42,18 @@ def event_loop():
 
 async def aazure_translate_text_en_hi():
     async_openai_text_translator = AsyncAzureOpenAITextTranslator(
-        llm_client=async_azure_openai_llm
+        llm_client=async_azure_openai_llm,
+        bot_config=bot_config
     )
 
     system_prompt = bot_config["llm_translation"]["system_prompt"]["hi"]
     user_prompt = bot_config["llm_translation"]["user_prompt"]
 
 
-    input_text = "Hello, how are you?"
+    input_text = "After your radiation therapy, it's important to continue eating a balanced diet to support your recovery. You can include soft, moist, and bland foods such as soft-cooked vegetables, boneless chicken, minced meats, half-boiled eggs, simple khichdi, custards, puddings, and ice cream. Ensure you stay hydrated by drinking plenty of liquids like water, milk, and coconut water. Avoid spicy, very hot, and tough fibrous foods, as well as alcohol and tobacco. If you experience any side effects like a dry mouth or difficulty swallowing, use gravies and sauces to soften foods and consider blending or puréeing your meals. Always consult with your healthcare provider or a dietitian for personalized dietary advice."
     source_language = "en"
     target_language = "hi"
-    translated_text = await async_openai_text_translator.atranslate_text(
+    translated_text = await async_openai_text_translator.atranslate_text_with_prompts(
         input_text=input_text,
         source_language=source_language,
         target_language=target_language,
@@ -66,7 +67,8 @@ async def aazure_translate_text_en_hi():
 
 async def aazure_translate_text_en_en():
     async_openai_text_translator = AsyncAzureOpenAITextTranslator(
-        llm_client=async_azure_openai_llm
+        llm_client=async_azure_openai_llm,
+        bot_config=bot_config
     )
 
     system_prompt = bot_config["llm_translation"]["system_prompt"]["en"]
@@ -75,7 +77,7 @@ async def aazure_translate_text_en_en():
     input_text = "Hello, how are you?"
     source_language = "en"
     target_language = "en"
-    translated_text = await async_openai_text_translator.atranslate_text(
+    translated_text = await async_openai_text_translator.atranslate_text_with_prompts(
         input_text=input_text,
         source_language=source_language,
         target_language=target_language,
