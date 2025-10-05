@@ -60,11 +60,13 @@ class ByoebUserProcess(Handler):
             source_text = message.message_context.message_source_text
             
             if source_language != "en":
+                print(f"🔤 USER PROCESS: Translating '{source_text}' from {source_language} to en")
                 translated_en_text = await text_translator.atranslate_text(
                     input_text=source_text,
                     source_language=source_language,
                     target_language="en"
                 )
+                print(f"🔤 USER PROCESS: Translation result: '{translated_en_text}'")
             else:
                 translated_en_text = source_text
             

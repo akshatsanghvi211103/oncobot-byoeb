@@ -667,7 +667,8 @@ class ByoebUserGenerateResponse(Handler):
         message_english = message.message_context.message_english_text
         
         print(f"\n=== RESPONSE GENERATION DEBUG ===")
-        print(f"📤 Processing message: '{message_english}'")
+        print(f"� Original message: '{message.message_context.message_source_text}'")
+        print(f"📤 English message for KB: '{message_english}'")
         print(f"👤 User: {message.user.phone_number_id} (language: {message.user.user_language})")
         
         # print(f"🔍 Retrieving relevant chunks from knowledge base...")

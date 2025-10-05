@@ -591,14 +591,40 @@ class ByoebExpertGenerateResponse(Handler):
             )
 
             
-            # NEW FLOW: Send approved answer to user
-            byoeb_user_messages = await self.__create_user_message(
-                translated_bot_answer,
-                message,
-                None,  # Remove emoji reactions as requested
-                constants.VERIFIED,
-                []  # Empty list to suppress related questions in final verified answer
+            # NEW FLOW: Send approved answer to user (using already translated text)
+            # We need to create the user message manually to avoid double translation
+            user = message.cross_conversation_context.get(constants.USER, {})
+            user_obj = User(
+                user_id=user.get("user_id"),
+                user_type=user.get("user_type"),
+                user_language=user.get("user_language", "en"),
+                phone_number_id=user.get("phone_number_id")
             )
+            
+            message_context = MessageContext(
+                message_id=str(uuid.uuid4()),
+                message_type=MessageTypes.REGULAR_TEXT.value,
+                message_english_text=bot_answer,  # Original English text
+                message_source_text=translated_bot_answer,  # Already translated text
+                additional_info={}
+            )
+            
+            new_user_message = ByoebMessageContext(
+                channel_type=message.channel_type,
+                message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
+                user=user_obj,
+                message_context=message_context,
+                reply_context=ReplyContext(
+                    reply_id=message.reply_context.reply_id if message.reply_context else None,
+                    additional_info={
+                        constants.VERIFICATION_STATUS: constants.VERIFIED,
+                        constants.RELATED_QUESTIONS: []
+                    }
+                ),
+                incoming_timestamp=message.incoming_timestamp,
+            )
+            
+            byoeb_user_messages = [new_user_message]
             
             print(f"🔧 DEBUG: Created user message with bot_answer: '{bot_answer}'")
 
