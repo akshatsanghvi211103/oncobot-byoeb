@@ -65,11 +65,19 @@ def has_text(
         byoeb_message.message_context.message_source_text is not None
     )
 
-def get_last_active_duration_seconds(timestamp: str):
+def get_last_active_duration_seconds(timestamp):
     from datetime import datetime
     
-    # Convert Unix timestamp string to a datetime object
-    last_active_time = datetime.fromtimestamp(int(timestamp))
+    # Handle both string and integer timestamps
+    if isinstance(timestamp, str):
+        timestamp_int = int(timestamp)
+    elif isinstance(timestamp, int):
+        timestamp_int = timestamp
+    else:
+        raise ValueError(f"Timestamp must be string or int, got {type(timestamp)}")
+    
+    # Convert Unix timestamp to a datetime object  
+    last_active_time = datetime.fromtimestamp(timestamp_int)
     
     # Calculate the duration since last active
     return (datetime.now() - last_active_time).total_seconds()

@@ -1,0 +1,35 @@
+{
+    "llm_response": {
+        "consensus": {
+            "system_prompt": "Please verify the answer",
+            "user_propmt": "Is the answer correct?"
+        }
+    },
+    "template_messages": {
+        "expert": {
+            "consensus": {
+                "header": {
+                    "en": "Please provide answer to below query",
+                    "hi": "कृपया नीचे पूछे गए प्रश्न का उत्तर दें"
+                },
+                "footer": {
+                    "en": "Reply by tagging the message",
+                    "hi": "संदेश को टैग करके जवाब दें"
+                },
+                "template_name": "consensus"
+            }   
+        },
+        "user": {
+            "consensus": {
+                "timeout": {
+                    "en": "Please ask your question directly to ANM",
+                    "hi": "कृपया अपना प्रश्न सीधे ANM से पूछें"
+                }
+            },
+            "follow_up_questions_description": {
+                "en": "Related questions",
+                "hi": "संबंधित सवाल"
+            }
+        }
+    }
+}

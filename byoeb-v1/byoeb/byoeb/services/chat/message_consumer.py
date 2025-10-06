@@ -163,7 +163,7 @@ class MessageConsmerService:
         task = []
         for conversation in conversations:
             if conversation.user is not None:
-                conversation.user.activity_timestamp = str(int(datetime.now().timestamp()))
+                conversation.user.activity_timestamp = int(datetime.now().timestamp())
                 # b_utils.log_to_text_file("Processing message: " + json.dumps(conversation.model_dump()))
                 if conversation.user.user_type == self._regular_user_type:
                     task.append(self.__process_byoebuser_conversation(conversation))

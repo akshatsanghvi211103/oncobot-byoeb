@@ -243,8 +243,8 @@ class UserService(BaseUserService):
                 user_type=user.user_type,
                 experts=user.experts,
                 audience=user.audience,
-                created_timestamp = str(int(datetime.now().timestamp())),
-                activity_timestamp = str(int(datetime.now().timestamp()))
+                created_timestamp = int(datetime.now().timestamp()),
+                activity_timestamp = int(datetime.now().timestamp()) - (25 * 60 * 60)  # Set to 25 hours ago so newly onboarded users are treated as inactive
             )
             byoeb_users.append(new_user)
         json_data_users = self.__prepare_user_insert_data(byoeb_users)

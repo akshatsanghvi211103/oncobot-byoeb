@@ -1005,3 +1005,12 @@ Conversations created in: 0.6008701324462891 seconds
 DB queries executed in: 0.5523970127105713 seconds
 Successfully processed 1 messages
 Processed 1 message in: 4 seconds
+Conversations created in: 1.4229910373687744 seconds
+Retrieved chunks in 8.008117914199829 seconds
+Generated answer tokens: {'total_tokens': 1757, 'completion_tokens': 121, 'prompt_tokens': 1636}
+Generated answer tokens: {'total_tokens': 1456, 'completion_tokens': 66, 'prompt_tokens': 1390}
+Generated answer and related questions in 23.40077495574951 seconds
+Successfully send the message to the user and expert in 1.5930469036102295 seconds
+DB queries executed in: 0.7317750453948975 seconds
+Successfully processed 1 messages
+Processed 1 message in: 33 seconds

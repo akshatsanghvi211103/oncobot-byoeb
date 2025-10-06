@@ -33,16 +33,18 @@ class AsyncAzureOpenAITextTranslator(BaseTextTranslator):
                 return input_text
             
             # Get system and user prompts from bot config
-            # When translating TO English, we need a different system prompt
             if target_language == "en":
                 # Translating FROM some language TO English
-                system_prompt = f"You are a translation assistant. Translate the provided {source_language} text to English. Respond with ONLY the translated English text, without any explanation, quotes, or additional formatting."
+                system_prompt = self.bot_config["llm_translation"]["translate_to_english"].get(source_language)
+                if not system_prompt:
+                    self.__logger.warning(f"No translate_to_english prompt found for source language '{source_language}', using fallback")
+                    system_prompt = self.bot_config["llm_translation"]["translate_to_english"]["fallback"]
             else:
                 # Translating FROM English TO some other language (use existing logic)
                 system_prompt = self.bot_config["llm_translation"]["system_prompt"].get(target_language)
                 if not system_prompt:
-                    self.__logger.warning(f"No system prompt found for target language '{target_language}', using fallback")
-                    system_prompt = f"You are a translation assistant. Translate the provided text to {target_language}. Respond with ONLY the translated text, without any explanation, quotes, or additional formatting."
+                    self.__logger.warning(f"No system prompt found for target language '{target_language}', using English")
+                    system_prompt = self.bot_config["llm_translation"]["system_prompt"]["en"]
             
             user_prompt = self.bot_config["llm_translation"]["user_prompt"]
             

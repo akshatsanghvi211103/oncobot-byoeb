@@ -56,7 +56,10 @@ class UserMongoDBService(BaseMongoDBService):
 
     def user_create_query(self, user: User, qa: Dict[str, Any] = None):
         """Generate create query for new user."""
-        latest_timestamp = str(int(datetime.now().timestamp()))
+        latest_timestamp = int(datetime.now().timestamp())
+        # Set activity_timestamp to 25 hours ago for new users so they're treated as inactive
+        # This prevents newly onboarded users from being considered "active" when they haven't sent messages
+        initial_activity_timestamp = latest_timestamp - (25 * 60 * 60)  # 25 hours ago
         user_data = {
             "_id": user.user_id,
             "User": {
@@ -64,7 +67,7 @@ class UserMongoDBService(BaseMongoDBService):
                 "phone_number_id": user.phone_number_id,
                 "user_type": user.user_type,
                 "user_language": user.user_language,
-                "activity_timestamp": latest_timestamp,
+                "activity_timestamp": initial_activity_timestamp,
                 "last_conversations": []
             }
         }
@@ -80,7 +83,7 @@ class UserMongoDBService(BaseMongoDBService):
 
     def user_activity_update_query(self, user: User, qa: Dict[str, Any] = None):
         """Generate update query for user activity, ensuring all fields are set for upsert."""
-        latest_timestamp = str(int(datetime.now().timestamp()))
+        latest_timestamp = int(datetime.now().timestamp())
         update_data = {
             "$set": {
                 "User.user_id": user.user_id,
