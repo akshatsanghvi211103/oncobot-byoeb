@@ -664,10 +664,33 @@ class ByoebExpertGenerateResponse(Handler):
                 target_language=message.cross_conversation_context.get(constants.USER, {}).get("user_language", "en")
             )
 
+            # Generate TTS audio for the translated text (FIX: Add missing audio generation)
+            media_additional_info = {}
+            user = message.cross_conversation_context.get(constants.USER, {})
+            user_language = user.get("user_language", "en")
+            
+            try:
+                from byoeb.chat_app.configuration.dependency_setup import tts_service
+                audio_url = await tts_service.generate_audio_url(
+                    text=translated_bot_answer,
+                    language=user_language,
+                )
+                if audio_url:
+                    media_additional_info = {
+                        "audio_url": audio_url,  # Store SAS URL for QikChat
+                        constants.MIME_TYPE: "audio/wav"
+                    }
+                    print(f"🔧 DEBUG: Audio message generated successfully for YES flow with SAS URL")
+                else:
+                    media_additional_info = {}
+                    print(f"⚠️ DEBUG: TTS service returned no audio URL for YES flow")
+            except Exception as e:
+                print(f"❌ DEBUG: Error generating audio message for YES flow: {e}")
+                # Continue without audio if TTS fails
+                media_additional_info = {}
             
             # NEW FLOW: Send approved answer to user (using already translated text)
             # We need to create the user message manually to avoid double translation
-            user = message.cross_conversation_context.get(constants.USER, {})
             user_obj = User(
                 user_id=user.get("user_id"),
                 user_type=user.get("user_type"),
@@ -680,7 +703,7 @@ class ByoebExpertGenerateResponse(Handler):
                 message_type=MessageTypes.REGULAR_TEXT.value,
                 message_english_text=bot_answer,  # Original English text
                 message_source_text=translated_bot_answer,  # Already translated text
-                additional_info={}
+                additional_info=media_additional_info  # FIX: Include audio info
             )
             
             new_user_message = ByoebMessageContext(
