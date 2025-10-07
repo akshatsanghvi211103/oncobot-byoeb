@@ -1014,3 +1014,4 @@ Successfully send the message to the user and expert in 1.5930469036102295 secon
 DB queries executed in: 0.7317750453948975 seconds
 Successfully processed 1 messages
 Processed 1 message in: 33 seconds
+Processed 1 message in: 11 seconds
