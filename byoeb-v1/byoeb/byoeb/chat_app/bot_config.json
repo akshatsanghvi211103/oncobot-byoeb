@@ -72,6 +72,16 @@
                 "hi": "संबंधित प्रश्न",
                 "kn": "ಸಂಬಂಧಿತ ಪ್ರಶ್ನೆಗಳು"
             },
+            "out_of_scope": {
+                "en": "This is outside the scope of my current knowledge. You can ask me any cataract surgery related questions.",
+                "hi": "यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे मोतियाबिंद सर्जरी से संबंधित कोई भी प्रश्न पूछ सकते हैं।",
+                "kn": "ಇದು ನನ್ನ ಪ್ರಸ್ತುತ ಜ್ಞಾನ ವ್ಯಾಪ್ತಿಯ ಹೊರಗೆ ಇದೆ. ನೀವು ನನಗೆ ಕಣ್ಣಿನ ಮೋತಿಬಿಂದು ಶಸ್ತ್ರಚಿಕಿತ್ಸೆಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಬಹುದು."
+            },
+            "incomprehensible": {
+                "en": "I did not understand your question. Could you please rephrase or provide more details?",
+                "hi": "मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?",
+                "kn": "ನನಗೆ ನಿಮ್ಮ ಪ್ರಶ್ನೆ ಅರ್ಥವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಅದನ್ನು ಪುನಃ ಹೇಳಬಹುದು ಅಥವಾ ಸ್ವಲ್ಪ ಹೆಚ್ಚು ವಿವರ ನೀಡಬಹುದು?"
+            },
             "onboarding": {
                 "welcome_messages": {
                     "en": [

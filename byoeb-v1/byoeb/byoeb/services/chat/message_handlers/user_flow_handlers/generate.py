@@ -711,6 +711,32 @@ class ByoebUserGenerateResponse(Handler):
             )
             print(f"✅ Small-talk answer sent directly to user (no expert verification needed)")
             return byoeb_user_messages + [read_reciept_message]
+        elif query_type == "out-of-scope":
+            answer = bot_config["template_messages"]["user"]["out_of_scope"].get(message.user.user_language,
+                     "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
+            byoeb_user_messages = await self.__create_user_message(
+                message=message,
+                response_text=answer,  # Send the out-of-scope message directly
+                emoji=None,
+                status=None,
+                related_questions=related_questions,
+                generate_audio=True
+            )
+            print(f"✅ Out-of-scope message sent directly to user (no expert verification needed)")
+            return byoeb_user_messages + [read_reciept_message]
+        elif query_type == "incomprehensible":
+            answer = bot_config["template_messages"]["user"]["incomprehensible"].get(message.user.user_language,
+                     "I apologize, but I couldn't understand your question. Could you please rephrase it?")
+            byoeb_user_messages = await self.__create_user_message(
+                message=message,
+                response_text=answer,  # Send the incomprehensible message directly
+                emoji=None,
+                status=None,
+                related_questions=related_questions,
+                generate_audio=True
+            )
+            print(f"✅ Incomprehensible message sent directly to user (no expert verification needed)")
+            return byoeb_user_messages + [read_reciept_message]
         else:
             # For medical/logistical queries, send waiting message and get expert verification
             user_lang = message.user.user_language
