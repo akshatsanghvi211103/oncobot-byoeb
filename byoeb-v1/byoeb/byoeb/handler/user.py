@@ -67,11 +67,23 @@ class UsersHandler:
         self,
         data: list
     ) -> ByoebResponseModel:
+        print("🔧 DEBUG: UsersHandler.aregister called", flush=True)
+        print(f"🔧 DEBUG: Registration data received: {data}", flush=True)
+        
+        # Also write to a debug file
+        import os
+        debug_file = os.path.join(os.getcwd(), "registration_debug.log")
+        with open(debug_file, "a") as f:
+            f.write(f"Registration called with data: {data}\n")
+        
         user_svc = await self.get_or_create_user_service()
+        print("🔧 DEBUG: Got user service", flush=True)
         byoeb_users = []
         byoeb_messages = []
         for user in data:
+            print(f"🔧 DEBUG: Creating User from data: {user}")
             byoeb_user = User(**user)
+            print(f"🔧 DEBUG: Created User object - ID: {byoeb_user.user_id}, Name: {byoeb_user.user_name}, Patient Details: {byoeb_user.patient_details}")
             expert_numbers = user_utils.get_experts_numbers(byoeb_user.experts)
             if byoeb_user.phone_number_id is None:
                 message = "Phone number id must be provided"

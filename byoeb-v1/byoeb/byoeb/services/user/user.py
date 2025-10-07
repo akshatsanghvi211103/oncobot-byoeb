@@ -1,6 +1,7 @@
 
 import byoeb.services.user.utils as user_utils
 import hashlib
+import logging
 from datetime import datetime
 from typing import List, Dict, Any
 from byoeb_core.models.byoeb.user import User
@@ -17,6 +18,7 @@ class UserService(BaseUserService):
         self.__collection_client = collection_client
         self.__regular_user_type = bot_config["regular"]["user_type"]
         self.__expert_user_types = bot_config["expert"].values()
+        print("🔧 DEBUG: UserService initialized")
 
     def __prepare_user_insert_data(
         self,
@@ -231,23 +233,32 @@ class UserService(BaseUserService):
         byoeb_messages = []
         ids = await self.__collection_client.afetch_ids()
         for user in users:
-            user_id = hashlib.md5(user.phone_number_id.encode()).hexdigest()
+            # Use provided patient_id (user_id) if available, otherwise generate from phone_number_id
+            user_id = user.user_id if user.user_id else hashlib.md5(user.phone_number_id.encode()).hexdigest()
+            print(f"🔧 DEBUG: user.user_id = {user.user_id}", flush=True)
+            print(f"🔧 DEBUG: user.user_name = {user.user_name}", flush=True)
+            print(f"🔧 DEBUG: user.patient_details = {user.patient_details}", flush=True)
+            print(f"🔧 DEBUG: Final user_id = {user_id}", flush=True)
             if user_id in ids:
                 message = "Already registered. Please use update or delete and add again"
                 byoeb_messages.append(user_utils.get_register_message(user, message))
                 continue
             new_user = User(
-                user_id=hashlib.md5(user.phone_number_id.encode()).hexdigest(),
+                user_id=user_id,
+                user_name=user.user_name,  # Use provided full name
                 phone_number_id=user.phone_number_id,
                 user_language=user.user_language,
                 user_type=user.user_type,
                 experts=user.experts,
                 audience=user.audience,
+                patient_details=user.patient_details,  # Include patient details
                 created_timestamp = int(datetime.now().timestamp()),
                 activity_timestamp = int(datetime.now().timestamp()) - (25 * 60 * 60)  # Set to 25 hours ago so newly onboarded users are treated as inactive
             )
+            print(f"🔧 DEBUG: Created new_user - ID: {new_user.user_id}, Name: {new_user.user_name}, Patient Details: {new_user.patient_details}")
             byoeb_users.append(new_user)
         json_data_users = self.__prepare_user_insert_data(byoeb_users)
+        print(f"🔧 DEBUG: JSON data for database insertion: {json_data_users}")
         inserted_ids, _ = await self.__collection_client.ainsert(json_data_users)
         print(inserted_ids)
         ids = list(set(ids + inserted_ids))

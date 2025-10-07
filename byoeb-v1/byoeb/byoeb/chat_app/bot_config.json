@@ -73,9 +73,9 @@
                 "kn": "ಸಂಬಂಧಿತ ಪ್ರಶ್ನೆಗಳು"
             },
             "out_of_scope": {
-                "en": "This is outside the scope of my current knowledge. You can ask me any cataract surgery related questions.",
-                "hi": "यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे मोतियाबिंद सर्जरी से संबंधित कोई भी प्रश्न पूछ सकते हैं।",
-                "kn": "ಇದು ನನ್ನ ಪ್ರಸ್ತುತ ಜ್ಞಾನ ವ್ಯಾಪ್ತಿಯ ಹೊರಗೆ ಇದೆ. ನೀವು ನನಗೆ ಕಣ್ಣಿನ ಮೋತಿಬಿಂದು ಶಸ್ತ್ರಚಿಕಿತ್ಸೆಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಬಹುದು."
+                "en": "This is outside the scope of my current knowledge. You can ask me any cancer related questions.",
+                "hi": "यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।",
+                "kn": "ಇದು ನನ್ನ ಪ್ರಸ್ತುತ ಜ್ಞಾನ ವ್ಯಾಪ್ತಿಯ ಹೊರಗೆ ಇದೆ. ನೀವು ನನಗೆ ಕ್ಯಾನ್ಸರ್ ಸಂಬಂಧಿತ ಯಾವುದೇ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಬಹುದು."
             },
             "incomprehensible": {
                 "en": "I did not understand your question. Could you please rephrase or provide more details?",
