@@ -631,7 +631,7 @@ class ByoebExpertGenerateResponse(Handler):
                 print(f"❌ ERROR: Could not extract bot answer from verification message")
                 # Try to extract answer from additional_info template parameters as fallback
                 template_params = reply_context.additional_info.get("template_parameters", [])
-                print(f"🔧 DEBUG: Template parameters: {template_params}")
+                # print(f"🔧 DEBUG: Template parameters: {template_params}")
                 if len(template_params) >= 2:
                     # template_params should be [verification_question, verification_bot_answer]
                     bot_answer = template_params[1]  # Second parameter is the bot answer

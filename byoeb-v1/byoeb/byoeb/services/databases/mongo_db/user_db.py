@@ -39,7 +39,7 @@ class UserMongoDBService(BaseMongoDBService):
         return activity_timestamp, False
 
     async def get_users(self, user_ids: List[str]) -> List[User]:
-        """Fetch multiple users from the database."""
+        """Fetch multiple users from the database by user_ids."""
         # print(f"[DEBUG] get_users called with user_ids: {user_ids}")
         # print(f"[DEBUG] Using collection: '{self.collection_name}'")
         user_collection_client = await self._get_collection_client(self.collection_name)
@@ -51,6 +51,20 @@ class UserMongoDBService(BaseMongoDBService):
             # print(f"[DEBUG] Retrieved user with user_id: '{user.user_id}', phone_number_id: '{user.phone_number_id}', conversations: {len(user.last_conversations)}")
             # if user.last_conversations:
             #     print(f"[DEBUG]  Recent conversations: {user.last_conversations}")
+            users.append(user)
+        return users
+
+    async def get_users_by_phone_numbers(self, phone_numbers: List[str]) -> List[User]:
+        """Fetch users from the database by phone_number_ids."""
+        print(f"[DEBUG] get_users_by_phone_numbers called with phone_numbers: {phone_numbers}")
+        print(f"[DEBUG] Using collection: '{self.collection_name}'")
+        user_collection_client = await self._get_collection_client(self.collection_name)
+        users_obj = await user_collection_client.afetch_all({"User.phone_number_id": {"$in": phone_numbers}})
+        print(f"[DEBUG] Raw users_obj from DB (by phone numbers): {users_obj}")
+        users = []
+        for user_obj in users_obj:
+            user = User(**user_obj["User"])
+            print(f"[DEBUG] Retrieved user by phone - user_id: '{user.user_id}', phone_number_id: '{user.phone_number_id}', user_name: '{user.user_name}', conversations: {len(user.last_conversations)}")
             users.append(user)
         return users
 

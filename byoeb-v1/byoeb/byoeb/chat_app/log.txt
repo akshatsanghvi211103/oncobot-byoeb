@@ -1181,3 +1181,11 @@ Successfully send the message to the user and expert in 1.3671369552612305 secon
 DB queries executed in: 0.647042989730835 seconds
 Successfully processed 1 messages
 Processed 1 message in: 17 seconds
+Conversations created in: 1.8627848625183105 seconds
+Retrieved chunks in 8.032320022583008 seconds
+Generated answer tokens: {'total_tokens': 1395, 'completion_tokens': 80, 'prompt_tokens': 1315}
+Generated answer tokens: {'total_tokens': 1083, 'completion_tokens': 68, 'prompt_tokens': 1015}
+Generated answer and related questions in 24.614136934280396 seconds
+Successfully send the message to the user and expert in 0.5226519107818604 seconds
+DB queries executed in: 0.7590789794921875 seconds
+Successfully processed 1 messages

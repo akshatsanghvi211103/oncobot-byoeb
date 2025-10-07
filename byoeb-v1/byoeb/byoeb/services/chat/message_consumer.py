@@ -45,20 +45,26 @@ class MessageConsmerService:
 
     ) -> tuple[User, bool]:  # Returns (user, is_new_user)
         print(f"[DEBUG] Looking for user with phone_number_id: '{phone_number_id}' in {len(users)} retrieved users")
-        user_id = hashlib.md5(phone_number_id.encode()).hexdigest()
-        print(f"[DEBUG] Generated user_id: '{user_id}' from phone_number_id: '{phone_number_id}'")
+        
+        # Search for existing user by phone_number_id (this is the correct way)
         user = next((user for user in users if user.phone_number_id == phone_number_id), None)
+        
         if user is None:
-            print(f"[DEBUG] User not found in database, creating new user with ID: {user_id} and phone_number_id: '{phone_number_id}'")
+            print(f"[DEBUG] User not found in database, creating new user with phone_number_id: '{phone_number_id}'")
+            # Generate hash-based user_id only as fallback for new users
+            user_id = hashlib.md5(phone_number_id.encode()).hexdigest()
+            print(f"[DEBUG] Generated fallback user_id: '{user_id}' from phone_number_id: '{phone_number_id}'")
             user = User(
                 user_id=user_id,
                 phone_number_id=phone_number_id,
                 user_type=self._regular_user_type,
-                user_language="en"
+                user_language="en",
+                user_name=None,  # Explicitly set to None to indicate this is auto-generated
+                patient_details={}  # Empty dict to indicate missing patient details
             )
             return user, True  # User is newly created
         else:
-            print(f"[DEBUG] Found existing user with user_id: '{user.user_id}', phone_number_id: '{user.phone_number_id}', conversations: {len(user.last_conversations)}")
+            print(f"[DEBUG] Found existing user with user_id: '{user.user_id}', user_name: '{user.user_name}', phone_number_id: '{user.phone_number_id}', conversations: {len(user.last_conversations)}")
             return user, False  # User exists in database
     
     def __is_expert_user_type(
@@ -88,8 +94,10 @@ class MessageConsmerService:
         messages: List[ByoebMessageContext]
     ) -> List[ByoebMessageContext]:
         phone_numbers = list(set([message.user.phone_number_id for message in messages]))
-        user_ids = list(set([hashlib.md5(number.encode()).hexdigest() for number in phone_numbers]))
-        byoeb_users = await self._user_db_service.get_users(user_ids)
+        print(f"[DEBUG] Looking up users by phone_numbers: {phone_numbers}")
+        
+        # Fix: Get users by phone numbers instead of assuming hash-based user_ids
+        byoeb_users = await self._user_db_service.get_users_by_phone_numbers(phone_numbers)
         bot_message_ids = list(
             set(message.reply_context.reply_id for message in messages if message.reply_context is not None and message.reply_context.reply_id is not None)
         )
