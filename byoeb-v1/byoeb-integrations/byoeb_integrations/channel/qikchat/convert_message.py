@@ -171,38 +171,65 @@ def convert_qikchat_interactive_message(original_message: Dict[str, Any]) -> Byo
     else:
         print(f"🔗 NO INTERACTIVE REPLY CONTEXT: 'context' not in message_data keys: {list(message_data.keys())}")
     
-    interactive_data = message_data.get("interactive", {})
-    interactive_type = interactive_data.get("type")
-    
+    message_type = message_data.get("type")
     message_text = ""
     byoeb_message_type = None
     additional_info = {}
     
-    if interactive_type == "button_reply":
-        button_reply = interactive_data.get("button_reply", {})
-        message_text = button_reply.get("title", "")
-        button_id = button_reply.get("id", "")
+    if message_type == "button":
+        # New button format - data is directly in the message
+        # Check for button data in different possible locations
+        if "button" in message_data:
+            button_data = message_data.get("button", {})
+            message_text = button_data.get("text", "") or button_data.get("title", "") or button_data.get("body", "")
+            button_id = button_data.get("id", "") or button_data.get("payload", "")
+        elif "text" in message_data:
+            # Fallback: button text might be in text field
+            text_data = message_data.get("text", {})
+            if isinstance(text_data, dict):
+                message_text = text_data.get("body", "")
+            else:
+                message_text = str(text_data)
+            button_id = message_data.get("button_id", "") or message_data.get("id", "")
+        else:
+            # Last resort: check all fields for button-like data
+            message_text = message_data.get("title", "") or message_data.get("text", "") or str(message_data)
+            button_id = message_data.get("id", "")
+        
         byoeb_message_type = MessageTypes.INTERACTIVE_BUTTON.value
         additional_info = {
             "button_id": button_id,
             "button_title": message_text
         }
+    else:
+        # Original interactive format
+        interactive_data = message_data.get("interactive", {})
+        interactive_type = interactive_data.get("type")
         
-    elif interactive_type == "list_reply":
-        list_reply = interactive_data.get("list_reply", {})
-        message_title = list_reply.get("title", "")
-        message_description = list_reply.get("description", "")
-        list_id = list_reply.get("id", "")
-        
-        # Use description if available (full text), otherwise fall back to title
-        message_text = message_description if message_description else message_title
-        
-        byoeb_message_type = MessageTypes.INTERACTIVE_LIST.value
-        additional_info = {
-            "list_id": list_id,
-            "list_title": message_title,
-            "list_description": message_description
-        }
+        if interactive_type == "button_reply":
+            button_reply = interactive_data.get("button_reply", {})
+            message_text = button_reply.get("title", "")
+            button_id = button_reply.get("id", "")
+            byoeb_message_type = MessageTypes.INTERACTIVE_BUTTON.value
+            additional_info = {
+                "button_id": button_id,
+                "button_title": message_text
+            }
+        elif interactive_type == "list_reply":
+            list_reply = interactive_data.get("list_reply", {})
+            message_title = list_reply.get("title", "")
+            message_description = list_reply.get("description", "")
+            list_id = list_reply.get("id", "")
+            
+            # Use description if available (full text), otherwise fall back to title
+            message_text = message_description if message_description else message_title
+            
+            byoeb_message_type = MessageTypes.INTERACTIVE_LIST.value
+            additional_info = {
+                "list_id": list_id,
+                "list_title": message_title,
+                "list_description": message_description
+            }
     
     # Create user and message contexts
     user = User(
@@ -295,6 +322,16 @@ def convert_qikchat_message_to_byoeb(original_message: Dict[str, Any]) -> Option
                 print(f"✅ Interactive conversion successful")
             except Exception as e:
                 print(f"❌ Error in convert_qikchat_interactive_message: {e}")
+                import traceback
+                traceback.print_exc()
+                return None
+        elif message_type == "button":
+            print(f"🔘 Converting button message as interactive message")
+            try:
+                result = convert_qikchat_interactive_message(original_message)
+                print(f"✅ Button conversion successful")
+            except Exception as e:
+                print(f"❌ Error in convert_qikchat_interactive_message (button): {e}")
                 import traceback
                 traceback.print_exc()
                 return None

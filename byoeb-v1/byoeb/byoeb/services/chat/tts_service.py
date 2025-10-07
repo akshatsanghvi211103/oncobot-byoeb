@@ -47,16 +47,16 @@ class TTSService:
         Returns the public URL of the uploaded audio file.
         """
         try:
-            print(f"🔧 TTS DEBUG - Starting TTS generation")
-            print(f"🔧 TTS DEBUG - Input text: '{text[:100]}...' (length: {len(text)})")
-            print(f"🔧 TTS DEBUG - Input language: '{language}'")
+            # print(f"🔧 TTS DEBUG - Starting TTS generation")
+            # print(f"🔧 TTS DEBUG - Input text: '{text[:100]}...' (length: {len(text)})")
+            # print(f"🔧 TTS DEBUG - Input language: '{language}'")
             voice = self.voice_map.get(language, "en-US-JennyNeural")
-            print(f"🔧 TTS DEBUG - Selected voice: '{voice}' for language: '{language}'")
+            # print(f"🔧 TTS DEBUG - Selected voice: '{voice}' for language: '{language}'")
             
-            print(f"🔧 TTS DEBUG - Calling speech_translator.atext_to_speech...")
-            print(f"🔧 TTS DEBUG - Speech translator config - Region: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__region', 'unknown')}")
-            print(f"🔧 TTS DEBUG - Speech translator config - Resource ID: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__resource_id', 'unknown')}")
-            print(f"🔧 TTS DEBUG - Speech translator config - Has token provider: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__token_provider', None) is not None}")
+            # print(f"🔧 TTS DEBUG - Calling speech_translator.atext_to_speech...")
+            # print(f"🔧 TTS DEBUG - Speech translator config - Region: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__region', 'unknown')}")
+            # print(f"🔧 TTS DEBUG - Speech translator config - Resource ID: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__resource_id', 'unknown')}")
+            # print(f"🔧 TTS DEBUG - Speech translator config - Has token provider: {getattr(self.speech_translator, '_AsyncAzureSpeechTranslator__token_provider', None) is not None}")
             
             # Generate audio bytes using Azure Speech Services
             audio_bytes = await self.speech_translator.atext_to_speech(

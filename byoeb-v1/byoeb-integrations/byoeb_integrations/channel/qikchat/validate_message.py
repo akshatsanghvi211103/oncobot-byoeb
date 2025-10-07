@@ -116,6 +116,11 @@ def validate_qikchat_regular_message(original_message: Union[str, Dict[str, Any]
                 return False
             return True
             
+        elif message_type == "button":
+            # Handle button response messages - these should be treated as interactive
+            # Button messages contain the button response data directly
+            return False  # Return False here so it goes to interactive validation
+            
         else:
             logger.warning(f"Unsupported Qikchat message type: {message_type}")
             return False
@@ -151,7 +156,10 @@ def validate_qikchat_interactive_message(original_message: Union[str, Dict[str, 
         # Check if it's an interactive response
         message_type = message_data.get("type")
         
-        if message_type != "interactive":
+        if message_type == "button":
+            # New button format - treat as button_reply
+            return True
+        elif message_type != "interactive":
             return False
             
         interactive_data = message_data.get("interactive")

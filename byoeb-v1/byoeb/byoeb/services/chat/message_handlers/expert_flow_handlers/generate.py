@@ -56,6 +56,38 @@ class ByoebExpertGenerateResponse(Handler):
                 "Bot_Answer": match.group(2).strip()
             }
         return {}
+        
+    def __parse_message_alternative(self, message: str) -> dict:
+        """
+        Alternative parser for the new verification message format.
+        Handles format like:
+        <QUESTION>
+        <ANSWER>
+        Is the answer correct?
+        """
+        lines = message.strip().split('\n')
+        if len(lines) >= 2:
+            # Find "Is the answer correct?" line
+            footer_index = -1
+            for i, line in enumerate(lines):
+                if "Is the answer correct?" in line.strip():
+                    footer_index = i
+                    break
+            
+            if footer_index > 1:
+                # Everything before footer is question + answer
+                question = lines[0].strip()
+                # Answer is everything between question and footer
+                answer_lines = lines[1:footer_index]
+                answer = '\n'.join(answer_lines).strip()
+                
+                return {
+                    "Question": question,
+                    "Bot_Answer": answer
+                }
+        
+        # If alternative parsing fails, return empty dict
+        return {}
     
     def __get_user_prompt(
         self,
@@ -522,12 +554,36 @@ class ByoebExpertGenerateResponse(Handler):
             print(f"🔧 Original verification message: '{verification_message}'")
             print(f"🔧 Correction text: '{correction}'")
             
+            print(f"🔧 DEBUG: Original verification text for correction (after NO): '{verification_message}'")
             parsed_message = self.__parse_message(verification_message)
-            # print(f"🔧 Parsed message: {parsed_message}")
+            print(f"🔧 DEBUG: Parsed verification message for correction (after NO): {parsed_message}")
+            
+            if "Question" not in parsed_message or "Bot_Answer" not in parsed_message:
+                print(f"❌ ERROR: Question or Bot_Answer not found in parsed message (after NO). Available keys: {list(parsed_message.keys())}")
+                print(f"🔧 DEBUG: Attempting alternative parsing for correction (after NO)...")
+                # Alternative parsing for new format
+                parsed_message = self.__parse_message_alternative(verification_message)
+                print(f"🔧 DEBUG: Alternative parsed message for correction (after NO): {parsed_message}")
+                
+            question = parsed_message.get("Question", "")
+            bot_answer = parsed_message.get("Bot_Answer", "")
+            
+            if not question or not bot_answer:
+                print(f"❌ ERROR: Could not extract question or bot answer from verification message for correction (after NO)")
+                # Try to extract from additional_info template parameters as fallback
+                template_params = reply_context.additional_info.get("template_parameters", [])
+                print(f"🔧 DEBUG: Template parameters for correction (after NO): {template_params}")
+                if len(template_params) >= 2:
+                    # template_params should be [verification_question, verification_bot_answer]
+                    question = template_params[0] if not question else question
+                    bot_answer = template_params[1] if not bot_answer else bot_answer
+                    print(f"🔧 DEBUG: Extracted from template_parameters (after NO) - question: '{question}', bot_answer: '{bot_answer}'")
+                
+            print(f"🔧 DEBUG: Final extracted for correction (after NO) - question: '{question}', bot_answer: '{bot_answer}'")
             
             user_prompt = self.__get_user_prompt(
-                parsed_message["Question"],
-                parsed_message["Bot_Answer"],
+                question,
+                bot_answer,
                 correction
             )
             # print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")
@@ -559,11 +615,29 @@ class ByoebExpertGenerateResponse(Handler):
             print("✅ Branch: Expert clicked YES - sending approved answer to user and thank you to expert")
             
             # Parse the verification message to get the original answer
+            print(f"🔧 DEBUG: Original verification text: '{reply_context.reply_english_text}'")
             parsed_message = self.__parse_message(reply_context.reply_english_text)
-            bot_answer = parsed_message["Bot_Answer"]
-            
             print(f"🔧 DEBUG: Parsed verification message: {parsed_message}")
-            print(f"🔧 DEBUG: Extracted bot_answer: '{bot_answer}'")
+            
+            if "Bot_Answer" not in parsed_message:
+                print(f"❌ ERROR: Bot_Answer not found in parsed message. Available keys: {list(parsed_message.keys())}")
+                print(f"🔧 DEBUG: Attempting alternative parsing...")
+                # Alternative parsing for new format
+                parsed_message = self.__parse_message_alternative(reply_context.reply_english_text)
+                print(f"🔧 DEBUG: Alternative parsed message: {parsed_message}")
+                
+            bot_answer = parsed_message.get("Bot_Answer", "")
+            if not bot_answer:
+                print(f"❌ ERROR: Could not extract bot answer from verification message")
+                # Try to extract answer from additional_info template parameters as fallback
+                template_params = reply_context.additional_info.get("template_parameters", [])
+                print(f"🔧 DEBUG: Template parameters: {template_params}")
+                if len(template_params) >= 2:
+                    # template_params should be [verification_question, verification_bot_answer]
+                    bot_answer = template_params[1]  # Second parameter is the bot answer
+                    print(f"🔧 DEBUG: Extracted bot answer from template_parameters: '{bot_answer}'")
+                
+            print(f"🔧 DEBUG: Final extracted bot_answer: '{bot_answer}'")
             print(f"🔧 DEBUG: Expert thank you message: '{self.EXPERT_THANK_YOU_MESSAGE}'")
             
             # Get related questions from expert verification message if available
@@ -662,12 +736,36 @@ class ByoebExpertGenerateResponse(Handler):
             print(f"🔧 Original verification message: '{verification_message}'")
             print(f"🔧 Correction text: '{correction}'")
             
+            print(f"🔧 DEBUG: Original verification text for correction: '{verification_message}'")
             parsed_message = self.__parse_message(verification_message)
-            # print(f"🔧 Parsed message: {parsed_message}")
+            print(f"🔧 DEBUG: Parsed verification message for correction: {parsed_message}")
+            
+            if "Question" not in parsed_message or "Bot_Answer" not in parsed_message:
+                print(f"❌ ERROR: Question or Bot_Answer not found in parsed message. Available keys: {list(parsed_message.keys())}")
+                print(f"🔧 DEBUG: Attempting alternative parsing for correction...")
+                # Alternative parsing for new format
+                parsed_message = self.__parse_message_alternative(verification_message)
+                print(f"🔧 DEBUG: Alternative parsed message for correction: {parsed_message}")
+                
+            question = parsed_message.get("Question", "")
+            bot_answer = parsed_message.get("Bot_Answer", "")
+            
+            if not question or not bot_answer:
+                print(f"❌ ERROR: Could not extract question or bot answer from verification message for correction")
+                # Try to extract from additional_info template parameters as fallback
+                template_params = reply_context.additional_info.get("template_parameters", [])
+                print(f"🔧 DEBUG: Template parameters for correction: {template_params}")
+                if len(template_params) >= 2:
+                    # template_params should be [verification_question, verification_bot_answer]
+                    question = template_params[0] if not question else question
+                    bot_answer = template_params[1] if not bot_answer else bot_answer
+                    print(f"🔧 DEBUG: Extracted from template_parameters - question: '{question}', bot_answer: '{bot_answer}'")
+                
+            print(f"🔧 DEBUG: Final extracted for correction - question: '{question}', bot_answer: '{bot_answer}'")
             
             user_prompt = self.__get_user_prompt(
-                parsed_message["Question"],
-                parsed_message["Bot_Answer"],
+                question,
+                bot_answer,
                 correction
             )
             # print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")

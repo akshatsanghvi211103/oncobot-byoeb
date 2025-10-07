@@ -273,9 +273,9 @@ def get_qikchat_template_request_from_byoeb_message(
     template_parameters = additional_info.get("template_parameters", [])
     
     # Debug output
-    print(f"🔧 Template language type: {type(template_language)}, value: {template_language}")
-    print(f"🔧 Template parameters: {template_parameters}")
-    print(f"🔧 Additional info: {additional_info}")
+    # print(f"🔧 Template language type: {type(template_language)}, value: {template_language}")
+    # print(f"🔧 Template parameters: {template_parameters}")
+    # print(f"🔧 Additional info: {additional_info}")
     
     # Ensure template_language is a string
     if isinstance(template_language, dict):
@@ -309,6 +309,6 @@ def get_qikchat_template_request_from_byoeb_message(
         }
     }
     
-    print(f"🔧 Final template language in payload: {qikchat_message['template']['language']}")
-    print(f"🔧 Final template components: {qikchat_message['template']['components']}")
+    # print(f"🔧 Final template language in payload: {qikchat_message['template']['language']}")
+    # print(f"🔧 Final template components: {qikchat_message['template']['components']}")
     return qikchat_message
