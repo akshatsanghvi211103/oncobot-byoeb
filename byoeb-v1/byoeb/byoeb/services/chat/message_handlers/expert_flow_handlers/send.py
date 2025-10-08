@@ -52,6 +52,14 @@ class ByoebExpertSendResponse(Handler):
                     original_reply_id = user_message.reply_context.reply_id
                     print(f"🔧 Original reply_id: {original_reply_id}")
                     
+                    # First check if the current reply_id already looks like a valid QikChat message ID
+                    if original_reply_id and not original_reply_id.startswith(('uuid:', 'urn:', '{')) and len(original_reply_id) > 10:
+                        print(f"🔧 Reply_id already looks like valid QikChat message ID, keeping it: {original_reply_id}")
+                        # Keep the additional_info but remove emoji to avoid reactions
+                        if user_message.reply_context.additional_info:
+                            user_message.reply_context.additional_info.pop(constants.EMOJI, None)
+                        continue
+                    
                     # Try to find the original user question from cross conversation context
                     if (hasattr(user_message, 'cross_conversation_context') and 
                         user_message.cross_conversation_context and 

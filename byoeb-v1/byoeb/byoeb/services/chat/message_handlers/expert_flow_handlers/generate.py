@@ -128,13 +128,35 @@ class ByoebExpertGenerateResponse(Handler):
             constants.VERIFICATION_STATUS: status,
             constants.MODIFIED_TIMESTAMP: str(int(datetime.now().timestamp()))
         }
+        print(f"🔧 __create_user_reply_context DEBUG: status={status}, cross_conv_message has reply_context={cross_conv_message.reply_context is not None}")
+        if cross_conv_message.reply_context:
+            print(f"🔧 __create_user_reply_context DEBUG: cross_conv_message.reply_context.reply_id={cross_conv_message.reply_context.reply_id}")
+            print(f"🔧 __create_user_reply_context DEBUG: additional_info exists={cross_conv_message.reply_context.additional_info is not None}")
+            if cross_conv_message.reply_context.additional_info:
+                verification_status = cross_conv_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS)
+                print(f"🔧 __create_user_reply_context DEBUG: verification_status='{verification_status}' (should be '{constants.WAITING}')")
+                print(f"🔧 __create_user_reply_context DEBUG: verification_status comparison: {verification_status == constants.WAITING}")
+            else:
+                print(f"🔧 __create_user_reply_context DEBUG: additional_info is None!")
+        
+        print(f"🔧 __create_user_reply_context DEBUG: Checking verified condition:")
+        print(f"  - status == constants.VERIFIED: {status == constants.VERIFIED} (status='{status}', VERIFIED='{constants.VERIFIED}')")
+        print(f"  - reply_context is not None: {cross_conv_message.reply_context is not None}")
+        print(f"  - additional_info is not None: {cross_conv_message.reply_context.additional_info is not None if cross_conv_message.reply_context else False}")
+        if cross_conv_message.reply_context and cross_conv_message.reply_context.additional_info:
+            verification_check = cross_conv_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING
+            print(f"  - verification_status == WAITING: {verification_check}")
+        
         if (status == constants.VERIFIED
             and cross_conv_message.reply_context is not None
-            and cross_conv_message.reply_context.additional_info is not None
-            and cross_conv_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING
+            and cross_conv_message.reply_context.reply_id is not None
+            # For verified messages, use the reply_id if it looks like a QikChat message ID (not UUID)
+            and not cross_conv_message.reply_context.reply_id.startswith(('uuid:', 'urn:', '{'))
+            and len(cross_conv_message.reply_context.reply_id) > 10
         ):
-            # For verified answers, reply to the original user question (not the waiting message)
+            # For verified answers, reply to the original user question (using the QikChat message ID)
             reply_id = cross_conv_message.reply_context.reply_id
+            print(f"🔧 __create_user_reply_context DEBUG: Using verified flow, reply_id set to: {reply_id}")
             reply_type = None
             reply_additional_info = {
                 constants.UPDATE_ID: cross_conv_message.message_context.message_id,
@@ -142,6 +164,7 @@ class ByoebExpertGenerateResponse(Handler):
                 constants.MODIFIED_TIMESTAMP: str(int(datetime.now().timestamp()))
             }
 
+        print(f"🔧 __create_user_reply_context DEBUG: Final reply_id being returned: {reply_id}")
         return ReplyContext(
             reply_id=reply_id,
             reply_type=reply_type,
@@ -706,18 +729,38 @@ class ByoebExpertGenerateResponse(Handler):
                 additional_info=media_additional_info  # FIX: Include audio info
             )
             
-            new_user_message = ByoebMessageContext(
-                channel_type=message.channel_type,
-                message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
-                user=user_obj,
-                message_context=message_context,
-                reply_context=ReplyContext(
+            # Fix: Use the same approach as __create_user_message() - take the last message and create reply context
+            reply_to_user_messages_context = message.cross_conversation_context.get(constants.MESSAGES_CONTEXT)
+            if reply_to_user_messages_context:
+                # Get the most recent message (like __create_user_message does for VERIFIED status)
+                reply_to_user_message_context = ByoebMessageContext.model_validate(reply_to_user_messages_context[-1])
+                print(f"🔧 DEBUG: Using last message in conversation context: {reply_to_user_message_context.message_context.message_id}")
+                print(f"🔧 DEBUG: Last message category: '{reply_to_user_message_context.message_category}'")
+                
+                # Create proper reply context that tags the original user question (same as __create_user_message)
+                reply_context = self.__create_user_reply_context(
+                    message,
+                    reply_to_user_message_context,
+                    None,  # emoji
+                    constants.VERIFIED
+                )
+                print(f"🔧 DEBUG: Created reply_context with reply_id: {reply_context.reply_id}")
+            else:
+                # Fallback to basic reply context if no conversation context
+                reply_context = ReplyContext(
                     reply_id=message.reply_context.reply_id if message.reply_context else None,
                     additional_info={
                         constants.VERIFICATION_STATUS: constants.VERIFIED,
                         constants.RELATED_QUESTIONS: []
                     }
-                ),
+                )
+
+            new_user_message = ByoebMessageContext(
+                channel_type=message.channel_type,
+                message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
+                user=user_obj,
+                message_context=message_context,
+                reply_context=reply_context,  # Now uses the properly created reply context
                 incoming_timestamp=message.incoming_timestamp,
             )
             
