@@ -90,8 +90,8 @@ class ByoebExpertSendResponse(Handler):
         for user_message in user_messages_context:
             if user_message != audio_message:
                 new_context = user_message.__deepcopy__()
-                new_context.reply_context = None
-                print(f"🔧 Removed reply_context from non-audio message copy")
+                # Keep reply_context for all messages to ensure proper tagging
+                print(f"🔧 Keeping reply_context for text/interactive message: {new_context.reply_context.reply_id if new_context.reply_context else 'None'}")
                 new_contexts.append(new_context)
 
         return new_contexts

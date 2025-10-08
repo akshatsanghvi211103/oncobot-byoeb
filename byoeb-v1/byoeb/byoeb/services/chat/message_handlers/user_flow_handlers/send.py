@@ -176,7 +176,7 @@ class ByoebUserSendResponse(Handler):
                 follow_up_context.message_context.message_type = MessageTypes.INTERACTIVE_LIST.value
                 follow_up_context.message_context.message_source_text = "Follow-up questions:"
                 follow_up_context.message_context.message_english_text = "Follow-up questions:"
-                follow_up_context.reply_context = None  # No reply context for follow-up
+                # Keep reply_context for proper tagging of follow-up questions
                 
                 # CRITICAL: Remove audio URL from follow-up questions - they should be TEXT ONLY
                 if hasattr(follow_up_context.message_context, 'additional_info'):
@@ -191,16 +191,13 @@ class ByoebUserSendResponse(Handler):
                 
             else:
                 print(f"🎵 Audio message only (no follow-up questions)")
-                # Standard audio handling - send audio and text
-                user_message_copy = user_message_context.__deepcopy__()
-                user_message_copy.reply_context = None
-                user_requests_no_tag = await channel_service.prepare_requests(user_message_copy)
-                audio_tag_message = user_requests[1]
-                text_no_tag_message = user_requests_no_tag[0]
+                # Standard audio handling - send both audio and text with tagging
+                text_tag_message = user_requests[0]  # Text message with reply_context
+                audio_tag_message = user_requests[1]  # Audio message with reply_context
+                response_text, message_id_text = await channel_service.send_requests([text_tag_message])
                 response_audio, message_id_audio = await channel_service.send_requests([audio_tag_message])
-                response_text, message_id_text = await channel_service.send_requests([text_no_tag_message])
-                responses = response_audio + response_text
-                message_ids = message_id_audio + message_id_text
+                responses = response_text + response_audio
+                message_ids = message_id_text + message_id_audio
                 
         else:
             # print(f"💬 Sending text/interactive message...")

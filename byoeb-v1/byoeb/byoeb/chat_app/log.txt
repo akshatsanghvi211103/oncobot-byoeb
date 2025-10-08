@@ -1608,3 +1608,78 @@ Conversations created in: 0.6372129917144775 seconds
 DB queries executed in: 0.5911898612976074 seconds
 Successfully processed 1 messages
 Processed 1 message in: 7 seconds
+Conversations created in: 5.4269349575042725 seconds
+Retrieved chunks in 10.987011194229126 seconds
+Generated answer tokens: {'total_tokens': 1180, 'completion_tokens': 47, 'prompt_tokens': 1133}
+Generated answer tokens: {'total_tokens': 896, 'completion_tokens': 68, 'prompt_tokens': 828}
+Generated answer and related questions in 21.57112216949463 seconds
+Successfully send the message to the user and expert in 0.4544098377227783 seconds
+DB queries executed in: 0.7113521099090576 seconds
+Successfully processed 1 messages
+Processed 1 message in: 29 seconds
+Conversations created in: 1.2402400970458984 seconds
+Retrieved chunks in 3.5360381603240967 seconds
+Generated answer tokens: {'total_tokens': 1430, 'completion_tokens': 33, 'prompt_tokens': 1397}
+Generated answer tokens: {'total_tokens': 1159, 'completion_tokens': 66, 'prompt_tokens': 1093}
+Generated answer and related questions in 9.651373863220215 seconds
+Successfully send the message to the user and expert in 0.44294095039367676 seconds
+DB queries executed in: 0.7055978775024414 seconds
+Successfully processed 1 messages
+Processed 1 message in: 12 seconds
+Conversations created in: 1.426826000213623 seconds
+Retrieved chunks in 3.3192760944366455 seconds
+Generated answer tokens: {'total_tokens': 1553, 'completion_tokens': 98, 'prompt_tokens': 1455}
+Generated answer tokens: {'total_tokens': 1218, 'completion_tokens': 65, 'prompt_tokens': 1153}
+Generated answer and related questions in 10.49660611152649 seconds
+Successfully send the message to the user and expert in 1.6511249542236328 seconds
+DB queries executed in: 0.6997799873352051 seconds
+Successfully processed 1 messages
+Processed 1 message in: 14 seconds
+Conversations created in: 5.407447099685669 seconds
+Retrieved chunks in 11.994854927062988 seconds
+Generated answer tokens: {'total_tokens': 1339, 'completion_tokens': 47, 'prompt_tokens': 1292}
+Generated answer tokens: {'total_tokens': 1058, 'completion_tokens': 70, 'prompt_tokens': 988}
+Generated answer and related questions in 21.683094024658203 seconds
+Successfully send the message to the user and expert in 0.4655270576477051 seconds
+DB queries executed in: 0.5901339054107666 seconds
+Successfully processed 1 messages
+Processed 1 message in: 29 seconds
+Conversations created in: 1.4237720966339111 seconds
+Retrieved chunks in 4.401098966598511 seconds
+Generated answer tokens: {'total_tokens': 1279, 'completion_tokens': 47, 'prompt_tokens': 1232}
+Generated answer tokens: {'total_tokens': 995, 'completion_tokens': 66, 'prompt_tokens': 929}
+Generated answer and related questions in 10.85838794708252 seconds
+Successfully send the message to the user and expert in 0.46036791801452637 seconds
+DB queries executed in: 0.6390600204467773 seconds
+Successfully processed 1 messages
+Processed 1 message in: 14 seconds
+Conversations created in: 1.068138837814331 seconds
+Retrieved chunks in 4.3061981201171875 seconds
+Generated answer tokens: {'total_tokens': 1798, 'completion_tokens': 102, 'prompt_tokens': 1696}
+Generated answer tokens: {'total_tokens': 1460, 'completion_tokens': 70, 'prompt_tokens': 1390}
+Generated answer and related questions in 11.251636028289795 seconds
+Successfully send the message to the user and expert in 1.445483922958374 seconds
+DB queries executed in: 0.6476559638977051 seconds
+Successfully processed 1 messages
+Processed 1 message in: 14 seconds
+Conversations created in: 0.9966108798980713 seconds
+DB queries executed in: 0.632436990737915 seconds
+Successfully processed 1 messages
+Processed 1 message in: 7 seconds
+Conversations created in: 1.4331350326538086 seconds
+Retrieved chunks in 4.5749077796936035 seconds
+Generated answer tokens: {'total_tokens': 1867, 'completion_tokens': 110, 'prompt_tokens': 1757}
+Generated answer tokens: {'total_tokens': 1521, 'completion_tokens': 70, 'prompt_tokens': 1451}
+Generated answer and related questions in 12.001771926879883 seconds
+Successfully send the message to the user and expert in 1.4543440341949463 seconds
+DB queries executed in: 0.7291381359100342 seconds
+Successfully processed 1 messages
+Processed 1 message in: 16 seconds
+Conversations created in: 0.5974490642547607 seconds
+DB queries executed in: 0.6246979236602783 seconds
+Successfully processed 1 messages
+Processed 1 message in: 2 seconds
+Conversations created in: 1.5404901504516602 seconds
+DB queries executed in: 0.6494960784912109 seconds
+Successfully processed 1 messages
+Processed 1 message in: 2 seconds

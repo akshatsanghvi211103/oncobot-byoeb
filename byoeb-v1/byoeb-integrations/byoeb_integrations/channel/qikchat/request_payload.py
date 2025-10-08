@@ -170,6 +170,12 @@ def get_qikchat_interactive_button_request_from_byoeb_message(
         }
     }
     
+    # Add reply context if available (same as text messages)
+    if byoeb_message.reply_context is not None:
+        qikchat_message["context"] = {
+            "message_id": byoeb_message.reply_context.reply_id
+        }
+    
     return qikchat_message
 
 def get_qikchat_interactive_list_request_from_byoeb_message(
@@ -232,6 +238,12 @@ def get_qikchat_interactive_list_request_from_byoeb_message(
             }
         }
     }
+    
+    # Add reply context if available (same as text messages)
+    if byoeb_message.reply_context is not None:
+        qikchat_message["context"] = {
+            "message_id": byoeb_message.reply_context.reply_id
+        }
     
     return qikchat_message
 
