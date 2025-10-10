@@ -1,9 +1,10 @@
 import re
 import json
 import uuid
+import asyncio
 import byoeb.services.chat.constants as constants
 from typing import List, Dict, Any
-from datetime import datetime
+from datetime import datetime, timedelta
 from byoeb.chat_app.configuration.config import bot_config, app_config
 from byoeb.models.message_category import MessageCategory
 from byoeb_core.models.byoeb.message_context import (
@@ -89,6 +90,7 @@ class ByoebExpertGenerateResponse(Handler):
         # If alternative parsing fails, return empty dict
         return {}
     
+
     def __get_user_prompt(
         self,
         question,
@@ -197,6 +199,24 @@ class ByoebExpertGenerateResponse(Handler):
         user_info_dict = byoeb_message.cross_conversation_context.get(constants.USER)
         user = User.model_validate(user_info_dict)
         user.user_type = self._regular_user_type
+        
+        # Check if user is active for verified answers (template vs regular message decision)
+        should_use_template = False
+        if status == constants.VERIFIED:
+            from byoeb.chat_app.configuration.dependency_setup import user_db_service
+            from byoeb.services.chat.message_handlers.user_flow_handlers.send import ByoebUserSendResponse
+            
+            user_id = user.user_id
+            # Check if user is active (hasn't been inactive for 24 hours)
+            send_handler = ByoebUserSendResponse(user_db_service, None)  # message_db_service not needed for activity check
+            is_active_user = await send_handler.is_active_user(user_id)
+            print(f"🔧 User {user_id} is_active_user: {is_active_user}")
+            
+            if not is_active_user:
+                should_use_template = True
+                print("📋 User is inactive for 24 hours, will send template message")
+            else:
+                print("🔘 User is active, will send regular text message", should_use_template)
         reply_to_user_messages_context = byoeb_message.cross_conversation_context.get(constants.MESSAGES_CONTEXT)
         
         # print(f"🔧 DEBUG: reply_to_user_messages_context type: {type(reply_to_user_messages_context)}")
@@ -321,17 +341,31 @@ class ByoebExpertGenerateResponse(Handler):
                 
                 # For verified answers (status == constants.VERIFIED), always send as regular text without interactive elements
                 if status == constants.VERIFIED:
-                    print("🔧 DEBUG: Status is VERIFIED - creating regular text message without questions")
-                    message_context = MessageContext(
-                        message_id=str(uuid.uuid4()),  # Generate unique message ID
-                        message_type=MessageTypes.REGULAR_TEXT.value,
-                        message_english_text=message_en_text,
-                        message_source_text=text_message,
-                        additional_info={
-                            **message_reaction_additional_info,
-                            **media_additiona_info
-                        }
-                    )
+                    if should_use_template:
+                        print("🔧 DEBUG: Status is VERIFIED - creating template message for inactive user")
+                        message_context = MessageContext(
+                            message_id=str(uuid.uuid4()),  # Generate unique message ID
+                            message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
+                            message_english_text=message_en_text,
+                            message_source_text=text_message,
+                            additional_info={
+                                constants.TEMPLATE_NAME: "expert_verification",
+                                constants.TEMPLATE_LANGUAGE: user.user_language,
+                                constants.TEMPLATE_PARAMETERS: ["(Template not verified yet, sending an approved one. No need to approve any answer here) " + text_message, text_message]
+                            }
+                        )
+                    else:
+                        print("🔧 DEBUG: Status is VERIFIED - creating regular text message without questions")
+                        message_context = MessageContext(
+                            message_id=str(uuid.uuid4()),  # Generate unique message ID
+                            message_type=MessageTypes.REGULAR_TEXT.value,
+                            message_english_text=message_en_text,
+                            message_source_text=text_message,
+                            additional_info={
+                                **message_reaction_additional_info,
+                                **media_additiona_info
+                            }
+                        )
                 # If related_questions is explicitly passed as empty list, don't include any questions (for verified answers)
                 elif related_questions is not None and len(related_questions) == 0:
                     print("🔧 DEBUG: related_questions is empty list - creating regular text message without questions")
@@ -376,17 +410,31 @@ class ByoebExpertGenerateResponse(Handler):
                 
                 # For verified answers, always send as regular text without interactive elements
                 if status == constants.VERIFIED:
-                    print("🔧 DEBUG: Status is VERIFIED - creating regular text message without questions")
-                    message_context = MessageContext(
-                        message_id=str(uuid.uuid4()),  # Generate unique message ID
-                        message_type=MessageTypes.REGULAR_TEXT.value,
-                        message_english_text=message_en_text,
-                        message_source_text=text_message,
-                        additional_info={
-                            **message_reaction_additional_info,
-                            **media_additiona_info
-                        }
-                    )
+                    if should_use_template:
+                        print("🔧 DEBUG: Status is VERIFIED - creating template message for inactive user")
+                        message_context = MessageContext(
+                            message_id=str(uuid.uuid4()),  # Generate unique message ID
+                            message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
+                            message_english_text=message_en_text,
+                            message_source_text=text_message,
+                            additional_info={
+                                constants.TEMPLATE_NAME: "expert_verification",
+                                constants.TEMPLATE_LANGUAGE: user.user_language,
+                                constants.TEMPLATE_PARAMETERS: ["(Template not verified yet, sending an approved one. No need to approve any answer here) " + text_message, text_message]
+                            }
+                        )
+                    else:
+                        print("🔧 DEBUG: Status is VERIFIED - creating regular text message without questions")
+                        message_context = MessageContext(
+                            message_id=str(uuid.uuid4()),  # Generate unique message ID
+                            message_type=MessageTypes.REGULAR_TEXT.value,
+                            message_english_text=message_en_text,
+                            message_source_text=text_message,
+                            additional_info={
+                                **message_reaction_additional_info,
+                                **media_additiona_info
+                            }
+                        )
                 # If we have related_questions, create an interactive list, otherwise regular text
                 elif related_questions and len(related_questions) > 0:
                     print("🔧 DEBUG: Adding follow-up questions to regular text message")
@@ -713,6 +761,18 @@ class ByoebExpertGenerateResponse(Handler):
                 media_additional_info = {}
             
             # NEW FLOW: Send approved answer to user (using already translated text)
+            # Check if user is active before deciding message type
+            from byoeb.chat_app.configuration.dependency_setup import user_db_service
+            from byoeb.services.chat.message_handlers.user_flow_handlers.send import ByoebUserSendResponse
+            
+            user_id = user.get("user_id")
+            user_language = user.get("user_language", "en")
+            
+            # Check if user is active (hasn't been inactive for 24 hours)
+            send_handler = ByoebUserSendResponse(user_db_service, None)  # message_db_service not needed for activity check
+            is_active_user = await send_handler.is_active_user(user_id)
+            print(f"🔧 User {user_id} is_active_user: {is_active_user}")
+            
             # We need to create the user message manually to avoid double translation
             user_obj = User(
                 user_id=user.get("user_id"),
@@ -721,12 +781,17 @@ class ByoebExpertGenerateResponse(Handler):
                 phone_number_id=user.get("phone_number_id")
             )
             
+            # Create message context (always start as regular text)
             message_context = MessageContext(
                 message_id=str(uuid.uuid4()),
                 message_type=MessageTypes.REGULAR_TEXT.value,
                 message_english_text=bot_answer,  # Original English text
                 message_source_text=translated_bot_answer,  # Already translated text
-                additional_info=media_additional_info  # FIX: Include audio info
+                additional_info=media_additional_info if is_active_user else {
+                    constants.TEMPLATE_NAME: "expert_verification",
+                    constants.TEMPLATE_LANGUAGE: user_language,
+                    constants.TEMPLATE_PARAMETERS: ["(Template not verified yet, sending an approved one. No need to approve any answer here) " + translated_bot_answer, translated_bot_answer]
+                }
             )
             
             # Fix: Use the same approach as __create_user_message() - take the last message and create reply context
@@ -764,7 +829,43 @@ class ByoebExpertGenerateResponse(Handler):
                 incoming_timestamp=message.incoming_timestamp,
             )
             
-            byoeb_user_messages = [new_user_message]
+            # Handle inactive user template message (similar to expert verification pattern)
+            if not is_active_user:
+                print("📋 User is inactive for 24 hours, preparing template message")
+                # Get channel service to prepare requests
+                if message.channel_type == "whatsapp":
+                    from byoeb.services.channel.whatsapp import WhatsAppService
+                    channel_service = WhatsAppService()
+                elif message.channel_type == "qikchat":
+                    from byoeb.services.channel.qikchat import QikchatService
+                    channel_service = QikchatService()
+                else:
+                    print(f"❌ Unsupported channel type: {message.channel_type}")
+                    byoeb_user_messages = [new_user_message]
+                    return
+                
+                # Prepare requests (creates both regular and template versions)
+                user_requests = await channel_service.prepare_requests(new_user_message)
+                print(f"🔧 DEBUG: user_requests length: {len(user_requests)}")
+                
+                if len(user_requests) < 2:
+                    print(f"❌ ERROR: Expected 2 requests (regular + template), got only {len(user_requests)}")
+                    byoeb_user_messages = [new_user_message]
+                    return
+                    
+                regular_message = user_requests[0]
+                template_message = user_requests[1]
+                
+                # Change message type to template and send template version
+                new_user_message.message_context.message_type = MessageTypes.TEMPLATE_BUTTON.value
+                responses, message_ids = await channel_service.send_requests([template_message])
+                print(f"📋 Template message sent to inactive user: {responses}")
+                
+                # Clear byoeb_user_messages since we already sent the message
+                byoeb_user_messages = []
+            else:
+                print("🔘 User is active, will send regular message through normal flow")
+                byoeb_user_messages = [new_user_message]
             
             print(f"🔧 DEBUG: Created user message with bot_answer: '{bot_answer}'")
 
