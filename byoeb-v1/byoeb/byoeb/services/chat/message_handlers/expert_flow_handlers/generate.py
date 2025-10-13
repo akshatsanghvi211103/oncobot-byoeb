@@ -974,7 +974,14 @@ class ByoebExpertGenerateResponse(Handler):
         # print(f"🔧 DEBUG: read_reciept_message type: {type(read_reciept_message)}, content: {read_reciept_message}")
         
         try:
-            byoeb_messages = byoeb_user_messages + byoeb_expert_messages + [read_reciept_message]
+            # Include the original expert message so it gets stored as EXPERT_TO_BOT
+            original_expert_message = messages[0]  # The original expert input message
+            # Ensure the category is properly set as string, not tuple
+            original_expert_message.message_category = MessageCategory.EXPERT_TO_BOT.value
+            print(f"🔧 Including original expert message for storage: ID={original_expert_message.message_context.message_id}")
+            print(f"🔧 Original expert message category: {getattr(original_expert_message, 'message_category', 'Not set')}")
+            
+            byoeb_messages = byoeb_user_messages + byoeb_expert_messages + [read_reciept_message, original_expert_message]
             # print(f"✅ DEBUG: Messages combined successfully")
         except Exception as e:
             print(f"❌ DEBUG: Error combining messages: {e}")

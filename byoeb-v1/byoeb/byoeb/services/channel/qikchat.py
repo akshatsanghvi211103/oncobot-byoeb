@@ -5,6 +5,7 @@ import byoeb.services.chat.constants as constants
 import byoeb.services.chat.utils as utils
 import byoeb_integrations.channel.qikchat.request_payload as qik_req_payload
 from byoeb.services.channel.base import BaseChannelService, MessageReaction
+from byoeb.models.message_category import MessageCategory
 from byoeb_core.models.byoeb.message_context import (
     User,
     ByoebMessageContext,
@@ -257,7 +258,7 @@ class QikchatService(BaseChannelService):
             # Create BYOeB message context
             bot_message = ByoebMessageContext(
                 channel_type=byoeb_user_message.channel_type,  # Required field
-                message_category=byoeb_user_message.message_category,  # Required field  
+                message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,  # Correct category for bot responses
                 user=bot_user,
                 message_context=bot_message_context,
                 reply_context=ReplyContext(reply_id=byoeb_user_message.message_context.message_id),

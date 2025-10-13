@@ -352,8 +352,47 @@ class ByoebUserSendResponse(Handler):
             start_time = datetime.now().timestamp()
             convs, byoeb_user_message = await self.__handle_message_send_workflow(messages)
             
+            # Create separate message objects for database storage
+            from byoeb.models.message_category import MessageCategory
+            
+            # Create USER_TO_BOT message with original user question text
+            if byoeb_user_message.reply_context and byoeb_user_message.reply_context.reply_english_text:
+                # Create a copy for the user question
+                user_question_message = byoeb_user_message.__deepcopy__()
+                user_question_message.message_category = MessageCategory.USER_TO_BOT.value
+                
+                # Set the message text to the original user question
+                user_question_message.message_context.message_english_text = byoeb_user_message.reply_context.reply_english_text
+                user_question_message.message_context.message_source_text = byoeb_user_message.reply_context.reply_source_text or byoeb_user_message.reply_context.reply_english_text
+                
+                # Generate unique message ID for the user question
+                import uuid
+                user_question_message.message_context.message_id = f"user_q_{uuid.uuid4().hex[:8]}"
+                
+                print(f"🔧 Created USER_TO_BOT message:")
+                print(f"   ID: {user_question_message.message_context.message_id}")
+                print(f"   Text: '{user_question_message.message_context.message_english_text[:50]}...'")
+                
+                # Include both user question and bot response in conversation history
+                all_convs = [user_question_message] + convs
+            else:
+                # Fallback: just include bot responses if no original question available
+                print("⚠️ No original user question found in reply_context - storing bot responses only")
+                all_convs = convs
+            
+            # DEBUG: Show what we're about to store
+            print(f"\n=== USER HANDLER MESSAGE STORAGE DEBUG ===")
+            print(f"📊 Total conversations to store: {len(all_convs)}")
+            for i, conv in enumerate(all_convs):
+                msg_text = conv.message_context.message_english_text or conv.message_context.message_source_text
+                print(f"  {i+1}. ID: {conv.message_context.message_id}")
+                print(f"     Category: {getattr(conv, 'message_category', 'NO_CATEGORY')}")
+                print(f"     Type: {conv.message_context.message_type}")
+                print(f"     Text: '{(msg_text or '')[:50]}...'")
+            print("=== END USER HANDLER DEBUG ===\n")
+            
             # Always prepare DB queries for conversation history, even in testing mode
-            db_queries = self.__prepare_db_queries(convs, byoeb_user_message)
+            db_queries = self.__prepare_db_queries(all_convs, byoeb_user_message)
             
             end_time = datetime.now().timestamp()
             b_utils.log_to_text_file(f"Successfully send the message to the user and expert in {end_time - start_time} seconds")

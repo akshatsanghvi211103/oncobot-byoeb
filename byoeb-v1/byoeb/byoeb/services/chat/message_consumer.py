@@ -172,16 +172,38 @@ class MessageConsmerService:
         for conversation in conversations:
             if conversation.user is not None:
                 conversation.user.activity_timestamp = int(datetime.now().timestamp())
+                # Debug: Log what messages are being processed
+                print(f"🔍 PROCESSING MESSAGE: Category={conversation.message_category}, UserType={conversation.user.user_type}")
+                print(f"🔍 Message Text: {conversation.message_context.message_english_text or conversation.message_context.message_source_text or 'No text'}".strip()[:100])
+                
                 # b_utils.log_to_text_file("Processing message: " + json.dumps(conversation.model_dump()))
                 if conversation.user.user_type == self._regular_user_type:
                     task.append(self.__process_byoebuser_conversation(conversation))
+                    print(f"🔍 Added USER conversation to processing queue")
                 elif self.__is_expert_user_type(conversation.user.user_type):
                     task.append(self.__process_byoebexpert_conversation(conversation))
+                    print(f"🔍 Added EXPERT conversation to processing queue")
         results = await asyncio.gather(*task)
-        for queries, processed_message, err in results:
-            if err is not None or queries is None:
+        print(f"🔍 PROCESSING RESULTS: Got {len(results)} results from handlers")
+        
+        for i, (queries, processed_message, err) in enumerate(results):
+            if err is not None:
+                print(f"❌ Result {i}: Error = {err}")
                 continue
+            if queries is None:
+                print(f"❌ Result {i}: No queries returned")
+                continue
+            
+            # Debug: Show what queries each handler returned
+            msg_creates = queries.get(constants.MESSAGE_DB_QUERIES, {}).get(constants.CREATE, [])
+            msg_updates = queries.get(constants.MESSAGE_DB_QUERIES, {}).get(constants.UPDATE, [])
+            user_creates = queries.get(constants.USER_DB_QUERIES, {}).get(constants.CREATE, [])
+            user_updates = queries.get(constants.USER_DB_QUERIES, {}).get(constants.UPDATE, [])
+            
+            print(f"✅ Result {i}: MSG_CREATE={len(msg_creates)}, MSG_UPDATE={len(msg_updates)}, USER_CREATE={len(user_creates)}, USER_UPDATE={len(user_updates)}")
+            
             successfully_processed_messages.append(processed_message)
+        
         start_time = datetime.now().timestamp()
         user_queries = self._user_db_service.aggregate_queries(results)
         message_queries = self._message_db_service.aggregate_queries(results)

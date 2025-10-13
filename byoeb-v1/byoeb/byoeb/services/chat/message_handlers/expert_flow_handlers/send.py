@@ -99,30 +99,70 @@ class ByoebExpertSendResponse(Handler):
     def __prepare_db_queries(
         self,
         byoeb_user_messages: List[ByoebMessageContext],
-        byoeb_expert_message: ByoebMessageContext,
+        byoeb_expert_messages: List[ByoebMessageContext],
     ):
-        print(f"🗄️ __prepare_db_queries: Preparing queries for {len(byoeb_user_messages) if byoeb_user_messages else 0} user messages")
+        print(f"🗄️ __prepare_db_queries: Preparing queries for {len(byoeb_user_messages) if byoeb_user_messages else 0} user messages and {len(byoeb_expert_messages) if byoeb_expert_messages else 0} expert messages")
         
+        # Prepare all messages that need to be stored in database
+        all_messages_to_store = []
+        
+        # Add user messages (verified answers) if they exist
+        if byoeb_user_messages:
+            all_messages_to_store.extend(byoeb_user_messages)
+            print(f"🗄️ Added {len(byoeb_user_messages)} user response messages for storage")
+        
+        # Add expert messages (expert's responses: YES/NO/correction and bot responses to expert)
+        if byoeb_expert_messages:
+            all_messages_to_store.extend(byoeb_expert_messages)
+            print(f"🗄️ Added {len(byoeb_expert_messages)} expert messages for storage")
+        
+        # Create database storage queries for all messages
+        message_create_queries = []
         message_update_queries = []
-        if byoeb_user_messages is None or len(byoeb_user_messages) == 0:
-            message_update_queries = []
-        else:
+        
+        if all_messages_to_store:
             try:
-                print(f"🗄️ Calling correction_update_query")
-                correction_queries = self._message_db_service.correction_update_query(byoeb_user_messages, byoeb_expert_message)
-                print(f"🗄️ Calling verification_status_update_query")
-                verification_queries = self._message_db_service.verification_status_update_query(byoeb_user_messages, byoeb_expert_message)
-                message_update_queries = correction_queries + verification_queries
+                # DEBUG: Show what messages we're storing for expert flow
+                print(f"\n=== EXPERT HANDLER MESSAGE STORAGE DEBUG ===")
+                print(f"📊 Total messages to store: {len(all_messages_to_store)}")
+                for i, msg in enumerate(all_messages_to_store):
+                    msg_text = msg.message_context.message_english_text or msg.message_context.message_source_text
+                    print(f"  {i+1}. ID: {msg.message_context.message_id}")
+                    print(f"     Category: {getattr(msg, 'message_category', 'NO_CATEGORY')}")
+                    print(f"     Type: {msg.message_context.message_type}")
+                    print(f"     Text: '{(msg_text or '')[:50]}...'")
+                print("=== END EXPERT HANDLER DEBUG ===\n")
+                
+                # CREATE queries for new messages (same pattern as user flow handlers)
+                message_create_queries = self._message_db_service.message_create_queries(all_messages_to_store)
+                print(f"🗄️ Generated {len(message_create_queries)} CREATE queries")
+                
+                # UPDATE queries for existing messages (existing logic)
+                if byoeb_user_messages and byoeb_expert_messages:
+                    # Use the first expert message for the update queries (the bot response to expert)
+                    primary_expert_message = byoeb_expert_messages[0]
+                    print(f"🗄️ Calling correction_update_query")
+                    correction_queries = self._message_db_service.correction_update_query(byoeb_user_messages, primary_expert_message)
+                    print(f"🗄️ Calling verification_status_update_query")
+                    verification_queries = self._message_db_service.verification_status_update_query(byoeb_user_messages, primary_expert_message)
+                    message_update_queries = correction_queries + verification_queries
+                    print(f"🗄️ Generated {len(message_update_queries)} UPDATE queries")
+                
                 print(f"🗄️ Database queries prepared successfully")
             except Exception as e:
                 print(f"❌ Error preparing database queries: {e}")
                 import traceback
                 traceback.print_exc()
+                message_create_queries = []
                 message_update_queries = []
         
-        user_update_queries = [self._user_db_service.user_activity_update_query(byoeb_expert_message.user)]
+        # Use the first expert message for user activity update (any expert message will do)
+        user_update_queries = []
+        if byoeb_expert_messages:
+            user_update_queries = [self._user_db_service.user_activity_update_query(byoeb_expert_messages[0].user)]
         return {
             constants.MESSAGE_DB_QUERIES: {
+                constants.CREATE: message_create_queries,
                 constants.UPDATE: message_update_queries
             },
             constants.USER_DB_QUERIES: {
@@ -281,6 +321,6 @@ class ByoebExpertSendResponse(Handler):
             user_responses = await self.__handle_user(channel_service, byoeb_user_messages)
         else:
             print(f"📨 No user messages to send")
-        db_queries = self.__prepare_db_queries(byoeb_user_messages, byoeb_expert_message)
+        db_queries = self.__prepare_db_queries(byoeb_user_messages, byoeb_expert_messages)
         print("=== END EXPERT SEND RESPONSE DEBUG ===\n")
         return db_queries
