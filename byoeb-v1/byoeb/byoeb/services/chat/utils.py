@@ -37,7 +37,7 @@ def has_interactive_list_additional_info(
         row_texts_exists = 'row_texts' in byoeb_message.message_context.additional_info
         row_texts_not_none = (row_texts_exists and 
                              byoeb_message.message_context.additional_info['row_texts'] is not None)
-        print(f"🔍 Checking interactive list - has description: {description_exists}, has row_texts: {row_texts_exists}, row_texts not None: {row_texts_not_none}, result: {has_list}")
+        print(f"Checking interactive list - has description: {description_exists}, has row_texts: {row_texts_exists}, row_texts not None: {row_texts_not_none}, result: {has_list}")
     return has_list
 
 def has_interactive_button_additional_info(

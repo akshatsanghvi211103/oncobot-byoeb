@@ -2189,3 +2189,61 @@ Conversations created in: 0.5847659111022949 seconds
 DB queries executed in: 0.7590889930725098 seconds
 Successfully processed 1 messages
 Processed 1 message in: 8 seconds
+Conversations created in: 5.286457061767578 seconds
+Error in multi-KB search: DefaultAzureCredential failed to retrieve a token from the included credentials.
+Attempted credentials:
+	EnvironmentCredential: EnvironmentCredential authentication unavailable. Environment variables are not fully configured.
+Visit https://aka.ms/azsdk/python/identity/environmentcredential/troubleshoot to troubleshoot this issue.
+	ManagedIdentityCredential: ManagedIdentityCredential authentication unavailable, no response from the IMDS endpoint.
+	SharedTokenCacheCredential: SharedTokenCacheCredential authentication unavailable. No accounts were found in the cache.
+	AzureCliCredential: Failed to invoke Azure CLI
+	AzurePowerShellCredential: Az.Account module >= 2.2.0 is not installed
+	AzureDeveloperCliCredential: Azure Developer CLI could not be found. Please visit https://aka.ms/azure-dev for installation instructions and then,once installed, authenticate to your Azure account using 'azd auth login'.
+To mitigate this issue, please refer to the troubleshooting guidelines here at https://aka.ms/azsdk/python/identity/defaultazurecredential/troubleshoot., falling back to original search
+Error in multi-KB search: DefaultAzureCredential failed to retrieve a token from the included credentials.
+Attempted credentials:
+	EnvironmentCredential: EnvironmentCredential authentication unavailable. Environment variables are not fully configured.
+Visit https://aka.ms/azsdk/python/identity/environmentcredential/troubleshoot to troubleshoot this issue.
+	ManagedIdentityCredential: ManagedIdentityCredential authentication unavailable, no response from the IMDS endpoint.
+	SharedTokenCacheCredential: SharedTokenCacheCredential authentication unavailable. No accounts were found in the cache.
+	AzureCliCredential: Failed to invoke Azure CLI
+	AzurePowerShellCredential: Az.Account module >= 2.2.0 is not installed
+	AzureDeveloperCliCredential: Azure Developer CLI could not be found. Please visit https://aka.ms/azure-dev for installation instructions and then,once installed, authenticate to your Azure account using 'azd auth login'.
+To mitigate this issue, please refer to the troubleshooting guidelines here at https://aka.ms/azsdk/python/identity/defaultazurecredential/troubleshoot., falling back to original search
+Conversations created in: 5.507788896560669 seconds
+Retrieved chunks in 10.663434028625488 seconds
+Generated answer tokens: {'total_tokens': 1534, 'completion_tokens': 110, 'prompt_tokens': 1424}
+Generated answer tokens: {'total_tokens': 1183, 'completion_tokens': 60, 'prompt_tokens': 1123}
+Generated answer and related questions in 21.078234910964966 seconds
+Successfully send the message to the user and expert in 1.6719539165496826 seconds
+DB queries executed in: 0.5850400924682617 seconds
+Successfully processed 1 messages
+Processed 1 message in: 30 seconds
+Conversations created in: 4.708544969558716 seconds
+DB queries executed in: 0.6973559856414795 seconds
+Successfully processed 1 messages
+Processed 1 message in: 15 seconds
+Conversations created in: 6.411456823348999 seconds
+Retrieved chunks in 13.360785007476807 seconds
+Generated answer tokens: {'total_tokens': 1737, 'completion_tokens': 108, 'prompt_tokens': 1629}
+Generated answer tokens: {'total_tokens': 1388, 'completion_tokens': 63, 'prompt_tokens': 1325}
+Conversations created in: 4.940972089767456 seconds
+Retrieved chunks in 12.841022968292236 seconds
+Generated answer tokens: {'total_tokens': 1453, 'completion_tokens': 125, 'prompt_tokens': 1328}
+Generated answer tokens: {'total_tokens': 1084, 'completion_tokens': 58, 'prompt_tokens': 1026}
+Generated answer and related questions in 23.082349061965942 seconds
+Successfully send the message to the user and expert in 1.802804946899414 seconds
+DB queries executed in: 0.5998668670654297 seconds
+Successfully processed 1 messages
+Conversations created in: 5.02866792678833 seconds
+DB queries executed in: 0.8449850082397461 seconds
+Successfully processed 1 messages
+Processed 1 message in: 15 seconds
+Conversations created in: 4.910463809967041 seconds
+DB queries executed in: 3.0837621688842773 seconds
+Successfully processed 2 messages
+Processed 2 message in: 9 seconds
+Conversations created in: 0.6938550472259521 seconds
+DB queries executed in: 1.1631171703338623 seconds
+Successfully processed 2 messages
+Processed 2 message in: 23 seconds
