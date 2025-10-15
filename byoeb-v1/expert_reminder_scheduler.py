@@ -13,7 +13,7 @@ import time
 from datetime import datetime
 
 # Configuration  
-# SCHEDULE_ENDPOINT = "http://localhost:5000/schedule"  # Use the port your server is running on
+#  SCHEDULE_ENDPOINT = "http://localhost:5000/schedule"  # Use the port your server is running on
 SCHEDULE_ENDPOINT = "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/schedule"  # Use the port your server is running on
 CHECK_INTERVAL_SECONDS = 10800  # 3 hours (3 * 60 * 60 seconds)
 MAX_RETRIES = 3
