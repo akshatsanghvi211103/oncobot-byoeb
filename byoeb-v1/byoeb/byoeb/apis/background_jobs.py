@@ -160,7 +160,7 @@ async def schedule(request: Request):
                 
                 print(f"✅ Command exit code: {result.returncode}")
                 if result.stdout:
-                    print(f"📤 Command stdout (first 2000 chars):\n{result.stdout[:2000]}")
+                    print(f"📤 Command stdout (first 5000 chars):\n{result.stdout[:5000]}")
                 if result.stderr:
                     print(f"❌ Command stderr:\n{result.stderr}")
                     

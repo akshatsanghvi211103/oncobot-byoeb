@@ -36,6 +36,7 @@ async def is_active_expert(user_id: str):
     Check if expert is active based on last activity timestamp.
     Uses same logic as main system.
     """
+    # return False
     try:
         SINGLETON = "singleton"
         mongo_factory = MongoDBFactory(config=app_config, scope=SINGLETON)
@@ -82,9 +83,31 @@ async def get_pending_expert_verifications():
         mongo_factory = MongoDBFactory(config=app_config, scope=SINGLETON)
         message_db_service = MessageMongoDBService(app_config, mongo_factory)
         
-        # Get message collection
+        # Get message collection with retry logic for DNS issues
         collection_name = app_config["databases"]["mongo_db"]["message_collection"]
-        message_collection_client = await message_db_service._get_collection_client(collection_name)
+        
+        # Retry connection up to 3 times for DNS/network issues
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                print(f"[INFO] Attempting database connection (attempt {attempt + 1}/{max_retries})")
+                message_collection_client = await message_db_service._get_collection_client(collection_name)
+                print(f"[INFO] Database connection successful")
+                break
+            except Exception as conn_error:
+                if "DNS" in str(conn_error) or "timeout" in str(conn_error).lower():
+                    print(f"[WARNING] DNS/network error on attempt {attempt + 1}: {conn_error}")
+                    if attempt < max_retries - 1:
+                        import asyncio
+                        print(f"[INFO] Retrying in 5 seconds...")
+                        await asyncio.sleep(5)
+                        continue
+                    else:
+                        print(f"[ERROR] All connection attempts failed")
+                        raise
+                else:
+                    # Not a DNS/network error, re-raise immediately
+                    raise
         
         # Calculate timestamp thresholds
         now = datetime.now()
@@ -264,6 +287,7 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
         
         # Check if expert is active
         is_active = await is_active_expert(expert_user_id)
+        print(f"[DEBUG] Consolidated reminder - Expert activity result: is_active = {is_active}")
         expert_user = User(
             phone_number_id=EXPERT_PHONE_NUMBER,
             language_type="en",
@@ -285,6 +309,7 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
             reminder_text = f"You have {len(verifications)} pending questions awaiting your response:\n\n{questions_text}\n\nKindly provide your answers at your earliest convenience."
             message_type = MessageTypes.REGULAR_TEXT.value
             additional_info = {}
+            print("[DEBUG] Taking ACTIVE branch - sending text message")
             print("[INFO] Sending consolidated text reminder to active expert")
         else:
             # Inactive expert gets template message
@@ -298,6 +323,7 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
                     "2": questions_text[:500] + ("..." if len(questions_text) > 500 else "")
                 }
             }
+            print("[DEBUG] Taking INACTIVE branch - sending template message")
             print(f"[INFO] Sending consolidated template '{TEMPLATE_NAME}' reminder to inactive expert")
         
         # Create consolidated reminder message context
@@ -324,13 +350,72 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
         
         # Prepare and send the consolidated reminder
         qikchat_service = QikchatService()
+        
+        if not is_active:
+            # For inactive experts, update additional_info for template and use system's template handling
+            print("[DEBUG] Setting up template message for inactive expert")
+            
+            # Clean questions text for WhatsApp template parameters (no newlines, tabs, or >4 spaces)
+            clean_questions_text = questions_text.replace('\n', ' | ').replace('\t', ' ').replace('\r', ' ')
+            # Replace multiple spaces with single space, but preserve up to 4 spaces
+            import re
+            clean_questions_text = re.sub(r' {5,}', ' ', clean_questions_text)  # Replace 5+ spaces with 1
+            clean_questions_text = clean_questions_text[:500] + ("..." if len(clean_questions_text) > 500 else "")
+            
+            reminder_byoeb_message.message_context.additional_info = {
+                "template_name": TEMPLATE_NAME,
+                "template_language": "en",  # String, not object
+                "template_parameters": [
+                    str(len(verifications)),  # Parameter 1: number of questions
+                    clean_questions_text  # Parameter 2: cleaned questions list
+                ]
+            }
+            reminder_byoeb_message.message_context.message_type = MessageTypes.TEMPLATE_BUTTON.value
+            print(f"[DEBUG] Template parameters: {reminder_byoeb_message.message_context.additional_info['template_parameters']}")
+        
+        # Use prepare_requests for both active and inactive (system handles template conversion)
+        print("[DEBUG] Preparing requests through system")
         requests = await qikchat_service.prepare_requests(reminder_byoeb_message)
-        responses, message_ids = await qikchat_service.send_requests(requests)
+        print(f"[DEBUG] Prepared {len(requests)} request(s)")
+        
+        # Debug: show details of each request
+        for i, req in enumerate(requests):
+            print(f"[DEBUG] Request {i}: type={req.get('type', 'unknown')}, to_contact={req.get('to_contact', 'unknown')}")
+            if req.get('type') == 'template':
+                print(f"[DEBUG]   Template name: {req.get('template', {}).get('name', 'unknown')}")
+            elif req.get('type') == 'text':
+                print(f"[DEBUG]   Text body: {req.get('text', {}).get('body', 'unknown')[:50]}...")
+        
+        # Send only the appropriate request type based on expert activity
+        if not is_active and len(requests) > 1:
+            # For inactive experts, send only template version if available
+            template_requests = [req for req in requests if req.get('type') == 'template']
+            if template_requests:
+                print("[DEBUG] Sending template request for inactive expert")
+                responses, message_ids = await qikchat_service.send_requests([template_requests[0]])
+            else:
+                print("[DEBUG] No template request found, sending first request")
+                responses, message_ids = await qikchat_service.send_requests([requests[0]])
+        else:
+            # For active experts or single request, send first/only request
+            print(f"[DEBUG] Sending {'first' if len(requests) > 1 else 'only'} request for active expert")
+            responses, message_ids = await qikchat_service.send_requests([requests[0]])
+        
+        print(f"[DEBUG] Sent 1 request, got {len(message_ids)} message IDs")
         
         print(f"Consolidated reminder sent successfully!")
         print(f"   Questions included: {len(verifications)}")
+        print(f"   Message type sent: {reminder_byoeb_message.message_context.message_type}")
+        print(f"   Template info: {additional_info}")
         print(f"   Response: {responses}")
         print(f"   Message IDs: {message_ids}")
+        
+        # Print full message details for debugging
+        print(f"[DEBUG] Full message context:")
+        print(f"  - Message ID: {reminder_byoeb_message.message_context.message_id}")
+        print(f"  - Message Type: {reminder_byoeb_message.message_context.message_type}")
+        print(f"  - Additional Info: {reminder_byoeb_message.message_context.additional_info}")
+        print(f"  - Message Text: {reminder_byoeb_message.message_context.message_english_text[:100]}...")
         
         return True
         
