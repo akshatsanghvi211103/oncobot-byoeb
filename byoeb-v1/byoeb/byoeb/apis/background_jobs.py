@@ -136,7 +136,7 @@ async def schedule(request: Request):
     current_hour = now.hour
     
     # Skip night hours (10PM to 6AM)
-    if not (23 <= current_hour or current_hour < 6):
+    if not (22 <= current_hour or current_hour < 6):
         if last_expert_reminder is None:
             # First run - run immediately if during day hours
             should_run_expert_reminder = True
@@ -158,7 +158,7 @@ async def schedule(request: Request):
     
     # Check KB Update Logic (Daily at 3AM)
     should_run_kb_update = False
-    if current_hour == 22:  # 3AM
+    if current_hour == 3:  # 3AM
         if last_kb_update is None or last_kb_update.date() != now.date():
             should_run_kb_update = True
             print("🗃️ KB update: Daily 3AM run")
