@@ -26,6 +26,14 @@
             }   
         },
         "user": {
+            "reminder": {
+                "message": {
+                    "en": "You can ask me any questions or concerns you have about cancer. I'm here to help you understand and guide you with reliable information.",
+                    "hi": "आप मुझसे कैंसर से जुड़ी कोई भी शंका या सवाल पूछ सकते हैं। मैं आपकी मदद करने और आपको भरोसेमंद जानकारी के साथ मार्गदर्शन देने के लिए यहाँ हूँ।",
+                    "kn": "ನೀವು ಕ್ಯಾನ್ಸರ್ ಕುರಿತು ಯಾವುದೇ ಪ್ರಶ್ನೆಗಳು ಅಥವಾ ಆತಂಕಗಳನ್ನು ನನಗೆ ಕೇಳಬಹುದು. ನಾನು ನಿಮಗೆ ನಿಖರವಾದ ಮಾಹಿತಿಯೊಂದಿಗೆ ಸಹಾಯ ಮಾಡಲು ಮತ್ತು ಮಾರ್ಗದರ್ಶನ ನೀಡಲು ಇಲ್ಲಿದ್ದೇನೆ."
+                },
+                "template_name": "user_reminders"
+            },
             "consensus": {
                 "timeout": {
                     "en": "Please ask your question directly to ANM",

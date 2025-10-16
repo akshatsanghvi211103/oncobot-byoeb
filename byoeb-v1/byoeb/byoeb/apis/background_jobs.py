@@ -32,11 +32,13 @@ templates = Jinja2Templates(directory=template_dir)
 app_start_time = datetime.now(pytz.timezone("Asia/Kolkata"))
 last_expert_reminder = None
 last_kb_update = None
+last_user_reminder = None
 
 # Available background jobs (will be selectively executed based on timing)
 available_jobs = {
     "expert_reminder": f"python {jobs_path}/send_expert_reminder.py && exit",
-    "kb_update": f"python {jobs_path}/update_kb_with_corrections.py && exit"
+    "kb_update": f"python {jobs_path}/update_kb_with_corrections.py && exit",
+    "user_reminder": f"python {jobs_path}/send_user_reminder.py && exit"
 }
 pids = []
 
@@ -108,7 +110,7 @@ pids = []
 
 @background_apis_router.post("/schedule")
 async def schedule(request: Request):
-    global last_expert_reminder, last_kb_update
+    global last_expert_reminder, last_kb_update, last_user_reminder
 
     # Clean up completed processes
     for pid in pids[:]:
@@ -171,6 +173,29 @@ async def schedule(request: Request):
         jobs_to_run.append(("kb_update", available_jobs["kb_update"]))
         last_kb_update = now
     
+    # Check User Reminder Logic (Every Tuesday and Friday at 11AM)
+    should_run_user_reminder = False
+    current_weekday = now.weekday()  # 0=Monday, 1=Tuesday, 4=Friday, 6=Sunday
+    
+    if current_hour == 11 and current_weekday in [1, 4]:  # Tuesday=1, Friday=4
+        if last_user_reminder is None or last_user_reminder.date() != now.date():
+            should_run_user_reminder = True
+            day_name = "Tuesday" if current_weekday == 1 else "Friday"
+            print(f"📱 User reminder: {day_name} 11AM run")
+        else:
+            print("📱 User reminder: Already ran today at 11AM")
+    else:
+        day_names = {1: "Tuesday", 4: "Friday"}
+        if current_weekday in [1, 4]:
+            print(f"📱 User reminder: Waiting for 11AM (current: {current_hour}:00)")
+        else:
+            next_day = "Tuesday" if current_weekday < 1 or current_weekday > 4 else "Friday"
+            print(f"📱 User reminder: Waiting for {next_day} 11AM")
+    
+    if should_run_user_reminder:
+        jobs_to_run.append(("user_reminder", available_jobs["user_reminder"]))
+        last_user_reminder = now
+    
     # Execute selected jobs
     if not jobs_to_run:
         print("⏸️ No jobs scheduled to run at this time")
@@ -203,7 +228,7 @@ async def schedule(request: Request):
             
             print(f"✅ {job_name} exit code: {result.returncode}")
             if result.stdout:
-                print(f"📤 {job_name} stdout (first 3000 chars):\n{result.stdout[:3000]}")
+                print(f"📤 {job_name} stdout (first 10000 chars):\n{result.stdout[:10000]}")
             if result.stderr:
                 print(f"❌ {job_name} stderr:\n{result.stderr}")
                 
@@ -214,8 +239,8 @@ async def schedule(request: Request):
                 "command": command,
                 "exit_code": result.returncode,
                 "executed_at": str(now),
-                "stdout": result.stdout[:1000] if result.stdout else None,
-                "stderr": result.stderr[:1000] if result.stderr else None
+                "stdout": result.stdout[:10000] if result.stdout else None,
+                "stderr": result.stderr[:10000] if result.stderr else None
             })
             
         except subprocess.TimeoutExpired:
@@ -229,7 +254,9 @@ async def schedule(request: Request):
             "current_time": str(now),
             "last_expert_reminder": str(last_expert_reminder) if last_expert_reminder else "Never",
             "last_kb_update": str(last_kb_update) if last_kb_update else "Never",
-            "next_kb_update": "Tomorrow at 3AM" if current_hour >= 3 else "Today at 3AM"
+            "last_user_reminder": str(last_user_reminder) if last_user_reminder else "Never",
+            "next_kb_update": "Tomorrow at 3AM" if current_hour >= 3 else "Today at 3AM",
+            "next_user_reminder": "Next Tuesday/Friday at 11AM"
         },
         status_code=202
     )

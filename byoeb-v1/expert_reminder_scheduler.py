@@ -13,7 +13,7 @@ import time
 from datetime import datetime
 
 # Configuration  
-#  SCHEDULE_ENDPOINT = "http://localhost:5000/schedule"  # Use the port your server is running on
+# SCHEDULE_ENDPOINT = "http://localhost:5000/schedule"  # Use the port your server is running on
 SCHEDULE_ENDPOINT = "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/schedule"  # Use the port your server is running on
 CHECK_INTERVAL_SECONDS = 10800  # 3 hours (3 * 60 * 60 seconds)
 MAX_RETRIES = 3
@@ -31,9 +31,18 @@ async def trigger_schedule():
                 if response.status == 202:
                     result = await response.json()
                     print(f"✅ Schedule triggered successfully!")
-                    print(f"   Active processes: {len(result)}")
-                    for process in result:
-                        print(f"   - PID {process['pid']}: {process['command']}")
+                    if "executed_jobs" in result:
+                        jobs = result.get("executed_jobs", [])
+                        print(f"   Executed jobs: {jobs}")
+                        print(f"   Current time: {result.get('current_time', 'Unknown')}")
+                    else:
+                        print(f"   Response: {result}")
+                    return True
+                elif response.status == 200:
+                    result = await response.json()
+                    print(f"✅ Schedule checked - no jobs to run")
+                    print(f"   Message: {result.get('message', 'No message')}")
+                    print(f"   Current time: {result.get('current_time', 'Unknown')}")
                     return True
                 else:
                     print(f"❌ Schedule endpoint returned status: {response.status}")

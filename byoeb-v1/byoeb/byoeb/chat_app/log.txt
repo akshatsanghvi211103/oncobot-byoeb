@@ -2258,3 +2258,16 @@ Visit https://aka.ms/azsdk/python/identity/environmentcredential/troubleshoot to
 	AzurePowerShellCredential: Az.Account module >= 2.2.0 is not installed
 	AzureDeveloperCliCredential: Azure Developer CLI could not be found. Please visit https://aka.ms/azure-dev for installation instructions and then,once installed, authenticate to your Azure account using 'azd auth login'.
 To mitigate this issue, please refer to the troubleshooting guidelines here at https://aka.ms/azsdk/python/identity/defaultazurecredential/troubleshoot., falling back to original search
+Conversations created in: 6.023981094360352 seconds
+Retrieved chunks in 11.713263034820557 seconds
+Retrieved chunks in 15.49316692352295 seconds
+Generated answer tokens: {'total_tokens': 1808, 'completion_tokens': 119, 'prompt_tokens': 1689}
+Generated answer tokens: {'total_tokens': 1791, 'completion_tokens': 102, 'prompt_tokens': 1689}
+Generated answer tokens: {'total_tokens': 1447, 'completion_tokens': 65, 'prompt_tokens': 1382}
+Generated answer tokens: {'total_tokens': 1448, 'completion_tokens': 66, 'prompt_tokens': 1382}
+Generated answer and related questions in 28.13642692565918 seconds
+Generated answer and related questions in 27.130765914916992 seconds
+Successfully send the message to the user and expert in 1.6941640377044678 seconds
+Successfully send the message to the user and expert in 1.6102190017700195 seconds
+DB queries executed in: 1.1368038654327393 seconds
+Successfully processed 2 messages
