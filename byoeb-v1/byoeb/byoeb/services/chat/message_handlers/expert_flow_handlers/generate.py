@@ -25,7 +25,7 @@ class ByoebExpertGenerateResponse(Handler):
 
     USER_VERIFIED_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["verified_answer"]
     USER_WRONG_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["wrong_answer"]
-    USER_WAITING_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["waiting_answer"]
+    # USER_WAITING_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["waiting_answer"]
     USER_CORRECTED_ANSWER_MESSAGES = bot_config["template_messages"]["user"]["corrected_answer"]
 
     USER_VERIFIED_EMOJI = app_config["channel"]["reaction"]["user"]["verified"]
