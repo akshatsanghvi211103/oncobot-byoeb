@@ -48,9 +48,42 @@ class ByoebExpertGenerateResponse(Handler):
         user = User.model_validate(user_info_dict)
         return user.user_language
 
+    def __strip_patient_context(self, message: str) -> str:
+        """
+        Strip patient context from the beginning of expert verification messages.
+        New simplified patient context format:
+        [Patient Name]
+        Age: [age], Gender: [gender], DOB: [dob]
+        
+        [Rest of message]
+        """
+        lines = message.split('\n')
+        
+        # Look for pattern: name line followed by details line (Age:, Gender:, DOB:)
+        if len(lines) >= 3:
+            # Check if second line contains age/gender/dob pattern
+            second_line = lines[1] if len(lines) > 1 else ""
+            if any(keyword in second_line for keyword in ["Age:", "Gender:", "DOB:"]):
+                # Skip the first two lines (patient name and details) and any empty lines after
+                remaining_lines = lines[2:]
+                # Skip any empty lines after patient context
+                while remaining_lines and not remaining_lines[0].strip():
+                    remaining_lines.pop(0)
+                
+                stripped = '\n'.join(remaining_lines)
+                print(f"🔧 DEBUG: Stripped patient context from expert message")
+                print(f"🔧 DEBUG: Patient context found - Name: '{lines[0]}', Details: '{second_line}'")
+                print("🔧 DEBUG: Stripped content:", stripped)
+                return stripped
+        
+        return message
+
     def __parse_message(self, message: str) -> dict:
+        # Strip patient context first
+        clean_message = self.__strip_patient_context(message)
+        
         pattern = r"\*Question\*:\s*(.*?)\n\*Bot_Answer\*:\s*(.*)"
-        match = re.search(pattern, message)
+        match = re.search(pattern, clean_message)
         if match:
             return {
                 "Question": match.group(1).strip(),
@@ -66,7 +99,10 @@ class ByoebExpertGenerateResponse(Handler):
         <ANSWER>
         Is the answer correct?
         """
-        lines = message.strip().split('\n')
+        # Strip patient context first
+        clean_message = self.__strip_patient_context(message)
+        
+        lines = clean_message.strip().split('\n')
         if len(lines) >= 2:
             # Find "Is the answer correct?" line
             footer_index = -1
@@ -657,7 +693,12 @@ class ByoebExpertGenerateResponse(Handler):
                 bot_answer,
                 correction
             )
-            # print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")
+            # Debug: Print exact text being passed to LLM for correction
+            print(f"🔧 DEBUG: EXACT TEXT BEING CORRECTED BY LLM (after NO):")
+            print(f"     Question: '{question}'")
+            print(f"     Original Bot Answer: '{bot_answer}'")
+            print(f"     Expert Correction: '{correction}'")
+            print(f"     Final User Prompt to LLM: '{user_prompt}'")
             
             augmented_prompts = self.__augment(user_prompt)
             llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
@@ -935,7 +976,12 @@ class ByoebExpertGenerateResponse(Handler):
                 bot_answer,
                 correction
             )
-            # print(f"🔧 Generated user prompt for LLM: '{user_prompt[:200]}...'")
+            # Debug: Print exact text being passed to LLM for correction
+            print(f"🔧 DEBUG: EXACT TEXT BEING CORRECTED BY LLM:")
+            print(f"     Question: '{question}'")
+            print(f"     Original Bot Answer: '{bot_answer}'")
+            print(f"     Expert Correction: '{correction}'")
+            print(f"     Final User Prompt to LLM: '{user_prompt}'")
             
             augmented_prompts = self.__augment(user_prompt)
             llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)

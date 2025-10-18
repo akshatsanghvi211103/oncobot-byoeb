@@ -497,6 +497,33 @@ class ByoebUserGenerateResponse(Handler):
             
         expert_user_id = hashlib.md5(expert_phone_number_id.encode()).hexdigest()
         print(f"🆔 Generated expert user_id: {expert_user_id} from phone: {expert_phone_number_id}")
+        
+        # Create patient context header with user name and patient details
+        patient_context_lines = []
+        
+        # Add patient name if available
+        if hasattr(message.user, 'user_name') and message.user.user_name:
+            patient_context_lines.append(f"{message.user.user_name}")
+        
+        # Add patient details if available
+        if hasattr(message.user, 'patient_details') and message.user.patient_details:
+            details = []
+            if message.user.patient_details.get('age'):
+                details.append(f"Age: {message.user.patient_details['age']}")
+            if message.user.patient_details.get('gender'):
+                details.append(f"Gender: {message.user.patient_details['gender']}")
+            if message.user.patient_details.get('date_of_birth'):
+                details.append(f"DOB: {message.user.patient_details['date_of_birth']}")
+            
+            if details:
+                patient_context_lines.append(f"{', '.join(details)}")
+        
+        # Create patient context header (only if we have patient info)
+        patient_context_header = ""
+        if patient_context_lines:
+            patient_context_header = "\n".join(patient_context_lines) + "\n\n"
+            print(f"👤 Added patient context for expert: {len(patient_context_lines)} lines")
+        
         verification_question_template = bot_config["template_messages"]["expert"]["verification"]["Question"]
         verification_bot_answer_template = bot_config["template_messages"]["expert"]["verification"]["Bot_Answer"]
         verification_question = verification_question_template.replace(
@@ -514,7 +541,18 @@ class ByoebUserGenerateResponse(Handler):
             status,
             related_questions
         )
-        expert_message = verification_question + "\n" + verification_bot_answer + "\n" + verification_footer_message
+        
+        # For template messages (INTERACTIVE_BUTTON), add patient context to template parameters
+        # For text messages, add patient context to message body
+        # Add Q: and A: prefixes to question and answer for expert clarity
+        formatted_question = f"Q: {verification_question}"
+        formatted_answer = f"A: {verification_bot_answer}"
+        expert_message = formatted_question + "\n" + formatted_answer + "\n" + verification_footer_message
+        
+        # Add patient context to the beginning of expert message content
+        if patient_context_header:
+            expert_message = patient_context_header + expert_message
+            print(f"👨‍⚕️ Expert message now includes patient context at the top")
         new_expert_verification_message = ByoebMessageContext(
             channel_type=message.channel_type,
             message_category=MessageCategory.BOT_TO_EXPERT_VERIFICATION.value,
