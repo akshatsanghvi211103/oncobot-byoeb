@@ -778,8 +778,24 @@ class ByoebUserGenerateResponse(Handler):
         else:
             # For medical/logistical queries, send waiting message and get expert verification
             user_lang = message.user.user_language
-            waiting_message = bot_config["template_messages"]["user"]["waiting_answer"].get(user_lang, 
-                             "Please wait while we verify the answer with our expert.")
+            
+            # Determine expert type that will be used for this query
+            expert_result = self.__get_expert_number_and_type(message.user.experts, query_type)
+            expert_type = None
+            if expert_result is not None:
+                _, expert_type = expert_result
+            
+            # Determine which waiting message to use based on query type or expert type
+            if query_type == "logistical" or expert_type == "byoebexpert2":
+                # Use staff waiting message for logistical queries or byoebexpert2
+                waiting_message = bot_config["template_messages"]["user"]["waiting_answer_logistical"].get(user_lang, 
+                                 "Please wait while we verify the answer with our staff.")
+                print(f"📋 Using staff waiting message for {'logistical query' if query_type == 'logistical' else 'byoebexpert2 expert'}")
+            else:
+                # Use default doctor waiting message for medical queries
+                waiting_message = bot_config["template_messages"]["user"]["waiting_answer_medical"].get(user_lang, 
+                                 "Please wait while we verify the answer with our expert.")
+                print(f"👨‍⚕️ Using doctor waiting message for medical query")
             
             byoeb_user_messages = await self.__create_user_message(
                 message=message,

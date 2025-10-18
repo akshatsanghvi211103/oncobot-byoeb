@@ -52,10 +52,16 @@
                 "hi": "प्रदान किया गया उत्तर गलत है। कृपया प्रतीक्षा करें जब तक हम विशेषज्ञ से सत्यापित उत्तर प्राप्त करते हैं।",
                 "kn": "ನೀಡಿದ ಉತ್ತರ ತಪ್ಪಾಗಿದೆ. ನಾವು ತಜ್ಞರಿಂದ ಪರಿಶೀಲಿಸಿದ ಉತ್ತರವನ್ನು ಪಡೆಯುವವರೆಗೆ ದಯವಿಟ್ಟು ಕಾಯಿರಿ."
             },
-            "waiting_answer": {
-                "en": "Please wait while we get verified answer from expert.",
-                "hi": "कृपया प्रतीक्षा करें जब तक हम विशेषज्ञ से सत्यापित उत्तर प्राप्त करते हैं।",
-                "kn": "ನಾವು ತಜ್ಞರಿಂದ ಪರಿಶೀಲಿಸಿದ ಉತ್ತರವನ್ನು ಪಡೆಯುವವರೆಗೆ ದಯವಿಟ್ಟು ಕಾಯಿರಿ."
+            "waiting_answer_medical": {
+                "en": "Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.",
+                "hi": "मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।",
+                "kn": "ನಾನು ಕೆ-ಎಂ-ಸಿ ವೈದ್ಯರೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ ನಿಮಗೆ ದೃಢವಾದ ಉತ್ತರ ನೀಡುತ್ತೇನೆ. ಅಷ್ಟರೊಳಗೆ, ಇನ್ನಷ್ಟು ಪ್ರಶ್ನೆಗಳು ಕೇಳಬಹುದು."
+            },
+            "waiting_answer_logistical": {
+                "en": "Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.",
+                "hi": "मैं के-एम-सी के स्टाफ से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।",
+                "kn": "ನಾನು ಕೆ-ಎಂ-ಸಿ ಸಿಬ್ಬಂದಿಯೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ ನಿಮಗೆ ದೃಢವಾದ ಉತ್ತರ ನೀಡುತ್ತೇನೆ. ಅಷ್ಟರೊಳಗೆ, ಇನ್ನಷ್ಟು ಪ್ರಶ್ನೆಗಳು ಕೇಳಬಹುದು."
+
             },
             "verified_answer": {
                 "en": "The answer provided is verified by expert.",
