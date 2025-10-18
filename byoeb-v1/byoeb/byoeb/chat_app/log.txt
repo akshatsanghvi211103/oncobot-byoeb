@@ -2571,3 +2571,7 @@ Successfully send the message to the user and expert in 1.5628530979156494 secon
 DB queries executed in: 0.6456389427185059 seconds
 Successfully processed 1 messages
 Processed 1 message in: 13 seconds
+Conversations created in: 0.9112420082092285 seconds
+Retrieved chunks in 12.612103939056396 seconds
+Generated answer tokens: {'total_tokens': 1797, 'completion_tokens': 101, 'prompt_tokens': 1696}
+Generated answer tokens: {'total_tokens': 1457, 'completion_tokens': 67, 'prompt_tokens': 1390}

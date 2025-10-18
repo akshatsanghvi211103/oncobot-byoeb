@@ -68,30 +68,22 @@ class WelcomeMessageSender:
         # Get questions from bot config
         initial_questions_config = bot_config["template_messages"]["user"]["onboarding"]["initial_questions"]
         questions = initial_questions_config["questions"].get(user.user_language, initial_questions_config["questions"]["en"])
-        # Use short description for button text (under 20 chars)
-        if user.user_language == "hi":
-            description = "प्रश्न चुनें"  # "Choose question" - 10 chars
-        elif user.user_language == "kn":
-            description = "ಪ್ರಶ್ನೆ ಆಯ್ಕೆ ಮಾಡಿ"  # "Choose question" - 14 chars  
-        else:  # English
-            description = "Choose a question"  # 17 chars
         
-        # Create short button labels (max 20 chars) with full questions as descriptions
-        if user.user_language == "hi":
-            short_labels = ["कैंसर प्रकार", "रेडिएशन", "लक्षण"]
-        elif user.user_language == "kn":
-            short_labels = ["ಕ್ಯಾನ್ಸರ್", "ವಿಕಿರಣ", "ಲಕ್ಷಣಗಳು"]
-        else:  # English
-            short_labels = ["Cancer Types", "Radiation", "Symptoms"]
+        # Use the description from config
+        description_config = initial_questions_config["description"]
+        description = description_config.get(user.user_language, description_config["en"])
         
-        # Use the short labels for buttons (all are under 20 chars)
-        truncated_questions = short_labels[:3]  # Limit to 3 questions
+        # Use the full questions directly (limit to 3 questions to match other parts of the system)
+        full_questions = questions[:3]
         
-        # Create interactive list additional info
+        print(f"🔧 Onboarding: Using {len(full_questions)} full questions for {user.user_language}:")
+        for i, question in enumerate(full_questions, 1):
+            print(f"  {i}. {question}")
+        
+        # Create interactive list additional info using full questions
         interactive_list_additional_info = {
             "description": description,
-            "row_texts": truncated_questions,
-            "full_questions": questions[:3],  # Store full questions for reference
+            "row_texts": full_questions,  # Use full questions instead of short labels
             "has_follow_up_questions": True
         }
         
@@ -99,8 +91,8 @@ class WelcomeMessageSender:
         message_context = MessageContext(
             message_id=str(uuid.uuid4()),
             message_type=MessageTypes.INTERACTIVE_LIST.value,
-            message_source_text=description,
-            message_english_text=description,
+            message_source_text=description,  # Use proper description from config
+            message_english_text=description,  # Use proper description from config
             additional_info=interactive_list_additional_info
         )
         
