@@ -131,11 +131,10 @@ async def send_user_reminders():
         user_collection_name = app_config["databases"]["mongo_db"]["user_collection"]
         user_collection_client = await user_db_service._get_collection_client(user_collection_name)
         
-        # Get specific users only
-        target_phones = ["916352927215", "917034432034"]
-        query = {"User.phone_number_id": {"$in": target_phones}}
+        # Get ALL byoeb users (not just specific phone numbers)
+        query = {"User.user_type": "byoebuser"}
         all_users = await user_collection_client.afetch_all(query)
-        print(f"👥 Found {len(all_users)} users matching phones {target_phones}")
+        print(f"👥 Found {len(all_users)} byoeb users to process")
         
         # Process each user
         sent_count = 0

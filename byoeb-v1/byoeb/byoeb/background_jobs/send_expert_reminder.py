@@ -24,8 +24,6 @@ from byoeb_core.models.byoeb.message_context import ByoebMessageContext, Message
 from byoeb.models.message_category import MessageCategory
 from byoeb.services.chat import utils as chat_utils
 
-# Hardcoded expert phone number as requested
-EXPERT_PHONE_NUMBER = "919739811075"
 REMINDER_MESSAGE = "Kindly verify the answer to this remaining question"
 # No minimum threshold - remind about any unanswered questions
 TEMPLATE_NAME = "expert_reminder"  # Template name for inactive experts
@@ -75,7 +73,7 @@ async def is_active_expert(user_id: str):
 
 async def get_pending_expert_verifications():
     """
-    Get pending expert verification messages that need reminders.
+    Get pending expert verification messages that need reminders for ALL experts.
     Returns list of message IDs that need reminders.
     """
     try:
@@ -115,13 +113,12 @@ async def get_pending_expert_verifications():
         
         window_start_timestamp = str(int(window_start_time.timestamp()))
         
-        print(f"Checking expert verification messages from last 3 days")
+        print(f"Checking expert verification messages from last 3 days for ALL experts")
         print(f"   Window: {window_start_time} to {now}")
         
-        # Query for expert verification messages sent to our expert in the last 3 days
+        # Query for ALL expert verification messages in the last 3 days (removed phone number filter)
         query = {
             "message_data.message_category": MessageCategory.BOT_TO_EXPERT_VERIFICATION.value,
-            "message_data.user.phone_number_id": EXPERT_PHONE_NUMBER,
             "timestamp": {
                 "$gte": window_start_timestamp  # Check last 3 days (no upper threshold)
             }
@@ -138,13 +135,24 @@ async def get_pending_expert_verifications():
             message_context = message_data.get("message_context", {})
             verification_text = message_context.get("message_english_text", "")
             
+            # Get the expert info from the verification message
+            expert_user_data = message_data.get("user", {})
+            expert_phone_id = expert_user_data.get("phone_number_id")
+            expert_user_id = expert_user_data.get("user_id", "")
+            expert_user_type = expert_user_data.get("user_type", "medical")  # Default to medical
+            
             print(f"[INFO] Checking verification message: ID={message_id}")
+            print(f"   Expert: {expert_phone_id} (type: {expert_user_type})")
             print(f"   Text preview: '{verification_text[:50]}...'")
             
-            # Check if this verification has been answered by looking for expert responses
+            if not expert_phone_id:
+                print(f"   ⚠️ Skipping - no expert phone number found")
+                continue
+            
+            # Check if this verification has been answered by looking for expert responses from THIS specific expert
             response_query = {
                 "message_data.message_category": MessageCategory.EXPERT_TO_BOT.value,
-                "message_data.user.phone_number_id": EXPERT_PHONE_NUMBER,
+                "message_data.user.phone_number_id": expert_phone_id,
                 "message_data.reply_context.reply_id": message_id,
                 "timestamp": {"$gt": msg.get("timestamp")}
             }
@@ -153,10 +161,6 @@ async def get_pending_expert_verifications():
             print(f"   Found {len(expert_responses)} expert responses")
             
             if len(expert_responses) == 0:
-                # Get expert user ID from the verification message
-                expert_user_data = message_data.get("user", {})
-                expert_user_id = expert_user_data.get("user_id", "")
-                
                 print(f"   No response found - adding to pending list")
                 print(f"   Expert user ID: {expert_user_id}")
                 
@@ -164,7 +168,9 @@ async def get_pending_expert_verifications():
                     "message_id": message_id,
                     "verification_text": verification_text,
                     "sent_time": msg.get("timestamp"),
-                    "expert_user_id": expert_user_id
+                    "expert_user_id": expert_user_id,
+                    "expert_phone_id": expert_phone_id,
+                    "expert_user_type": expert_user_type
                 })
             else:
                 print(f"   Expert already responded - skipping")
@@ -178,7 +184,7 @@ async def get_pending_expert_verifications():
         traceback.print_exc()
         return []
 
-async def send_reminder_message(verification_message_id: str, expert_user_id: str, original_verification_text: str = ""):
+async def send_reminder_message(verification_message_id: str, expert_user_id: str, expert_phone_id: str, expert_user_type: str = "medical", original_verification_text: str = ""):
     """
     Send reminder message to expert using QikChat service.
     Uses activity detection to send template or text message.
@@ -190,14 +196,15 @@ async def send_reminder_message(verification_message_id: str, expert_user_id: st
         # Check if expert is active
         is_active = await is_active_expert(expert_user_id)
         print(f"[DEBUG] Expert activity status: {'Active' if is_active else 'Inactive'}")
+        print(f"[DEBUG] Expert type: {expert_user_type}")
         
         # Create QikChat service
         qikchat_service = QikchatService()
         
         # Create expert user context
         expert_user = User(
-            phone_number_id=EXPERT_PHONE_NUMBER,
-            user_type="byoebexpert",
+            phone_number_id=expert_phone_id,
+            user_type=expert_user_type,
             user_language="en",
             user_id=expert_user_id
         )
@@ -285,11 +292,25 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
     try:
         print(f"[INFO] Sending consolidated reminder for {len(verifications)} questions")
         
+        # Get expert's phone number and user type from the first verification (all should be for same expert)
+        expert_phone_id = verifications[0]["expert_phone_id"] if verifications else None
+        expert_user_type = verifications[0]["expert_user_type"] if verifications else "medical"
+        if expert_phone_id == "919969557231":
+            print("Skipping")
+            print(verifications)
+            print("Skipping this above one")
+            return False
+        if not expert_phone_id:
+            print(f"[ERROR] No expert phone number found in verifications")
+            return False
+        
         # Check if expert is active
         is_active = await is_active_expert(expert_user_id)
         print(f"[DEBUG] Consolidated reminder - Expert activity result: is_active = {is_active}")
+        print(f"[DEBUG] Expert type: {expert_user_type}")
         expert_user = User(
-            phone_number_id=EXPERT_PHONE_NUMBER,
+            phone_number_id=expert_phone_id,
+            user_type=expert_user_type,
             language_type="en",
             user_id=expert_user_id
         )
