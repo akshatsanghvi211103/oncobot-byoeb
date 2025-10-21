@@ -29,6 +29,34 @@ REMINDER_MESSAGE = "Kindly verify the answer to this remaining question"
 TEMPLATE_NAME = "expert_reminder"  # Template name for inactive experts
 MAX_LAST_ACTIVE_DURATION_SECONDS = 86400  # 24 hours (same as main system)
 
+def strip_patient_context(message: str) -> str:
+    """
+    Strip patient context from the beginning of expert verification messages.
+    New simplified patient context format:
+    [Patient Name]
+    Age: [age], Gender: [gender], DOB: [dob]
+    
+    [Rest of message]
+    """
+    lines = message.split('\n')
+    
+    # Look for pattern: name line followed by details line (Age:, Gender:, DOB:)
+    if len(lines) >= 3:
+        # Check if second line contains age/gender/dob pattern
+        second_line = lines[1] if len(lines) > 1 else ""
+        if any(keyword in second_line for keyword in ["Age:", "Gender:", "DOB:"]):
+            # Skip the first two lines (patient name and details) and any empty lines after
+            remaining_lines = lines[2:]
+            # Skip any empty lines after patient context
+            while remaining_lines and not remaining_lines[0].strip():
+                remaining_lines.pop(0)
+            
+            stripped = '\n'.join(remaining_lines)
+            print(f"🔧 DEBUG: Stripped patient context from expert reminder message")
+            return stripped
+    
+    return message
+
 async def is_active_expert(user_id: str):
     """
     Check if expert is active based on last activity timestamp.
@@ -133,7 +161,10 @@ async def get_pending_expert_verifications():
             message_id = msg.get("_id")
             message_data = msg.get("message_data", {})
             message_context = message_data.get("message_context", {})
-            verification_text = message_context.get("message_english_text", "")
+            verification_text_raw = message_context.get("message_english_text", "")
+            
+            # Strip patient context from verification text before processing
+            verification_text = strip_patient_context(verification_text_raw)
             
             # Get the expert info from the verification message
             expert_user_data = message_data.get("user", {})
@@ -318,7 +349,9 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
         # Create consolidated message with all questions
         question_list = []
         for i, verification in enumerate(verifications, 1):
-            verification_text = verification.get("verification_text", "").strip()
+            verification_text_raw = verification.get("verification_text", "").strip()
+            # Strip patient context from verification text (in case it wasn't stripped earlier)
+            verification_text = strip_patient_context(verification_text_raw)
             # Extract the first line (usually the question)
             question = verification_text.split('\n')[0] if verification_text else f"Verification {verification['message_id']}"
             question_list.append(f"{i}. {question}")

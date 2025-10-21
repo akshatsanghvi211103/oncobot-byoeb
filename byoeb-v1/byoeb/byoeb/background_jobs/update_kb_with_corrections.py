@@ -29,6 +29,35 @@ import xml.etree.ElementTree as ET
 with open(os.path.join(os.path.dirname(__file__), 'bot_config.json'), 'r', encoding='utf-8') as f:
     bot_config = json.load(f)
 
+def strip_patient_context(message: str) -> str:
+    """
+    Strip patient context from the beginning of expert verification messages.
+    New simplified patient context format:
+    [Patient Name]
+    Age: [age], Gender: [gender], DOB: [dob]
+    
+    [Rest of message]
+    """
+    lines = message.split('\n')
+    
+    # Look for pattern: name line followed by details line (Age:, Gender:, DOB:)
+    if len(lines) >= 3:
+        # Check if second line contains age/gender/dob pattern
+        second_line = lines[1] if len(lines) > 1 else ""
+        if any(keyword in second_line for keyword in ["Age:", "Gender:", "DOB:"]):
+            # Skip the first two lines (patient name and details) and any empty lines after
+            remaining_lines = lines[2:]
+            # Skip any empty lines after patient context
+            while remaining_lines and not remaining_lines[0].strip():
+                remaining_lines.pop(0)
+            
+            stripped = '\n'.join(remaining_lines)
+            print(f"🔧 DEBUG: Stripped patient context from verification message")
+            print(f"🔧 DEBUG: Patient context found - Name: '{lines[0]}', Details: '{second_line}'")
+            return stripped
+    
+    return message
+
 async def get_corrected_conversations():
     """
     Get conversations where expert said "No" and provided corrections in the past hour.
@@ -46,7 +75,7 @@ async def get_corrected_conversations():
         
         # Calculate time window (past 1 hour for new corrections)
         now = datetime.now()
-        one_hour_ago = now - timedelta(hours=1)
+        one_hour_ago = now - timedelta(hours=24)
         one_hour_ago_timestamp = str(int(one_hour_ago.timestamp()))
         
         print(f"🔍 Searching for corrected conversations from: {one_hour_ago} to {now}")
@@ -96,8 +125,11 @@ async def get_corrected_conversations():
                         message_context = verification_msg.get("message_data", {}).get("message_context", {})
                         verification_text = message_context.get("message_english_text", "")
                         
+                        # Strip patient context before parsing the verification message
+                        clean_verification_text = strip_patient_context(verification_text)
+                        
                         # Parse the verification message to extract user query and bot answer
-                        lines = verification_text.split('\n')
+                        lines = clean_verification_text.split('\n')
                         
                         # Handle different verification message formats
                         if len(lines) >= 3:
@@ -237,15 +269,15 @@ async def anonymize_qa_pair(question, answer, llm_client):
 
 async def update_kb1_with_corrections(corrected_conversations):
     """
-    Update KB1 with the corrected Q&A pairs after anonymization.
-    For now, just print the data and return without actually updating.
+    Update KB1_Expert with the corrected Q&A pairs after anonymization.
+    Creates the expert corrections knowledge base and inserts validated entries.
     """
     if not corrected_conversations:
-        print("ℹ️  No corrected conversations to add to KB1")
+        print("ℹ️  No corrected conversations to add to KB1_Expert")
         return
     
     print(f"\n{'='*80}")
-    print(f"📋 PREPARING TO UPDATE KB1 WITH {len(corrected_conversations)} CORRECTIONS")
+    print(f"📋 UPDATING KB1_EXPERT WITH {len(corrected_conversations)} CORRECTIONS")
     print(f"{'='*80}")
     
     # Initialize LLM client for anonymization (same setup as dependency_setup.py)
@@ -258,6 +290,112 @@ async def update_kb1_with_corrections(corrected_conversations):
         azure_endpoint=app_config["llms"]["azure"]["endpoint"],
         token_provider=token_provider,
         api_version=app_config["llms"]["azure"]["api_version"]
+    )
+    
+    # Initialize Azure Search client for KB1_Expert
+    from azure.search.documents.aio import SearchClient
+    from azure.search.documents.indexes.aio import SearchIndexClient
+    from azure.search.documents.indexes.models import (
+        SearchIndex, SimpleField, SearchableField, VectorSearch, 
+        HnswAlgorithmConfiguration, VectorSearchProfile,
+        SearchField, SearchFieldDataType
+    )
+    
+    # KB1_Expert configuration
+    kb_expert_service_name = app_config["vector_store"]["azure_vector_search"]["service_name"]
+    kb_expert_index_name = "oncobot_expert_index"
+    kb_expert_endpoint = f"https://{kb_expert_service_name}.search.windows.net"
+    
+    print(f"🔗 Connecting to KB1_Expert:")
+    print(f"   Service: {kb_expert_service_name}")
+    print(f"   Index: {kb_expert_index_name}")
+    print(f"   Endpoint: {kb_expert_endpoint}")
+    
+    # Create index client to check/create index
+    index_client = SearchIndexClient(
+        endpoint=kb_expert_endpoint,
+        credential=DefaultAzureCredential()
+    )
+    
+    # Delete existing index if it exists and recreate with proper schema
+    try:
+        await index_client.get_index(kb_expert_index_name)
+        print(f"🗑️ Index '{kb_expert_index_name}' exists, deleting to recreate with proper schema...")
+        await index_client.delete_index(kb_expert_index_name)
+        print(f"✅ Successfully deleted existing index")
+    except Exception as e:
+        print(f"📋 Index '{kb_expert_index_name}' doesn't exist")
+    
+    print(f"🔨 Creating index '{kb_expert_index_name}' with full metadata schema...")
+    
+    # Create index with schema for expert corrections
+    fields = [
+            SimpleField(name="id", type=SearchFieldDataType.String, key=True),
+            SearchableField(name="question", type=SearchFieldDataType.String),
+            SearchableField(name="answer", type=SearchFieldDataType.String), 
+            SearchableField(name="combined_text", type=SearchFieldDataType.String),
+            SimpleField(name="source", type=SearchFieldDataType.String, filterable=True),
+            SimpleField(name="category", type=SearchFieldDataType.String, filterable=True),
+            SimpleField(name="question_number", type=SearchFieldDataType.Int32, filterable=True),
+            SimpleField(name="expert_validated", type=SearchFieldDataType.Boolean, filterable=True),
+            # Correction metadata fields (flattened for Azure Search)
+            SimpleField(name="expert_no_message_id", type=SearchFieldDataType.String, filterable=True),
+            SimpleField(name="original_verification_id", type=SearchFieldDataType.String, filterable=True),
+            SearchableField(name="expert_correction", type=SearchFieldDataType.String),
+            SearchableField(name="original_bot_answer", type=SearchFieldDataType.String),
+            SimpleField(name="corrected_timestamp", type=SearchFieldDataType.DateTimeOffset, filterable=True),
+            SimpleField(name="created_at", type=SearchFieldDataType.DateTimeOffset, filterable=True),
+            SearchableField(name="original_question", type=SearchFieldDataType.String),
+            SearchableField(name="original_answer", type=SearchFieldDataType.String),
+            SearchField(
+                name="text_vector_3072",
+                type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
+                searchable=True,
+                vector_search_dimensions=3072,
+                vector_search_profile_name="vector-profile"
+            )
+    ]
+    
+    # Configure vector search
+    from azure.search.documents.indexes.models import HnswAlgorithmConfiguration
+    
+    vector_search = VectorSearch(
+        algorithms=[
+            HnswAlgorithmConfiguration(
+                name="vector-config",
+                parameters={
+                    "m": 4,
+                    "ef_construction": 400,
+                    "ef_search": 500,
+                    "metric": "cosine"
+                }
+            )
+        ],
+        profiles=[
+            VectorSearchProfile(
+                name="vector-profile",
+                algorithm_configuration_name="vector-config"
+            )
+        ]
+    )
+    
+    # Create the index
+    index = SearchIndex(
+        name=kb_expert_index_name,
+        fields=fields,
+        vector_search=vector_search
+    )
+    
+    result = await index_client.create_index(index)
+    print(f"✅ Successfully created index '{kb_expert_index_name}'")
+    
+    # Close index client and create search client
+    await index_client.close()
+    
+    search_client = SearchClient(
+        endpoint=kb_expert_endpoint,
+        index_name=kb_expert_index_name,
+        credential=DefaultAzureCredential()
     )
     
     generalizable_conversations = []
@@ -281,29 +419,47 @@ async def update_kb1_with_corrections(corrected_conversations):
         # Generate a unique ID for the new KB entry
         kb_entry_id = f"expert_corrected_{uuid.uuid4().hex[:8]}"
         
+        # Get embeddings for the corrected Q&A pair
+        from byoeb_integrations.embeddings.llama_index.azure_openai import AzureOpenAIEmbed
+        
+        # Initialize embedding function (same as dependency_setup.py)
+        azure_openai_embed = AzureOpenAIEmbed(
+            model=app_config["embeddings"]["azure"]["model"],
+            deployment_name=app_config["embeddings"]["azure"]["deployment_name"],
+            azure_endpoint=app_config["embeddings"]["azure"]["endpoint"],
+            token_provider=token_provider,
+            api_version=app_config["embeddings"]["azure"]["api_version"]
+        )
+        embedding_fn = azure_openai_embed.get_embedding_function()
+        
+        # Generate embedding for the combined text
+        combined_text = f"Question: {final_question}\nAnswer: {final_answer}"
+        text_embedding = await embedding_fn.aget_text_embedding(combined_text)
+        
         kb_entry = {
             'id': kb_entry_id,
             'question': final_question,
             'answer': final_answer,
             'category': 'Expert Corrected',  # Updated to match existing KB1 style
             'question_number': None,  # No question number for corrected entries
-            'combined_text': f"Question: {final_question}\nAnswer: {final_answer}",
-            'source': 'oncobot_knowledge_base',
-            'correction_metadata': {
-                'expert_no_message_id': conv['expert_no_message_id'],
-                'original_verification_id': conv['original_verification_id'],
-                'expert_correction': conv['expert_correction'],
-                'original_bot_answer': conv['bot_answer'],
-                'corrected_timestamp': conv['expert_no_timestamp'],
-                'created_at': datetime.now().isoformat(),
-                'original_question': question,
-                'original_answer': corrected_answer
-            }
+            'combined_text': combined_text,
+            'source': 'oncobot_expert_knowledge_base',  # Unique source for expert corrections
+            'expert_validated': True,  # Flag to identify expert corrections
+            'text_vector_3072': text_embedding,  # Embedding vector for search
+            # Flattened correction metadata fields
+            'expert_no_message_id': conv['expert_no_message_id'],
+            'original_verification_id': conv['original_verification_id'],
+            'expert_correction': conv['expert_correction'],
+            'original_bot_answer': conv['bot_answer'],
+            'corrected_timestamp': datetime.fromtimestamp(float(conv['expert_no_timestamp'])).isoformat() + 'Z',
+            'created_at': datetime.now().isoformat() + 'Z',
+            'original_question': question,
+            'original_answer': corrected_answer
         }
         
         generalizable_conversations.append(kb_entry)
         
-        print(f"\n✅ APPROVED FOR KB1 - CORRECTION #{i}")
+        print(f"\n✅ APPROVED FOR KB1_EXPERT - CORRECTION #{i}")
         print(f"{'─'*60}")
         print(f"🆔 KB Entry ID: {kb_entry_id}")
         print(f"❓ Final Question: {final_question}")
@@ -312,18 +468,29 @@ async def update_kb1_with_corrections(corrected_conversations):
         print(f"   - ID: {kb_entry['id']}")
         print(f"   - Source: {kb_entry['source']}")
         print(f"   - Category: {kb_entry['category']}")
+        print(f"   - Expert Validated: {kb_entry['expert_validated']}")
         print(f"   - Combined Text: {kb_entry['combined_text'][:300]}...")
         
-        # TODO: Actually update KB1 here - STRICTLY RETURN BEFORE THIS
-        print(f"📋 WOULD INSERT INTO KB1: {kb_entry_id}")
-        print(f"🛑 RETURNING BEFORE ACTUAL DATABASE UPDATE")
+        # Actually insert into KB1_Expert
+        try:
+            print(f"📤 Inserting document into KB1_Expert index...")
+            result = await search_client.upload_documents([kb_entry])
+            print(f"✅ Successfully inserted document {kb_entry_id} into KB1_Expert")
+            print(f"   Upload result: {result}")
+        except Exception as e:
+            print(f"❌ Error inserting document {kb_entry_id}: {e}")
+            # Continue with other documents even if one fails
         
+    # Close search client
+    await search_client.close()
+    
     print(f"\n{'='*60}")
-    print(f"🛑 KB UPDATE SIMULATION COMPLETE - NO ACTUAL CHANGES MADE")
+    print(f"✅ KB1_EXPERT UPDATE COMPLETE")
     print(f"   Found {len(corrected_conversations)} total corrections")
-    print(f"   Found {len(generalizable_conversations)} generalizable corrections ready for KB1")
+    print(f"   Successfully processed {len(generalizable_conversations)} generalizable corrections")
     print(f"   Filtered out {len(corrected_conversations) - len(generalizable_conversations)} non-generalizable corrections")
-    print(f"   Next step: Implement actual Azure Search index update")
+    print(f"   KB1_Expert now contains {len(generalizable_conversations)} new expert-validated entries")
+    print(f"   These will be prioritized in future LLM responses")
 
 async def main():
     """

@@ -1,0 +1,19 @@
+Invoke-RestMethod -Uri "http://localhost:5000/register_users" -Method POST -ContentType "application/json" -Body '[{"phone_number_id": "919739811075", "user_language": "en", "user_type": "byoebexpert"}]'
+
+Invoke-RestMethod -Uri "http://localhost:5000/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "916352927215", "user_id": "001", "user_name": "Bhuvan", "user_language": "en", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 38 }, "experts": { "byoebexpert": ["919739811075"], "byoebexpert2": ["919739811075"] } }]'
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{"phone_number_id": "919739811075", "user_language": "en", "user_type": "byoebexpert"}]'
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "916352927215", "user_id": "001", "user_name": "Rahul Sharma", "user_language": "hi", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 38 }, "experts": { "byoebexpert": ["919739811075"], "byoebexpert2": ["919739811075"] } }]'
+
+
+
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{"phone_number_id": "919741363511", "user_language": "en", "user_type": "byoebexpert2"}]'
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "916352927215", "user_id": "002", "user_name": "Akshat Sanghvi", "user_language": "en", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 21 }, "experts": { "byoebexpert": ["919739811075"], "byoebexpert2": ["919741363511"] } }]'
+
+
+
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "918375066113", "user_id": "001", "user_name": "Bhuvan", "user_language": "hi", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 38 }, "experts": { "byoebexpert": ["919739811075"], "byoebexpert2": ["919739811075"] } }]'

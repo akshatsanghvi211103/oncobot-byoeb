@@ -33,11 +33,12 @@ class ByoebUserGenerateResponse(Handler):
         k
     ) -> List[Chunk]:
         """
-        Retrieve chunks from all 3 knowledge bases:
+        Retrieve chunks from all 4 knowledge bases:
         - KB1: Q&A pairs (source='oncobot_knowledge_base') - 3 results
         - KB2: Markdown content (source='kb2_content') - 2 results  
         - KB3: Markdown content (source='kb3_content') - 2 results
-        Total: 7 results combining all knowledge bases using vector search only
+        - KB1_Expert: Expert corrections (source='oncobot_expert_knowledge_base') - 2 results
+        Total: 9 results combining all knowledge bases using vector search only
         """
         from byoeb.chat_app.configuration.dependency_setup import vector_store
         start_time = datetime.now().timestamp()
@@ -55,13 +56,17 @@ class ByoebUserGenerateResponse(Handler):
             print(f"Chunk {i+1}:")
             # Print source safely
             source = "Unknown"
+            is_expert_validated = False
             if hasattr(chunk, 'metadata') and chunk.metadata:
                 source = chunk.metadata.source or "Unknown"
                 if hasattr(chunk.metadata, 'additional_metadata') and chunk.metadata.additional_metadata:
                     question = chunk.metadata.additional_metadata.get('question', '')
+                    is_expert_validated = chunk.metadata.additional_metadata.get('expert_validated', False)
                     if question:
                         print(f"  Question: {question}")
             print(f"  Source: {source}")
+            if is_expert_validated:
+                print(f"  🏆 EXPERT-VALIDATED: This chunk contains expert-corrected content")
             
             # Print content safely
             if hasattr(chunk, 'text') and chunk.text:
@@ -76,15 +81,16 @@ class ByoebUserGenerateResponse(Handler):
         Retrieve from all knowledge bases with specific distribution:
         - 3 from Q&A pairs (KB1: oncobot_knowledge_base)
         - 2 from KB2 markdown content (kb2_content)
-        - 2 from KB3 markdown content (kb3_content)
-        Total: 7 chunks using vector search only
+        - 2 from KB3 markdown content (kb3_content)  
+        - 2 from KB1_Expert expert corrections (oncobot_expert_knowledge_base)
+        Total: 9 chunks using vector search only
         """
         all_chunks = []
         
         try:
             print(f"\n🔍 MULTI-KB SEARCH DEBUG:")
             print(f"🔍 Query: '{query_text}'")
-            print(f"🔍 Searching 3 knowledge bases...")
+            print(f"🔍 Searching 4 knowledge bases...")
             
             # Get the Azure Search client directly for filtered searches
             search_client = vector_store.search_client
@@ -156,7 +162,54 @@ class ByoebUserGenerateResponse(Handler):
                     all_chunks.append(chunk)
                     kb3_count += 1
             print(f"🔍 KB3 returned {kb3_count} Markdown results")
-            print(f"🔍 Total chunks retrieved: {len(all_chunks)} (KB1: {qa_count}, KB2: {kb2_count}, KB3: {kb3_count})")
+            
+            # Search KB1_Expert: Expert corrections (2 results) - separate index
+            print(f"🔍 Searching KB1_Expert (Expert Corrections) with filter: source eq 'oncobot_expert_knowledge_base'")
+            try:
+                # Create separate search client for KB1_Expert index
+                from azure.search.documents import SearchClient
+                from azure.identity import DefaultAzureCredential
+                
+                # Get Azure Search service name from vector_store config  
+                service_name = vector_store.search_client._endpoint.split('//')[1].split('.')[0]
+                kb_expert_endpoint = f"https://{service_name}.search.windows.net"
+                
+                kb_expert_search_client = SearchClient(
+                    endpoint=kb_expert_endpoint,
+                    index_name="oncobot_expert_index",
+                    credential=DefaultAzureCredential()
+                )
+                
+                kb_expert_results = kb_expert_search_client.search(
+                    search_text=None,  # Vector search only
+                    vector_queries=[vector_query],
+                    top=2,
+                    filter="source eq 'oncobot_expert_knowledge_base'",
+                    select=['id', 'combined_text', 'source', 'question', 'answer']
+                )
+                
+                # Close the expert search client after use
+                kb_expert_search_client.close()
+                
+            except Exception as kb_expert_error:
+                print(f"⚠️  KB1_Expert not available yet (this is normal if no expert corrections exist): {kb_expert_error}")
+                kb_expert_results = []
+            
+            # Convert KB1_Expert results to chunks (if any available)
+            kb_expert_count = 0
+            if kb_expert_results:
+                for result in kb_expert_results:
+                    chunk = self.__convert_search_result_to_chunk(result, is_expert_validated=True)
+                    if chunk:
+                        all_chunks.append(chunk)
+                        kb_expert_count += 1
+            
+            if kb_expert_count > 0:
+                print(f"🔍 KB1_Expert returned {kb_expert_count} Expert-validated results")
+            else:
+                print(f"🔍 KB1_Expert: No expert corrections available yet (will be populated as experts provide corrections)")
+            
+            print(f"🔍 Total chunks retrieved: {len(all_chunks)} (KB1: {qa_count}, KB2: {kb2_count}, KB3: {kb3_count}, KB1_Expert: {kb_expert_count})")
                     
                     
         except Exception as e:
@@ -166,7 +219,7 @@ class ByoebUserGenerateResponse(Handler):
             utils.log_to_text_file(f"Error in multi-KB search: {e}, falling back to original search")
             all_chunks = await vector_store.aretrieve_top_k_chunks(
                 query_text,
-                7,  # Default to 7 total results
+                9,  # Updated to 9 total results to match new distribution
                 search_type=AzureVectorSearchType.DENSE.value,
                 select=["id", "combined_text", "source", "question", "answer"],
                 vector_field="text_vector_3072"
@@ -175,12 +228,17 @@ class ByoebUserGenerateResponse(Handler):
         
         return all_chunks
 
-    def __convert_search_result_to_chunk(self, result):
+    def __convert_search_result_to_chunk(self, result, is_expert_validated=False):
         """Convert Azure Search result to Chunk object"""
         try:
+            # Mark expert-validated content with a clear prefix
+            text = result.get("combined_text") or result.get("answer") or ""
+            if is_expert_validated:
+                text = f"[EXPERT-VALIDATED] {text}"
+            
             chunk = Chunk(
                 chunk_id=result.get("id"),
-                text=result.get("combined_text") or result.get("answer") or "",
+                text=text,
                 metadata=Chunk_metadata(
                     source=result.get("source"),
                     creation_timestamp=None,
@@ -188,7 +246,8 @@ class ByoebUserGenerateResponse(Handler):
                     additional_metadata={
                         "question": result.get("question"),
                         "answer": result.get("answer"),
-                        "category": result.get("category")
+                        "category": result.get("category"),
+                        "expert_validated": is_expert_validated
                     }
                 ),
                 related_questions={}
