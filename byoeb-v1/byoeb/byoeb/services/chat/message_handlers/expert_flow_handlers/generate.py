@@ -237,7 +237,7 @@ class ByoebExpertGenerateResponse(Handler):
         user.user_type = self._regular_user_type
         
         # Check if user is active for verified answers (template vs regular message decision)
-        should_use_template = False
+        should_use_template = False #TODO
         if status == constants.VERIFIED:
             from byoeb.chat_app.configuration.dependency_setup import user_db_service
             from byoeb.services.chat.message_handlers.user_flow_handlers.send import ByoebUserSendResponse
@@ -246,6 +246,7 @@ class ByoebExpertGenerateResponse(Handler):
             # Check if user is active (hasn't been inactive for 24 hours)
             send_handler = ByoebUserSendResponse(user_db_service, None)  # message_db_service not needed for activity check
             is_active_user = await send_handler.is_active_user(user_id)
+            # is_active_user = False #TODO
             print(f"🔧 User {user_id} is_active_user: {is_active_user}")
             
             if not is_active_user:
@@ -379,15 +380,27 @@ class ByoebExpertGenerateResponse(Handler):
                 if status == constants.VERIFIED:
                     if should_use_template:
                         print("🔧 DEBUG: Status is VERIFIED - creating template message for inactive user")
+                        # Extract original question from reply context for template
+                        original_question = "Your question"  # Default fallback
+                        if (byoeb_message.reply_context and 
+                            byoeb_message.reply_context.reply_english_text):
+                            parsed_verification = self.__parse_message(byoeb_message.reply_context.reply_english_text)
+                            if not parsed_verification.get("Question"):
+                                parsed_verification = self.__parse_message_alternative(byoeb_message.reply_context.reply_english_text)
+                            original_question = parsed_verification.get("Question", "Your question")
+                        
+                        user_language = user.user_language
+                        if user_language == "en":
+                            user_language = user_language + "_US"
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
-                            message_english_text=message_en_text,
-                            message_source_text=text_message,
+                            # message_english_text=message_en_text, #TODO
+                            # message_source_text=text_message, #TODO
                             additional_info={
-                                constants.TEMPLATE_NAME: "expert_verification",
-                                constants.TEMPLATE_LANGUAGE: user.user_language,
-                                constants.TEMPLATE_PARAMETERS: ["(Template not verified yet, sending an approved one. No need to approve any answer here) " + text_message, text_message]
+                                constants.TEMPLATE_NAME: "bot_temp",
+                                constants.TEMPLATE_LANGUAGE: user_language,
+                                constants.TEMPLATE_PARAMETERS: [original_question, text_message]
                             }
                         )
                     else:
@@ -448,15 +461,27 @@ class ByoebExpertGenerateResponse(Handler):
                 if status == constants.VERIFIED:
                     if should_use_template:
                         print("🔧 DEBUG: Status is VERIFIED - creating template message for inactive user")
+                        # Extract original question from reply context for template
+                        original_question = "Your question"  # Default fallback
+                        if (byoeb_message.reply_context and 
+                            byoeb_message.reply_context.reply_english_text):
+                            parsed_verification = self.__parse_message(byoeb_message.reply_context.reply_english_text)
+                            if not parsed_verification.get("Question"):
+                                parsed_verification = self.__parse_message_alternative(byoeb_message.reply_context.reply_english_text)
+                            original_question = parsed_verification.get("Question", "Your question")
+                        
+                        user_language = user.user_language
+                        if user_language == "en":
+                            user_language = user_language + "_US"
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
-                            message_english_text=message_en_text,
-                            message_source_text=text_message,
+                            # message_english_text=message_en_text, #TODO
+                            # message_source_text=text_message, #TODO
                             additional_info={
-                                constants.TEMPLATE_NAME: "expert_verification",
-                                constants.TEMPLATE_LANGUAGE: user.user_language,
-                                constants.TEMPLATE_PARAMETERS: ["(Template not verified yet, sending an approved one. No need to approve any answer here) " + text_message, text_message]
+                                constants.TEMPLATE_NAME: "bot_temp",
+                                constants.TEMPLATE_LANGUAGE: user_language,
+                                constants.TEMPLATE_PARAMETERS: [original_question, text_message]
                             }
                         )
                     else:
@@ -738,18 +763,21 @@ class ByoebExpertGenerateResponse(Handler):
                 parsed_message = self.__parse_message_alternative(reply_context.reply_english_text)
                 print(f"🔧 DEBUG: Alternative parsed message: {parsed_message}")
                 
+            question = parsed_message.get("Question", "")
             bot_answer = parsed_message.get("Bot_Answer", "")
-            if not bot_answer:
-                print(f"❌ ERROR: Could not extract bot answer from verification message")
-                # Try to extract answer from additional_info template parameters as fallback
+            
+            if not bot_answer or not question:
+                print(f"❌ ERROR: Could not extract question or bot answer from verification message")
+                # Try to extract from additional_info template parameters as fallback
                 template_params = reply_context.additional_info.get("template_parameters", [])
                 # print(f"🔧 DEBUG: Template parameters: {template_params}")
                 if len(template_params) >= 2:
                     # template_params should be [verification_question, verification_bot_answer]
-                    bot_answer = template_params[1]  # Second parameter is the bot answer
-                    print(f"🔧 DEBUG: Extracted bot answer from template_parameters: '{bot_answer}'")
+                    question = template_params[0] if not question else question  # First parameter is the question
+                    bot_answer = template_params[1] if not bot_answer else bot_answer  # Second parameter is the bot answer
+                    print(f"🔧 DEBUG: Extracted from template_parameters - question: '{question}', bot_answer: '{bot_answer}'")
                 
-            print(f"🔧 DEBUG: Final extracted bot_answer: '{bot_answer}'")
+            print(f"🔧 DEBUG: Final extracted question: '{question}' bot_answer: '{bot_answer}'")
             print(f"🔧 DEBUG: Expert thank you message: '{self.EXPERT_THANK_YOU_MESSAGE}'")
             
             # Get related questions from expert verification message if available
@@ -812,6 +840,7 @@ class ByoebExpertGenerateResponse(Handler):
             # Check if user is active (hasn't been inactive for 24 hours)
             send_handler = ByoebUserSendResponse(user_db_service, None)  # message_db_service not needed for activity check
             is_active_user = await send_handler.is_active_user(user_id)
+            # is_active_user = False #TODO
             print(f"🔧 User {user_id} is_active_user: {is_active_user}")
             
             # We need to create the user message manually to avoid double translation
@@ -823,15 +852,17 @@ class ByoebExpertGenerateResponse(Handler):
             )
             
             # Create message context (always start as regular text)
+            if user_language == "en":
+                user_language = user_language + "_US"
             message_context = MessageContext(
                 message_id=str(uuid.uuid4()),
                 message_type=MessageTypes.REGULAR_TEXT.value,
                 message_english_text=bot_answer,  # Original English text
                 message_source_text=translated_bot_answer,  # Already translated text
                 additional_info=media_additional_info if is_active_user else {
-                    constants.TEMPLATE_NAME: "expert_verification",
+                    constants.TEMPLATE_NAME: "bot_temp",
                     constants.TEMPLATE_LANGUAGE: user_language,
-                    constants.TEMPLATE_PARAMETERS: ["(Template not verified yet, sending an approved one. No need to approve any answer here) " + translated_bot_answer, translated_bot_answer]
+                    constants.TEMPLATE_PARAMETERS: [question, translated_bot_answer]
                 }
             )
             
