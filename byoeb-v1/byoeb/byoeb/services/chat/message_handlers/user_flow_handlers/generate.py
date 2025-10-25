@@ -333,11 +333,25 @@ class ByoebUserGenerateResponse(Handler):
             constants.VERIFICATION_STATUS: status,
         }
         # Always define message_source_text and interactive_list_additional_info
-        message_source_text = await text_translator.atranslate_text(
-            input_text=response_text,
-            source_language="en",
-            target_language=user_language
-        )
+        print(f"🔤 TRANSLATION DEBUG: About to translate message to {user_language}")
+        print(f"🔤 TRANSLATION DEBUG: Input text: '{response_text}'")
+        
+        # Check if response_text is already localized (contains non-ASCII chars suggesting it's already translated)
+        # or if user_language is English - in both cases, skip translation
+        is_already_localized = not all(ord(char) < 128 for char in response_text) and user_language != "en"
+        
+        if user_language == "en" or is_already_localized:
+            print(f"🔤 TRANSLATION DEBUG: Skipping translation - {'English target' if user_language == 'en' else 'Already localized text detected'}")
+            message_source_text = response_text
+        else:
+            message_source_text = await text_translator.atranslate_text(
+                input_text=response_text,
+                source_language="en",
+                target_language=user_language
+            )
+        
+        print(f"🔤 TRANSLATION DEBUG: Final result: '{message_source_text}'")
+        print(f"🔤 TRANSLATION DEBUG: Translation used: {not (user_language == 'en' or is_already_localized)}")
         
         # Simplified to text-only responses
         print(f"� Creating user response message...")
@@ -594,24 +608,34 @@ class ByoebUserGenerateResponse(Handler):
             response_text
         )
         verification_footer_message = bot_config["template_messages"]["expert"]["verification"]["footer"]
+        
+        # Create patient info parameter for template
+        patient_info = ""
+        if patient_context_lines:
+            patient_info = ", ".join(patient_context_lines)
+        else:
+            patient_info = "No patient info available"
+        
+        # Template parameters: {{1}} = Patient Info, {{2}} = Question, {{3}} = Answer
+        template_parameters = [patient_info, verification_question, verification_bot_answer]
+        
         additional_info = self.__get_expert_additional_info(
-            [verification_question, verification_bot_answer],
+            template_parameters,
             emoji,
             status,
             related_questions
         )
         
-        # For template messages (INTERACTIVE_BUTTON), add patient context to template parameters
-        # For text messages, add patient context to message body
-        # Add Q: and A: prefixes to question and answer for expert clarity
-        formatted_question = f"Q: {verification_question}"
-        formatted_answer = f"A: {verification_bot_answer}"
-        expert_message = formatted_question + "\n" + formatted_answer + "\n" + verification_footer_message
+        print(f"📋 Template parameters created:")
+        print(f"  {{1}} Patient Info: {patient_info}")
+        print(f"  {{2}} Question: {verification_question}")
+        print(f"  {{3}} Answer: {verification_bot_answer}")
         
-        # Add patient context to the beginning of expert message content
-        if patient_context_header:
-            expert_message = patient_context_header + expert_message
-            print(f"👨‍⚕️ Expert message now includes patient context at the top")
+        # For template messages (INTERACTIVE_BUTTON), patient info is in template parameters
+        # For text messages (fallback), format the message to match the template structure
+        expert_message = f"*Patient Info*: {patient_info}\n\n*Question:* {verification_question}\n*Answer:* {verification_bot_answer}\n\n{verification_footer_message}"
+        
+        print(f"👨‍⚕️ Expert message created with patient info in template format")
         new_expert_verification_message = ByoebMessageContext(
             channel_type=message.channel_type,
             message_category=MessageCategory.BOT_TO_EXPERT_VERIFICATION.value,
@@ -686,19 +710,25 @@ class ByoebUserGenerateResponse(Handler):
         
         augmented_prompts = self.__augment(system_prompt, user_prompt)
         
-        # # Log the full prompts being sent to LLM
-        # print(f"\n=== FULL LLM INPUT ===")
-        # for i, prompt in enumerate(augmented_prompts):
-        #     print(f"Message {i+1} ({prompt['role']}):")
-        #     print(f"  Content: {prompt['content'][:300]}{'...' if len(prompt['content']) > 300 else ''}")
-        # print("=== END FULL LLM INPUT ===\n")
+        # Log the full prompts being sent to LLM for debugging Kannada issues
+        print(f"\n=== FULL LLM INPUT DEBUG ===")
+        for i, prompt in enumerate(augmented_prompts):
+            print(f"Message {i+1} ({prompt['role']}):")
+            print(f"  Content: {prompt['content'][:500]}{'...' if len(prompt['content']) > 500 else ''}")
+        print(f"🔍 Question being processed: '{question}'")
+        print(f"🔍 Number of chunks: {len(chunks_list)}")
+        print("=== END FULL LLM INPUT DEBUG ===\n")
         
         llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
-        print("nice bro", llm_response)
+        print(f"\n=== LLM RESPONSE DEBUG ===")
+        print(f"🔤 Raw LLM response_text: '{response_text}'")
+        print(f"🔤 Response length: {len(response_text) if response_text else 0}")
+        print(f"🔤 Contains 'Sorry': {'Sorry' in response_text if response_text else False}")
+        print(f"🔤 Contains 'assist': {'assist' in response_text if response_text else False}")
+        print("=== END LLM RESPONSE DEBUG ===\n")
+        
         tokens = llm_client.get_response_tokens(llm_response)
         utils.log_to_text_file(f"Generated answer tokens: {str(tokens)}")
-        
-        # print(f"Raw LLM response_text: {response_text}")
         
         parse_result = parse_response(response_text)
         if parse_result is None:
@@ -764,9 +794,16 @@ class ByoebUserGenerateResponse(Handler):
         message_english = message.message_context.message_english_text
         
         print(f"\n=== RESPONSE GENERATION DEBUG ===")
-        print(f"� Original message: '{message.message_context.message_source_text}'")
+        print(f"📝 Original message: '{message.message_context.message_source_text}'")
         print(f"📤 English message for KB: '{message_english}'")
         print(f"👤 User: {message.user.phone_number_id} (language: {message.user.user_language})")
+        
+        # Extra debug for Kannada issues
+        if message.user.user_language == "kn":
+            print(f"🔍 KANNADA DEBUG: Original length: {len(message.message_context.message_source_text or '')}")
+            print(f"🔍 KANNADA DEBUG: English length: {len(message_english or '')}")
+            print(f"🔍 KANNADA DEBUG: English contains medical terms: {any(term in (message_english or '').lower() for term in ['cancer', 'treatment', 'therapy', 'doctor', 'medicine'])}")
+            print(f"🔍 KANNADA DEBUG: English text: '{message_english}'")
         
         # print(f"🔍 Retrieving relevant chunks from knowledge base...")
         retrieved_chunks = await self.__aretrieve_chunks(message_english, k=3)

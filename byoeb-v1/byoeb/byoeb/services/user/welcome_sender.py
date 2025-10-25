@@ -41,7 +41,7 @@ class WelcomeMessageSender:
         # Use template message for onboarding
         template_additional_info = {
             constants.TEMPLATE_NAME: template_name,
-            constants.TEMPLATE_LANGUAGE: "en",  # Use approved template language
+            constants.TEMPLATE_LANGUAGE: user.user_language,  # Use approved template language
             constants.TEMPLATE_PARAMETERS: []  # No parameters needed for onboarding templates
         }
         

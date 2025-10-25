@@ -17,3 +17,26 @@ Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurew
 
 
 Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "918375066113", "user_id": "001", "user_name": "Bhuvan", "user_language": "hi", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 38 }, "experts": { "byoebexpert": ["919739811075"], "byoebexpert2": ["919739811075"] } }]'
+
+
+
+# TESTING SYSTEM onboarding
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{"phone_number_id": "917034432034", "user_language": "en", "user_type": "byoebexpert"}]'
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{"phone_number_id": "917022488975", "user_language": "en", "user_type": "byoebexpert2"}]'
+
++917907935402 - Dr Salma assigned - done
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "917907935402", "user_id": "010", "user_name": "Dr Akshay", "user_language": "en", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 38 }, "experts": { "byoebexpert": ["917034432034"], "byoebexpert2": ["917022488975"] } }]'
+
++917397303725 - Dr Salma Assigned - done
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "917397303725", "user_id": "011", "user_name": "Dr Anoushka", "user_language": "hi", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Female", "age": 38 }, "experts": { "byoebexpert": ["917034432034"], "byoebexpert2": ["917022488975"] } }]'
+
++918700105161 - Dr Shirley Assigned - done
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "918700105161", "user_id": "012", "user_name": "Dr Umesh", "user_language": "kn", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Male", "age": 38 }, "experts": { "byoebexpert": ["919969557231"], "byoebexpert2": ["917022488975"] } }]'
+
++917259517399 - Dr Shirley Assigned - failed
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "917259517399", "user_id": "013", "user_name": "Dr Rabia", "user_language": "kn", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Female", "age": 38 }, "experts": { "byoebexpert": ["919969557231"], "byoebexpert2": ["917022488975"] } }]'

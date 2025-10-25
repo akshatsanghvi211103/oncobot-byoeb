@@ -79,7 +79,7 @@ class AsyncAzureOpenAITextTranslator(BaseTextTranslator):
         This is for backward compatibility with existing test files.
         """
         try:
-            assert source_language == "en", "Currently only source language as English is supported"
+            # assert source_language == "en", "Currently only source language as English is supported"
             if source_language == target_language:
                 return input_text
                 
