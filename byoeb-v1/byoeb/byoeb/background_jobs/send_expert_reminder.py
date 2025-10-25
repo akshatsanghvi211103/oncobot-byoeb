@@ -32,15 +32,36 @@ MAX_LAST_ACTIVE_DURATION_SECONDS = 86400  # 24 hours (same as main system)
 def strip_patient_context(message: str) -> str:
     """
     Strip patient context from the beginning of expert verification messages.
-    New simplified patient context format:
+    Handles both old and new template formats:
+    
+    Old format:
     [Patient Name]
     Age: [age], Gender: [gender], DOB: [dob]
-    
     [Rest of message]
+    
+    New template format:
+    *Patient Info*: [patient details]
+    
+    *Question:* [question]
+    *Answer:* [answer]
+    
+    Is the answer correct?
     """
     lines = message.split('\n')
     
-    # Look for pattern: name line followed by details line (Age:, Gender:, DOB:)
+    # Check for new template format first
+    if lines and lines[0].startswith('*Patient Info*:'):
+        print(f"🔧 DEBUG: Detected new template format - stripping patient info line")
+        # Skip the patient info line and any empty lines after it
+        remaining_lines = lines[1:]
+        while remaining_lines and not remaining_lines[0].strip():
+            remaining_lines.pop(0)
+        
+        stripped = '\n'.join(remaining_lines)
+        print(f"🔧 DEBUG: Stripped new template patient context from expert reminder message")
+        return stripped
+    
+    # Check for old format: name line followed by details line (Age:, Gender:, DOB:)
     if len(lines) >= 3:
         # Check if second line contains age/gender/dob pattern
         second_line = lines[1] if len(lines) > 1 else ""
@@ -52,9 +73,10 @@ def strip_patient_context(message: str) -> str:
                 remaining_lines.pop(0)
             
             stripped = '\n'.join(remaining_lines)
-            print(f"🔧 DEBUG: Stripped patient context from expert reminder message")
+            print(f"🔧 DEBUG: Stripped old format patient context from expert reminder message")
             return stripped
     
+    print(f"🔧 DEBUG: No patient context detected - returning original message")
     return message
 
 async def is_active_expert(user_id: str):
@@ -326,11 +348,11 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
         # Get expert's phone number and user type from the first verification (all should be for same expert)
         expert_phone_id = verifications[0]["expert_phone_id"] if verifications else None
         expert_user_type = verifications[0]["expert_user_type"] if verifications else "medical"
-        if expert_phone_id == "919969557231":
-            print("Skipping")
-            print(verifications)
-            print("Skipping this above one")
-            return False
+        # if expert_phone_id == "919969557231":
+        #     print("Skipping")
+        #     print(verifications)
+        #     print("Skipping this above one")
+        #     return False
         if not expert_phone_id:
             print(f"[ERROR] No expert phone number found in verifications")
             return False
