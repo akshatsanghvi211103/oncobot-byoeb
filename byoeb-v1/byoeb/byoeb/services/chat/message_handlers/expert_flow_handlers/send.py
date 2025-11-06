@@ -108,6 +108,13 @@ class ByoebExpertSendResponse(Handler):
         
         # Add user messages (verified answers) if they exist
         if byoeb_user_messages:
+            print(f"🗄️ AUDIO_DEBUG: Checking {len(byoeb_user_messages)} user messages for audio processing")
+            for i, msg in enumerate(byoeb_user_messages):
+                has_audio = (hasattr(msg.message_context, 'additional_info') and 
+                           msg.message_context.additional_info and 
+                           'audio_url' in msg.message_context.additional_info)
+                print(f"🗄️ AUDIO_DEBUG: User message {i+1}: ID={msg.message_context.message_id}, has_audio={has_audio}")
+            
             all_messages_to_store.extend(byoeb_user_messages)
             print(f"🗄️ Added {len(byoeb_user_messages)} user response messages for storage")
         
@@ -127,9 +134,19 @@ class ByoebExpertSendResponse(Handler):
                 print(f"📊 Total messages to store: {len(all_messages_to_store)}")
                 for i, msg in enumerate(all_messages_to_store):
                     msg_text = msg.message_context.message_english_text or msg.message_context.message_source_text
+                    has_audio = (hasattr(msg.message_context, 'additional_info') and 
+                               msg.message_context.additional_info and 
+                               'audio_url' in msg.message_context.additional_info)
+                    qikchat_audio_id = (msg.message_context.additional_info.get('qikchat_audio_id') 
+                                      if hasattr(msg.message_context, 'additional_info') and msg.message_context.additional_info 
+                                      else None)
+                    
                     print(f"  {i+1}. ID: {msg.message_context.message_id}")
                     print(f"     Category: {getattr(msg, 'message_category', 'NO_CATEGORY')}")
                     print(f"     Type: {msg.message_context.message_type}")
+                    print(f"     Has Audio: {has_audio}")
+                    if qikchat_audio_id:
+                        print(f"     QikChat Audio ID: {qikchat_audio_id}")
                     print(f"     Text: '{(msg_text or '')[:50]}...'")
                 print("=== END EXPERT HANDLER DEBUG ===\n")
                 
@@ -223,6 +240,45 @@ class ByoebExpertSendResponse(Handler):
                 import traceback
                 traceback.print_exc()
 
+        # CRITICAL FIX: Update message IDs with QikChat IDs after sending
+        print(f"🔧 FINAL_ANSWER_ID_FIX: Updating {len(modified_user_messages_context)} message IDs with QikChat IDs")
+        print(f"🔧 FINAL_ANSWER_ID_FIX: Available QikChat IDs: {message_ids}")
+        
+        for i, user_message in enumerate(modified_user_messages_context):
+            original_id = user_message.message_context.message_id
+            has_audio = (hasattr(user_message.message_context, 'additional_info') and 
+                        user_message.message_context.additional_info and 
+                        'audio_url' in user_message.message_context.additional_info)
+            
+            print(f"🔧 FINAL_ANSWER_ID_FIX: Processing message {i+1}")
+            print(f"   - Original ID: {original_id}")
+            print(f"   - Has audio: {has_audio}")
+            print(f"   - Message type: {user_message.message_context.message_type}")
+            
+            if has_audio and len(message_ids) >= 2:
+                # This message generated 2 QikChat IDs (text + audio)
+                text_id = message_ids[0]  # First ID is for text request
+                audio_id = message_ids[1]  # Second ID is for audio request
+                
+                print(f"🔧 FINAL_ANSWER_ID_FIX: Text+Audio message detected")
+                print(f"   - Text QikChat ID: {text_id}")
+                print(f"   - Audio QikChat ID: {audio_id}")
+                
+                # Update the main message with text ID (this will create the text database entry)
+                user_message.message_context.message_id = text_id
+                
+                # Store the audio ID in additional_info so it can be used for the audio database entry
+                if 'qikchat_audio_id' not in user_message.message_context.additional_info:
+                    user_message.message_context.additional_info['qikchat_audio_id'] = audio_id
+                    print(f"🔧 FINAL_ANSWER_ID_FIX: Stored audio ID in additional_info: {audio_id}")
+                
+                print(f"🔧 FINAL_ANSWER_ID_FIX: Message {i+1} ID updated: {original_id} -> {text_id} (text), audio ID: {audio_id}")
+            elif len(message_ids) > i:
+                # Single message, use the corresponding QikChat ID
+                qikchat_id = message_ids[i]
+                user_message.message_context.message_id = qikchat_id
+                print(f"🔧 FINAL_ANSWER_ID_FIX: Message {i+1} ID updated: {original_id} -> {qikchat_id}")
+
         # Only add final emoji reactions if we have messages with additional_info that contains emoji
         emoji = None
         if (user_messages_context and 
@@ -255,10 +311,21 @@ class ByoebExpertSendResponse(Handler):
         original_expert_id = expert_message_context.message_context.message_id
         
         expert_requests = await channel_service.prepare_requests(expert_message_context)
-        responses, _ = await channel_service.send_requests(expert_requests)
+        responses, message_ids = await channel_service.send_requests(expert_requests)
+
+        # EXPERT_ID_FIX: Extract QikChat message ID from response and update expert message
+        if message_ids and len(message_ids) > 0 and message_ids[0] is not None:
+            qikchat_expert_id = message_ids[0]
+            print(f"🔧 EXPERT_ID_FIX: Updating expert message ID: {original_expert_id} -> {qikchat_expert_id}")
+            
+            # Update the message context with the QikChat ID
+            expert_message_context.message_context.message_id = qikchat_expert_id
+            new_expert_id = qikchat_expert_id
+        else:
+            print(f"⚠️ EXPERT_ID_FIX: No QikChat message ID received, keeping original: {original_expert_id}")
+            new_expert_id = original_expert_id
 
         # Update message ID in database if it changed after sending to Qikchat
-        new_expert_id = expert_message_context.message_context.message_id
         if original_expert_id != new_expert_id:
             print(f"🔄 Updating expert message ID in database: {original_expert_id} -> {new_expert_id}")
             await self._message_db_service.update_message_id(original_expert_id, new_expert_id)

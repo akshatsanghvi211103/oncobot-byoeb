@@ -365,7 +365,7 @@ class ByoebExpertGenerateResponse(Handler):
             if (reply_to_user_message_context.message_context.message_type == MessageTypes.REGULAR_AUDIO.value):
                 print("🔧 DEBUG: Creating REGULAR_AUDIO message context")
                 message_context = MessageContext(
-                    message_id=str(uuid.uuid4()),  # Generate unique message ID
+                    message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                     message_type=MessageTypes.REGULAR_AUDIO.value,
                     additional_info={
                         **media_additiona_info,
@@ -640,6 +640,8 @@ class ByoebExpertGenerateResponse(Handler):
         message_text = message.message_context.message_english_text or message.message_context.message_source_text
         print(f"💬 Message text: '{message_text}'")
         print(f"📝 Message type: {message.message_context.message_type}")
+        
+
         
         read_reciept_message = self.__get_read_reciept_message(message)
         from byoeb.chat_app.configuration.dependency_setup import llm_client

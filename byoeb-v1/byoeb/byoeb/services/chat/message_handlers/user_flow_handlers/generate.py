@@ -327,6 +327,11 @@ class ByoebUserGenerateResponse(Handler):
     ) -> List[ByoebMessageContext]:
         from byoeb.chat_app.configuration.dependency_setup import text_translator
         from byoeb.chat_app.configuration.dependency_setup import speech_translator
+        
+        # CRITICAL: Store original user question ID for reply context
+        # This ensures both waiting message and audio message reply to the same user question
+        original_user_question_id = message.message_context.message_id
+        print(f"🔗 DEBUG: Storing original user question ID for reply context: {original_user_question_id}")
         user_language = message.user.user_language
         status_info = {
             constants.EMOJI: emoji,
@@ -373,6 +378,7 @@ class ByoebUserGenerateResponse(Handler):
         
         # Create appropriate message type based on whether we have follow-up questions
         if related_questions and len(related_questions) > 0:
+            print(f"🔗 DEBUG: Creating reply context - user message ID: {message.message_context.message_id}")
             user_message = ByoebMessageContext(
                 channel_type=message.channel_type,
                 message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
@@ -384,7 +390,7 @@ class ByoebUserGenerateResponse(Handler):
                     last_conversations=message.user.last_conversations
                 ),
                 message_context=MessageContext(
-                    message_id=str(uuid.uuid4()),  # Generate unique message ID
+                    message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                     message_type=MessageTypes.INTERACTIVE_LIST.value,
                     message_source_text=message_source_text,  # Use full message for body
                     message_english_text=response_text,
@@ -394,7 +400,7 @@ class ByoebUserGenerateResponse(Handler):
                     }
                 ),
                 reply_context=ReplyContext(
-                    reply_id=message.message_context.message_id,
+                    reply_id=original_user_question_id,  # Use stored original user question ID
                     reply_type=message.message_context.message_type,
                     reply_english_text=message.message_context.message_english_text,
                     reply_source_text=message.message_context.message_source_text,
@@ -402,6 +408,8 @@ class ByoebUserGenerateResponse(Handler):
                 ),
                 incoming_timestamp=message.incoming_timestamp,
             )
+            print(f"🔗 DEBUG: Created main waiting message reply context with reply_id: {user_message.reply_context.reply_id}")
+            print(f"🔗 DEBUG: Main waiting message ID: {user_message.message_context.message_id}")
         
         # Default case: create regular text message if no specific type was created
         if user_message is None:
@@ -417,11 +425,13 @@ class ByoebUserGenerateResponse(Handler):
                     last_conversations=message.user.last_conversations
                 ),
                 message_context=MessageContext(
-                    message_id=str(uuid.uuid4()),  # Generate unique message ID
+                    message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                     message_type=MessageTypes.REGULAR_TEXT.value,
                     message_source_text=message_source_text,
                     message_english_text=response_text,
-                    additional_info=status_info
+                    additional_info={
+                        **status_info
+                    }
                 ),
                 reply_context=ReplyContext(
                     reply_id=message.message_context.message_id,
@@ -500,7 +510,7 @@ class ByoebUserGenerateResponse(Handler):
                         last_conversations=message.user.last_conversations
                     ),
                     message_context=MessageContext(
-                        message_id=str(uuid.uuid4()),  # Generate unique message ID
+                        message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                         message_type=MessageTypes.REGULAR_AUDIO.value,
                         message_source_text="",  # Empty to avoid duplicate text display
                         message_english_text="",  # Empty to avoid duplicate text display
@@ -512,11 +522,11 @@ class ByoebUserGenerateResponse(Handler):
                         }
                     ),
                     reply_context=ReplyContext(
-                        reply_id=message.message_context.message_id,
-                        reply_type=message.message_context.message_type,
-                        reply_english_text=message.message_context.message_english_text,
-                        reply_source_text=message.message_context.message_source_text,
-                        media_info=message.message_context.media_info
+                        reply_id=original_user_question_id,  # Use original user question ID, not waiting message ID
+                        reply_type="text",  # Original user message type
+                        reply_english_text=None,  # Will be filled by proper context
+                        reply_source_text=None,  # Will be filled by proper context
+                        media_info=None
                     ),
                     incoming_timestamp=message.incoming_timestamp,
                 )
@@ -527,6 +537,8 @@ class ByoebUserGenerateResponse(Handler):
                 
                 messages_to_return.append(audio_message)
                 print(f"🎵 TTS audio message generated successfully with SAS URL")
+                print(f"🔗 DEBUG: Audio message reply context reply_id: {audio_message.reply_context.reply_id}")
+                print(f"🔗 DEBUG: Audio message ID: {audio_message.message_context.message_id}")
             else:
                 print(f"⚠️ TTS service returned no audio URL")
                 
@@ -646,11 +658,13 @@ class ByoebUserGenerateResponse(Handler):
                 phone_number_id=expert_phone_number_id
             ),
             message_context=MessageContext(
-                message_id=str(uuid.uuid4()),  # Generate unique message ID
+                message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                 message_type=MessageTypes.INTERACTIVE_BUTTON.value,
                 message_source_text=expert_message,
                 message_english_text=expert_message,
-                additional_info=additional_info
+                additional_info={
+                    **additional_info
+                }
             ),
             incoming_timestamp=message.incoming_timestamp,
         )
@@ -790,6 +804,10 @@ class ByoebUserGenerateResponse(Handler):
     ) -> List[ByoebMessageContext]:
         message: ByoebMessageContext = messages[0].model_copy(deep=True)
         
+        # Initialize additional_info if needed for other attributes
+        if not hasattr(message.message_context, 'additional_info') or message.message_context.additional_info is None:
+            message.message_context.additional_info = {}
+        
         read_reciept_message = self.__create_read_reciept_message(message)
         message_english = message.message_context.message_english_text
         
@@ -809,6 +827,17 @@ class ByoebUserGenerateResponse(Handler):
         retrieved_chunks = await self.__aretrieve_chunks(message_english, k=3)
         
         answer, query_type = await self.agenerate_answer(message_english, retrieved_chunks)
+        
+        print(f"Query the type:  {query_type}")
+        
+        # Store query_type temporarily in additional_info for database storage
+        if not hasattr(message.message_context, 'additional_info') or message.message_context.additional_info is None:
+            message.message_context.additional_info = {}
+        message.message_context.additional_info["llm_query_type"] = query_type
+        
+        # CLASSIFICATION_FIX: Set message_category for proper filtering in send handler
+        message.message_category = MessageCategory.USER_TO_BOT.value
+        print(f"📊 CLASSIFICATION_FIX: Set original message category to '{message.message_category}' for proper filtering")
         
         # Use LLM-generated follow-up questions for better results
         try:
@@ -844,7 +873,7 @@ class ByoebUserGenerateResponse(Handler):
                 generate_audio=True
             )
             print(f"✅ Small-talk answer sent directly to user (no expert verification needed)")
-            return byoeb_user_messages + [read_reciept_message]
+            return [message] + byoeb_user_messages + [read_reciept_message]
         elif query_type == "out-of-scope":
             answer = bot_config["template_messages"]["user"]["out_of_scope"].get(message.user.user_language,
                      "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
@@ -857,7 +886,7 @@ class ByoebUserGenerateResponse(Handler):
                 generate_audio=True
             )
             print(f"✅ Out-of-scope message sent directly to user (no expert verification needed)")
-            return byoeb_user_messages + [read_reciept_message]
+            return [message] + byoeb_user_messages + [read_reciept_message]
         elif query_type == "incomprehensible":
             answer = bot_config["template_messages"]["user"]["incomprehensible"].get(message.user.user_language,
                      "I apologize, but I couldn't understand your question. Could you please rephrase it?")
@@ -870,7 +899,7 @@ class ByoebUserGenerateResponse(Handler):
                 generate_audio=True
             )
             print(f"✅ Incomprehensible message sent directly to user (no expert verification needed)")
-            return byoeb_user_messages + [read_reciept_message]
+            return [message] + byoeb_user_messages + [read_reciept_message]
         else:
             # For medical/logistical queries, send waiting message and get expert verification
             user_lang = message.user.user_language
@@ -914,9 +943,9 @@ class ByoebUserGenerateResponse(Handler):
             )
             print(f"✅ Expert verification message created")
             
-            # FLOW CHANGE: Send waiting message(s) to user + expert verification message
-            result_messages = byoeb_user_messages + [byoeb_expert_message, read_reciept_message]
-            print(f"🎉 Complete! Generated {len(result_messages)} messages (waiting message{'s' if len(byoeb_user_messages) > 1 else ''} to user + expert verification + read receipt)")
+            # FLOW CHANGE: Send waiting message(s) to user + expert verification message + original user message for DB storage
+            result_messages = [message] + byoeb_user_messages + [byoeb_expert_message, read_reciept_message]
+            print(f"🎉 Complete! Generated {len(result_messages)} messages (original user message + waiting message{'s' if len(byoeb_user_messages) > 1 else ''} + expert verification + read receipt)")
             return result_messages
     
     async def handle(

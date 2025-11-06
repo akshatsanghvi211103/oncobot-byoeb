@@ -1,0 +1,718 @@
+[
+  {
+    _id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: null,
+      user: null,
+      message_context: {
+        message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+        message_type: 'interactive_list_reply',
+        message_source_text: null,
+        message_english_text: null,
+        media_info: null,
+        additional_info: {
+          verification_status: 'verified',
+          related_questions: [
+            'Can I use deodorant during radiation therapy?',
+            'What should I do if my skin becomes itchy?',
+            'Can I swim in a pool during radiation therapy?'
+          ],
+          corrected_en_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
+            '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
+          corrected_source_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
+            '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
+          modified_timestamp: '1762340147'
+        }
+      },
+      reply_context: {
+        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340121'
+  },
+  {
+    _id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: [
+          {
+            question: 'what is radiotherapy all about?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'can i take a bath after my radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'sdfghjk',
+            answer: 'I did not understand your question. Could you please rephrase or provide more details?'
+          }
+        ]
+      },
+      message_context: {
+        message_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'Can I take a bath after my radiotherapy session?',
+        message_english_text: 'Can I take a bath after my radiotherapy session?',
+        media_info: null,
+        additional_info: {
+          verification_status: 'pending',
+          related_questions: [
+            'Can I use deodorant during radiation therapy?',
+            'What should I do if my skin becomes itchy?',
+            'Can I swim in a pool during radiation therapy?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_type: 'regular_audio',
+        reply_source_text: '',
+        reply_english_text: 'Can I take a bath after my radiotherapy session?',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/1193138522709028.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340121'
+  },
+  {
+    _id: 'OD5vXDpUnOXsC2DIOgTRB07sv',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'OD5vXDpUnOXsC2DIOgTRB07sv',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
+        message_english_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
+        media_info: null,
+        additional_info: {
+          verification_status: 'pending',
+          related_questions: [
+            'Can I use deodorant during radiation therapy?',
+            'What should I do if my skin becomes itchy?',
+            'Can I swim in a pool during radiation therapy?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762340121
+    },
+    timestamp: '1762340121'
+  },
+  {
+    _id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebexpert_verification',
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
+        message_type: 'interactive_button_reply',
+        message_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath after my radiotherapy session?\n' +
+          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '\n' +
+          'Is the answer correct?',
+        message_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath after my radiotherapy session?\n' +
+          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '\n' +
+          'Is the answer correct?',
+        media_info: null,
+        additional_info: {
+          verification_status: 'verified',
+          correction_en_text: null,
+          correction_source_text: null,
+          modified_timestamp: '1762340142'
+        }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'en',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                verification_status: 'verified',
+                related_questions: [
+                  'Can I use deodorant during radiation therapy?',
+                  'What should I do if my skin becomes itchy?',
+                  'Can I swim in a pool during radiation therapy?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                verification_status: 'verified',
+                related_questions: [
+                  'Can I use deodorant during radiation therapy?',
+                  'What should I do if my skin becomes itchy?',
+                  'Can I swim in a pool during radiation therapy?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340121'
+  },
+  {
+    _id: 'ytrLJpmlKFpA19TW6RioFuUe3',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'ytrLJpmlKFpA19TW6RioFuUe3',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_bbeb0298da1d43c69a4214d8caadda01.mp3?st=2025-11-05T10%3A55%3A20Z&se=2025-11-05T11%3A55%3A20Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-05T10%3A55%3A20Z&ske=2025-11-05T11%3A55%3A20Z&sks=b&skv=2025-01-05&sig=qPBHWGJy7vYj4uT014XS41DhNfVMYpxK74Q6A8akjSU%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
+          emoji: null,
+          verification_status: 'pending'
+        }
+      },
+      reply_context: {
+        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762340121
+    },
+    timestamp: '1762340121'
+  },
+  {
+    _id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: null,
+      user: null,
+      message_context: {
+        message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+        message_type: 'interactive_list_reply',
+        message_source_text: null,
+        message_english_text: null,
+        media_info: null,
+        additional_info: {
+          verification_status: 'pending',
+          related_questions: [
+            'Can I use deodorant during radiation therapy?',
+            'What should I do if my skin becomes itchy?',
+            'Can I swim in a pool during radiation therapy?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340121'
+  },
+  {
+    _id: 'Kq1DFu2RYckD7C5diewvhSW3r',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebexpert',
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'Kq1DFu2RYckD7C5diewvhSW3r',
+        message_type: 'regular_text',
+        message_source_text: 'Thank you for verifiying the answer.',
+        message_english_text: 'Thank you for verifiying the answer.',
+        media_info: null,
+        additional_info: null
+      },
+      reply_context: {
+        reply_id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          modified_timestamp: '1762340142'
+        }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'en',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                verification_status: 'pending',
+                related_questions: [
+                  'Can I use deodorant during radiation therapy?',
+                  'What should I do if my skin becomes itchy?',
+                  'Can I swim in a pool during radiation therapy?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                verification_status: 'pending',
+                related_questions: [
+                  'Can I use deodorant during radiation therapy?',
+                  'What should I do if my skin becomes itchy?',
+                  'Can I swim in a pool during radiation therapy?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340148'
+  },
+  {
+    _id: 'IupaAj6IXF8uKgGaMZTRrVmNW',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: '002',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'IupaAj6IXF8uKgGaMZTRrVmNW',
+        message_type: 'regular_text',
+        message_source_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
+          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
+        message_english_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
+          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_bcb21549a65a4a20a80e03551656c0a5.mp3?st=2025-11-05T10%3A55%3A46Z&se=2025-11-05T11%3A55%3A46Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-05T10%3A55%3A46Z&ske=2025-11-05T11%3A55%3A46Z&sks=b&skv=2025-01-05&sig=KHxBF8bItTR0ImjukplXWiKaAVhW4iApF8Ye3GYAwqM%3D',
+          mime_type: 'audio/wav',
+          qikchat_audio_id: 'n3kAafGD00PUrjs6TgzRnpkp7'
+        }
+      },
+      reply_context: {
+        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: {
+          update_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+          verification_status: 'verified',
+          modified_timestamp: '1762340147'
+        }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340148'
+  },
+  {
+    _id: 'MYDdsbDBagskIASxl5ZDTYRxP',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: [ 'byoebexpert_to_bot' ],
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [
+          '918123273694',
+          '916352927215',
+          '918375066113',
+          '918861000105'
+        ],
+        patient_details: {},
+        created_timestamp: 1759916945,
+        activity_timestamp: 1762340142,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'MYDdsbDBagskIASxl5ZDTYRxP',
+        message_type: 'interactive_button_reply',
+        message_source_text: 'Yes',
+        message_english_text: 'Yes',
+        media_info: null,
+        additional_info: {
+          button_id: 'f1d8a0f3-8899-4010-8443-f66ff571c155',
+          button_title: 'Yes'
+        }
+      },
+      reply_context: {
+        reply_id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
+        reply_type: 'interactive_button_reply',
+        reply_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath after my radiotherapy session?\n' +
+          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '\n' +
+          'Is the answer correct?',
+        reply_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath after my radiotherapy session?\n' +
+          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '\n' +
+          'Is the answer correct?',
+        media_info: null,
+        message_category: 'bot_to_byoebexpert_verification',
+        additional_info: { verification_status: 'pending' }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'en',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                verification_status: 'pending',
+                related_questions: [
+                  'Can I use deodorant during radiation therapy?',
+                  'What should I do if my skin becomes itchy?',
+                  'Can I swim in a pool during radiation therapy?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                verification_status: 'pending',
+                related_questions: [
+                  'Can I use deodorant during radiation therapy?',
+                  'What should I do if my skin becomes itchy?',
+                  'Can I swim in a pool during radiation therapy?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762340148'
+  }
+]

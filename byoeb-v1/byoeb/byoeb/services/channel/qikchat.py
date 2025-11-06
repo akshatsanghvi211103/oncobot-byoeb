@@ -86,8 +86,8 @@ class QikchatService(BaseChannelService):
             # print(f"📋 Generated qikchat interactive list request: {qik_interactive_list_message}")
             qik_requests.append(qik_interactive_list_message)
             
-        # Handle text messages
-        elif utils.has_text(byoeb_message):
+        # Handle text messages (skip if text is empty to avoid "Missing body text" errors)
+        elif utils.has_text(byoeb_message) and byoeb_message.message_context.message_source_text.strip():
             qik_text_message = qik_req_payload.get_qikchat_text_request_from_byoeb_message(byoeb_message)
             qik_requests.append(qik_text_message)
         
@@ -207,66 +207,135 @@ class QikchatService(BaseChannelService):
     def create_conv(
         self,
         byoeb_user_message: ByoebMessageContext,
-        responses: List[Dict[str, Any]]
+        responses: List[Dict[str, Any]],
+        original_messages: List[ByoebMessageContext] = None
     ) -> List[ByoebMessageContext]:
         """
-        Create conversation context from bot responses.
+        Create conversation context from bot responses and update original message IDs.
         
         Key Differences from WhatsApp:
         1. Different response structure (Dict vs WhatsAppResponse)
-        2. Different message ID extraction
-        3. Simpler response parsing
+        2. Different message ID extraction  
+        3. Updates original message with actual QikChat ID
+        4. Preserves conversation thread ID
         """
         bot_to_user_messages = []
         
-        for response in responses:
+        # DEBUG: Let's see what we have in the user message context
+        print(f"🔍 CREATE_CONV DEBUG:")
+        print(f"   byoeb_user_message.message_context.message_id: {byoeb_user_message.message_context.message_id}")
+        if hasattr(byoeb_user_message, 'reply_context') and byoeb_user_message.reply_context:
+            print(f"   byoeb_user_message.reply_context.reply_id: {byoeb_user_message.reply_context.reply_id}")
+            # Use the reply_context.reply_id as the original user question ID!
+            original_user_question_id = byoeb_user_message.reply_context.reply_id
+            print(f"🔗 REPLY_CONTEXT_FIX: Using reply_context.reply_id as original user question ID: {original_user_question_id}")
+        else:
+            print(f"   byoeb_user_message has no reply_context")
+            # Fallback to message_context.message_id (though this might be wrong)
+            original_user_question_id = byoeb_user_message.message_context.message_id
+            print(f"🔗 REPLY_CONTEXT_FIX: Fallback to message_context.message_id: {original_user_question_id}")
+        
+        for i, response in enumerate(responses):
             if "error" in response:
                 continue
                 
             # Extract message details from Qikchat response
-            message_id = response.get("message_id") or response.get("id")
-            if message_id is None:
-                message_id = str(uuid.uuid4())  # Generate unique message ID if not provided
+            qikchat_message_id = None
+            if response and isinstance(response, dict):
+                # Try multiple fields for message ID
+                qikchat_message_id = response.get("message_id") or response.get("id")
+                
+                # Check in nested data array
+                if not qikchat_message_id and "data" in response and isinstance(response["data"], list) and len(response["data"]) > 0:
+                    qikchat_message_id = response["data"][0].get("id")
+                    
+            # Use UUID as fallback only if QikChat didn't provide ID
+            if qikchat_message_id is None:
+                qikchat_message_id = str(uuid.uuid4())
+                self.logger.warning(f"QikChat did not provide message ID, using UUID: {qikchat_message_id}")
+            else:
+                self.logger.info(f"Using QikChat message ID: {qikchat_message_id}")
+            
             timestamp = response.get("timestamp") or str(datetime.now().timestamp())
             
             # Convert timestamp to integer if it's a string
             if isinstance(timestamp, str):
                 try:
-                    # Convert string timestamp to integer (remove decimal part)
                     timestamp_int = int(float(timestamp))
                 except (ValueError, TypeError):
-                    # Fallback to current timestamp if conversion fails
                     timestamp_int = int(datetime.now().timestamp())
             else:
                 timestamp_int = int(timestamp)
             
+            # AUDIO_URL_FIX: Use original message additional_info if available
+            if original_messages and i < len(original_messages):
+                # Use the specific original message's additional_info to preserve audio URLs
+                original_msg = original_messages[i]
+                original_additional_info = original_msg.message_context.additional_info or {}
+                updated_additional_info = {**original_additional_info}
+                
+                # Get source text from the original generated message
+                source_text = original_msg.message_context.message_source_text
+                english_text = original_msg.message_context.message_english_text
+                message_type = original_msg.message_context.message_type
+                media_info = original_msg.message_context.media_info
+                
+                print(f"🎵 AUDIO_URL_FIX: Using original message {i+1} additional_info")
+                if 'audio_url' in updated_additional_info:
+                    print(f"🎵 AUDIO_URL_FIX: Found audio_url in original message: {updated_additional_info['audio_url'][:50]}...")
+            else:
+                # Fallback to user message additional_info (original behavior)
+                original_additional_info = byoeb_user_message.message_context.additional_info or {}
+                updated_additional_info = {**original_additional_info}
+                
+                # Use user message content (original behavior)
+                source_text = byoeb_user_message.message_context.message_source_text
+                english_text = byoeb_user_message.message_context.message_english_text
+                message_type = byoeb_user_message.message_context.message_type
+                media_info = byoeb_user_message.message_context.media_info
+                
+                print(f"🎵 AUDIO_URL_FIX: Using fallback user message additional_info for message {i+1}")
+            
+
+            
             # Create bot user context
             bot_user = User(
                 phone_number_id=byoeb_user_message.user.phone_number_id,
-                name="Oncology Bot",  # Bot name
+                name="Oncology Bot",
                 user_id="bot"
             )
             
-            # Create message context for bot response
+            # Create message context for bot response with QikChat ID
             bot_message_context = MessageContext(
-                message_id=message_id,
-                message_source_text=byoeb_user_message.message_context.message_source_text,
-                message_type=MessageTypes.REGULAR_TEXT.value,  # Fixed: Use valid MessageType
-                timestamp=str(timestamp_int)  # Convert to string for MessageContext
+                message_id=qikchat_message_id,  # Use actual QikChat message ID
+                message_source_text=source_text,
+                message_english_text=english_text,
+                message_type=message_type,  # Preserve original type
+                media_info=media_info,  # Preserve media info
+                timestamp=str(timestamp_int),
+                additional_info=updated_additional_info  # Use preserved additional_info with audio URLs
             )
             
             # Create BYOeB message context
             bot_message = ByoebMessageContext(
-                channel_type=byoeb_user_message.channel_type,  # Required field
-                message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,  # Correct category for bot responses
+                channel_type=byoeb_user_message.channel_type,
+                message_category=MessageCategory.BOT_TO_USER_RESPONSE.value,
                 user=bot_user,
                 message_context=bot_message_context,
-                reply_context=ReplyContext(reply_id=byoeb_user_message.message_context.message_id),
+                reply_context=ReplyContext(reply_id=original_user_question_id),  # Use preserved original ID
                 incoming_timestamp=byoeb_user_message.incoming_timestamp,
-                outgoing_timestamp=timestamp_int  # Use integer timestamp
+                outgoing_timestamp=timestamp_int
             )
             
+            print(f"🔗 REPLY_CONTEXT_FIX: Bot message {i+1} reply_id set to: {original_user_question_id} (QikChat ID: {qikchat_message_id})")
+            
             bot_to_user_messages.append(bot_message)
+            
+            # IMPORTANT: Update the original message ID to QikChat ID for database consistency
+            if hasattr(byoeb_user_message, 'message_context') and byoeb_user_message.message_context:
+                original_id = byoeb_user_message.message_context.message_id
+                byoeb_user_message.message_context.message_id = qikchat_message_id
+                self.logger.info(f"Updated original message ID: {original_id} -> {qikchat_message_id}")
         
         return bot_to_user_messages
     
@@ -314,6 +383,31 @@ class QikchatService(BaseChannelService):
                 reply_context=reply_context
             )
             user_messages_context.append(user_message_context)
+        
+        # FILTER_DUPLICATES: Remove redundant UUID entries that contain corrected content
+        print(f"🧹 FILTER_DUPLICATES: Before filtering - {len(user_messages_context)} entries in messages_context")
+        filtered_messages_context = []
+        for msg_ctx in user_messages_context:
+            message_id = msg_ctx.message_context.message_id
+            additional_info = msg_ctx.message_context.additional_info or {}
+            
+            # Check if this is a UUID format message with corrected content
+            is_uuid_format = (len(message_id) == 36 and 
+                            message_id.count('-') == 4 and 
+                            all(c in '0123456789abcdef-' for c in message_id.lower()))
+            has_corrected_content = ('corrected_en_text' in additional_info or 
+                                   'corrected_source_text' in additional_info)
+            
+            if is_uuid_format and has_corrected_content:
+                print(f"🧹 FILTER_DUPLICATES: Removing duplicate UUID entry with corrected content: {message_id}")
+                # Skip this entry - it's a duplicate with final answer content
+                continue
+            else:
+                print(f"🧹 FILTER_DUPLICATES: Keeping entry: {message_id} (UUID: {is_uuid_format}, Corrected: {has_corrected_content})")
+                filtered_messages_context.append(msg_ctx)
+        
+        user_messages_context = filtered_messages_context
+        print(f"🧹 FILTER_DUPLICATES: After filtering - {len(user_messages_context)} entries remaining")
         
         # Process expert responses and update expert message with returned message ID
         print(f"🔧 CREATE_CROSS_CONV: Processing {len(expert_responses)} expert responses")

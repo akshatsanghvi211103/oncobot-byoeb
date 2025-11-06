@@ -31,7 +31,8 @@ class BaseChannelService(ABC):
     def create_conv(
         self,
         byoeb_user_message: Any, 
-        responses: Any
+        responses: Any,
+        original_messages: List[Any] = None
     ) -> List[ByoebMessageContext]:
         pass
 

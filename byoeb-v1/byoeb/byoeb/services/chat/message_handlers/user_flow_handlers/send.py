@@ -191,13 +191,16 @@ class ByoebUserSendResponse(Handler):
                 
             else:
                 print(f"🎵 Audio message only (no follow-up questions)")
-                # Standard audio handling - send both audio and text with tagging
-                text_tag_message = user_requests[0]  # Text message with reply_context
-                audio_tag_message = user_requests[1]  # Audio message with reply_context
-                response_text, message_id_text = await channel_service.send_requests([text_tag_message])
-                response_audio, message_id_audio = await channel_service.send_requests([audio_tag_message])
-                responses = response_text + response_audio
-                message_ids = message_id_text + message_id_audio
+                # Since we now skip empty text requests, we only have audio request
+                print(f"🎵 Found {len(user_requests)} audio requests to send")
+                if len(user_requests) > 0:
+                    response_audio, message_id_audio = await channel_service.send_requests(user_requests)
+                    responses = response_audio
+                    message_ids = message_id_audio
+                else:
+                    print(f"⚠️ No audio requests to send")
+                    responses = []
+                    message_ids = []
                 
         else:
             # print(f"💬 Sending text/interactive message...")
@@ -220,13 +223,32 @@ class ByoebUserSendResponse(Handler):
         self,
         messages: List[ByoebMessageContext]
     ):
+        from byoeb.models.message_category import MessageCategory
+        
         verification_status = constants.VERIFICATION_STATUS
         read_receipt_messages = utils.get_read_receipt_byoeb_messages(messages)
-        byoeb_user_messages = utils.get_user_byoeb_messages(messages)
+        
+        # CLASSIFICATION_FIX: Separate incoming vs outgoing messages
+        incoming_user_messages = []  # Original user messages (to store in DB only)
+        outgoing_user_messages = []  # Bot responses to user (to send and store)
+        
+        for msg in messages:
+            if hasattr(msg, 'message_category'):
+                if msg.message_category == MessageCategory.USER_TO_BOT.value:
+                    incoming_user_messages.append(msg)
+                    print(f"📥 INCOMING: {msg.message_context.message_type}, ID={msg.message_context.message_id}")
+                elif msg.message_category == MessageCategory.BOT_TO_USER_RESPONSE.value:
+                    outgoing_user_messages.append(msg)
+                    print(f"📤 OUTGOING: {msg.message_context.message_type}, ID={msg.message_context.message_id}")
+        
+        # Use traditional utils for expert messages (unchanged)
         byoeb_expert_messages = utils.get_expert_byoeb_messages(messages)
         
+        # For backward compatibility, use outgoing messages as "byoeb_user_messages" 
+        byoeb_user_messages = outgoing_user_messages
+        
         # Debug: Show message breakdown
-        print(f"🔍 MESSAGE BREAKDOWN: Total={len(messages)}, User={len(byoeb_user_messages)}, Expert={len(byoeb_expert_messages)}, ReadReceipt={len(read_receipt_messages)}")
+        print(f"🔍 MESSAGE BREAKDOWN: Total={len(messages)}, Incoming={len(incoming_user_messages)}, Outgoing={len(byoeb_user_messages)}, Expert={len(byoeb_expert_messages)}, ReadReceipt={len(read_receipt_messages)}")
         for i, user_msg in enumerate(byoeb_user_messages):
             print(f"🔍 User message {i+1}: Type={user_msg.message_context.message_type}, ID={user_msg.message_context.message_id}")
         
@@ -291,14 +313,23 @@ class ByoebUserSendResponse(Handler):
 
         byoeb_user_verification_status = byoeb_expert_message.message_context.additional_info.get(verification_status)
         related_questions = byoeb_user_message.message_context.additional_info.get(constants.ROW_TEXTS)
-        byoeb_user_message.message_context.additional_info = {
+        
+        # CLASSIFICATION_PRESERVE: Don't overwrite existing additional_info, just update specific fields
+        if not hasattr(byoeb_user_message.message_context, 'additional_info') or byoeb_user_message.message_context.additional_info is None:
+            byoeb_user_message.message_context.additional_info = {}
+        
+        # Preserve existing additional_info and only update specific fields
+        byoeb_user_message.message_context.additional_info.update({
             verification_status: byoeb_user_verification_status,
             constants.RELATED_QUESTIONS: related_questions
-        }
+        })
+        
+
         # print(f"🔧 DEBUG: About to call create_conv with user_responses type={type(user_responses)}")
         bot_to_user_convs = channel_service.create_conv(
             byoeb_user_message,
-            user_responses
+            user_responses,
+            original_messages=byoeb_user_messages
         )
         # print(f"🔧 DEBUG: create_conv returned {len(bot_to_user_convs)} items, first_type={type(bot_to_user_convs[0]) if bot_to_user_convs else 'N/A'}")
         
@@ -323,20 +354,11 @@ class ByoebUserSendResponse(Handler):
                 expert_responses
             )
             
-            # Update message ID in database if it changed after sending
+            # Note: Expert message ID is updated by create_cross_conv and will be stored with correct ID
             new_expert_id = byoeb_expert_message.message_context.message_id
             print(f"   Expert ID after create_cross_conv: {new_expert_id}")
             print(f"   ID changed: {original_expert_id != new_expert_id}")
-            
-            if original_expert_id != new_expert_id:
-                print(f"🔄 Updating expert message ID in database: {original_expert_id} -> {new_expert_id}")
-                try:
-                    update_success = await self._message_db_service.update_message_id(original_expert_id, new_expert_id)
-                    print(f"   Message ID update result: {update_success}")
-                except Exception as e:
-                    print(f"   ❌ Message ID update failed: {e}")
-            else:
-                print(f"   ℹ️ Expert message ID unchanged - no database update needed")
+            print(f"   ℹ️ Expert message will be stored in database with correct QikChat ID: {new_expert_id}")
             
             return bot_to_user_convs + bot_to_expert_cross_convs, byoeb_user_message
         else:
@@ -357,21 +379,48 @@ class ByoebUserSendResponse(Handler):
             
             # Create USER_TO_BOT message with original user question text
             if byoeb_user_message.reply_context and byoeb_user_message.reply_context.reply_english_text:
-                # Create a copy for the user question
-                user_question_message = byoeb_user_message.__deepcopy__()
+                # CLASSIFICATION_FIX: Try to find the original incoming user message with classification
+                original_user_message = None
+                for msg in messages:
+                    if (hasattr(msg, 'message_category') and 
+                        msg.message_category == MessageCategory.USER_TO_BOT.value and
+                        msg.message_context.message_id == byoeb_user_message.reply_context.reply_id):
+                        original_user_message = msg
+                        print(f"🔍 CLASSIFICATION_FIX: Found original user message with ID {msg.message_context.message_id}")
+                        break
+                
+                if original_user_message:
+                    # Use the original message that has the classification
+                    user_question_message = original_user_message.__deepcopy__()
+                    print(f"🔍 CLASSIFICATION_FIX: Using original user message with preserved classification")
+                else:
+                    # Fallback: Create a copy for the user question
+                    user_question_message = byoeb_user_message.__deepcopy__()
+                    print(f"🔍 CLASSIFICATION_FIX: Original message not found, using fallback copy")
+                
                 user_question_message.message_category = MessageCategory.USER_TO_BOT.value
                 
                 # Set the message text to the original user question
                 user_question_message.message_context.message_english_text = byoeb_user_message.reply_context.reply_english_text
                 user_question_message.message_context.message_source_text = byoeb_user_message.reply_context.reply_source_text or byoeb_user_message.reply_context.reply_english_text
                 
-                # Generate unique message ID for the user question
-                import uuid
-                user_question_message.message_context.message_id = f"user_q_{uuid.uuid4().hex[:8]}"
+                # Use the actual QikChat message ID from reply context instead of generating new one
+                # This preserves the original user question message ID for proper threading
+                if byoeb_user_message.reply_context.reply_id:
+                    user_question_message.message_context.message_id = byoeb_user_message.reply_context.reply_id
+                    print(f"📎 Using original message ID from reply context: {byoeb_user_message.reply_context.reply_id}")
+                else:
+                    # Fallback to generated ID only if no reply_id available
+                    import uuid
+                    user_question_message.message_context.message_id = f"user_q_{uuid.uuid4().hex[:8]}"
+                    print(f"⚠️ No reply_id found, using generated ID: {user_question_message.message_context.message_id}")
                 
                 print(f"🔧 Created USER_TO_BOT message:")
                 print(f"   ID: {user_question_message.message_context.message_id}")
                 print(f"   Text: '{user_question_message.message_context.message_english_text[:50]}...'")
+                
+                # Debug: Show final additional_info for user question message
+
                 
                 # Include both user question and bot response in conversation history
                 all_convs = [user_question_message] + convs

@@ -91,7 +91,8 @@ class WhatsAppService(BaseChannelService):
     def create_conv(
         self,
         byoeb_user_message: ByoebMessageContext,
-        responses: List[WhatsAppResponse]
+        responses: List[WhatsAppResponse],
+        original_messages: List[ByoebMessageContext] = None
     ) -> List[ByoebMessageContext]:
         bot_to_user_messages = []
         for response in responses:

@@ -48,9 +48,21 @@ class MessageProducerService:
                 actual_message = payload["message"]
                 # print(f"DEBUG PRODUCER: Extracted message from payload: {actual_message}")
                 
-                # Add contact info from payload to the message for conversion
-                if "id" in payload:
-                    actual_message["id"] = payload["id"] 
+                # Preserve the actual message ID from the message itself, not payload ID
+                # QikChat message ID should already be in actual_message["id"]
+                message_id_in_message = actual_message.get("id")
+                payload_id = payload.get("id")
+                print(f"DEBUG PRODUCER: Message ID in message: {message_id_in_message}")
+                print(f"DEBUG PRODUCER: Payload ID: {payload_id}")
+                
+                if "id" not in actual_message and "id" in payload:
+                    # Only use payload ID as fallback if message doesn't have its own ID
+                    actual_message["id"] = payload["id"]
+                    print(f"DEBUG PRODUCER: Using payload ID as fallback: {payload['id']}")
+                elif message_id_in_message:
+                    print(f"DEBUG PRODUCER: Using message's own ID: {message_id_in_message}")
+                else:
+                    print(f"DEBUG PRODUCER: No ID found in message or payload") 
                 
                 # Fix: Use contacts field to get the actual sender (your number)
                 # The message.from field contains bot number, but contacts.to contains sender number

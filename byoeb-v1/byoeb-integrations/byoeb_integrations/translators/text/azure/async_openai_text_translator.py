@@ -30,6 +30,7 @@ class AsyncAzureOpenAITextTranslator(BaseTextTranslator):
             # If source and target languages are the same, return input text
             if source_language == target_language:
                 self.__logger.debug(f"Translation skipped - same language ({source_language}): '{input_text[:100]}...'")
+                print("Translation skipped - same language")
                 return input_text
             
             # Get system and user prompts from bot config

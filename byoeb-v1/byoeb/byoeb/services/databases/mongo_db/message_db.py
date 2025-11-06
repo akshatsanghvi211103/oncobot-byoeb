@@ -189,6 +189,13 @@ class MessageMongoDBService(BaseMongoDBService):
             message_type = message.message_context.message_type
             message_text = message.message_context.message_english_text
             
+            # Check for QikChat audio ID and LLM query type
+            qikchat_audio_id = None
+            llm_query_type = None
+            if hasattr(message.message_context, 'additional_info') and message.message_context.additional_info:
+                qikchat_audio_id = message.message_context.additional_info.get('qikchat_audio_id')
+                llm_query_type = message.message_context.additional_info.get('llm_query_type')
+            
             # Check if this looks like an expert verification message
             is_expert_verification = (
                 message_text and 
@@ -196,20 +203,46 @@ class MessageMongoDBService(BaseMongoDBService):
                 "Is the answer correct?" in message_text)
             )
             
+            # Create the main text message entry
             query = {
                 "_id": message_id,
                 "message_data": message.model_dump(),
                 "timestamp": str(int(datetime.now().timestamp())),
             }
+            
+            # Add message_class if LLM query type is available
+            if llm_query_type:
+                query["message_class"] = llm_query_type
+            
             queries.append(query)
             
             print(f"🔍 MESSAGE_CREATE_QUERIES: Message {i+1}")
             print(f"   Message ID: {message_id}")
             print(f"   Message Type: {message_type}")
+            print(f"   Message Class: {llm_query_type or 'Not classified'}")
             print(f"   Is Expert Verification: {is_expert_verification}")
+            print(f"   QikChat Audio ID: {qikchat_audio_id}")
             print(f"   Text Preview: {(message_text or '')[:80]}...")
             
+            # Note: qikchat_audio_id is already stored in additional_info of the main message
+            # No need to create a separate audio entry - the highlighted entry is correct
+            if qikchat_audio_id:
+                print(f"🎵 AUDIO_ID_STORED: QikChat audio ID {qikchat_audio_id} is stored in message additional_info")
+        
         print(f"🔍 MESSAGE_CREATE_QUERIES: Generated {len(queries)} database create queries")
+        
+        # Debug: Show what queries we're returning
+        print(f"🔍 FINAL_QUERIES_DEBUG: About to return {len(queries)} queries:")
+        for i, query in enumerate(queries):
+            query_id = query.get('_id', 'NO_ID')
+            query_data = query.get('message_data', {})
+            message_context = query_data.get('message_context', {})
+            additional_info = message_context.get('additional_info', {})
+            has_audio = 'audio_url' in additional_info if additional_info else False
+            has_text = bool(message_context.get('message_source_text') or message_context.get('message_english_text'))
+            
+            print(f"   Query {i+1}: ID={query_id}, has_text={has_text}, has_audio={has_audio}")
+        
         return queries
     
     def aggregate_queries(
