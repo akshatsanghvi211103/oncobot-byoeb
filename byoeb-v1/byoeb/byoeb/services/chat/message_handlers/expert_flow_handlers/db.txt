@@ -1,152 +1,113 @@
+
+[mongos] oncobotdb> db.messages.find({ $expr: { $gt: [ { $toDouble: "$timestamp" }, 1762759872] } }).sort({ timestamp: 1 }).pretty()
+
+[mongos] oncobotdb> db.messages.find({ $expr: { $gt: [ { $toDouble: "$timestamp" }, 1762759428] } }).sort({ timestamp: 1 }).pretty()
 [
   {
-    _id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
-    message_data: {
-      channel_type: 'qikchat',
-      message_category: null,
-      user: null,
-      message_context: {
-        message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
-        message_type: 'interactive_list_reply',
-        message_source_text: null,
-        message_english_text: null,
-        media_info: null,
-        additional_info: {
-          verification_status: 'verified',
-          related_questions: [
-            'Can I use deodorant during radiation therapy?',
-            'What should I do if my skin becomes itchy?',
-            'Can I swim in a pool during radiation therapy?'
-          ],
-          corrected_en_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
-            '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
-          corrected_source_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
-            '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
-          modified_timestamp: '1762340147'
-        }
-      },
-      reply_context: {
-        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
-        reply_type: null,
-        reply_source_text: null,
-        reply_english_text: null,
-        media_info: null,
-        message_category: null,
-        additional_info: null
-      },
-      cross_conversation_id: null,
-      cross_conversation_context: null,
-      incoming_timestamp: null,
-      outgoing_timestamp: null
-    },
-    timestamp: '1762340121'
-  },
-  {
-    _id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+    _id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
     message_data: {
       channel_type: 'qikchat',
       message_category: 'byoebuser_to_bot',
       user: {
         user_id: '002',
-        user_name: null,
+        user_name: 'Akshat Sanghvi',
         user_location: {},
-        user_language: 'en',
+        user_language: 'hi',
         user_type: 'byoebuser',
         phone_number_id: '916352927215',
         test_user: false,
-        experts: {},
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
         audience: [],
-        patient_details: {},
-        created_timestamp: null,
-        activity_timestamp: null,
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759436,
         last_conversations: [
           {
-            question: 'what is radiotherapy all about?',
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide educational support and answer questions related to cancer and its treatments. While I can offer information and guidance, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
             answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
           },
           {
-            question: 'can i take a bath after my radiotherapy?',
-            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
-          },
-          {
-            question: 'sdfghjk',
-            answer: 'I did not understand your question. Could you please rephrase or provide more details?'
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
           }
         ]
       },
       message_context: {
-        message_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
-        message_type: 'interactive_list_reply',
-        message_source_text: 'Can I take a bath after my radiotherapy session?',
-        message_english_text: 'Can I take a bath after my radiotherapy session?',
-        media_info: null,
-        additional_info: {
-          verification_status: 'pending',
-          related_questions: [
-            'Can I use deodorant during radiation therapy?',
-            'What should I do if my skin becomes itchy?',
-            'Can I swim in a pool during radiation therapy?'
-          ]
-        }
-      },
-      reply_context: {
-        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
-        reply_type: 'regular_audio',
-        reply_source_text: '',
-        reply_english_text: 'Can I take a bath after my radiotherapy session?',
+        message_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
+        message_type: 'regular_audio',
+        message_source_text: 'क्या मैं रेडियो थेरपी के बाद नहा सकता हूँ?',
+        message_english_text: 'Can I take a bath after radiotherapy?',
         media_info: {
-          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/1193138522709028.ogg',
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/1110986687531293.ogg',
           mime_type: 'audio/ogg; codecs=opus',
           media_type: 'audio/wav',
           media_url: null
         },
-        message_category: null,
-        additional_info: null
+        additional_info: { llm_query_type: 'medical' }
       },
+      reply_context: null,
       cross_conversation_id: null,
       cross_conversation_context: null,
       incoming_timestamp: null,
       outgoing_timestamp: null
     },
-    timestamp: '1762340121'
+    timestamp: '1762759465',
+    message_class: 'medical'
   },
   {
-    _id: 'OD5vXDpUnOXsC2DIOgTRB07sv',
+    _id: 'd2a38e7e-97dc-4783-8028-b1d7a0b3ad2b',
     message_data: {
       channel_type: 'qikchat',
-      message_category: 'bot_to_byoebuser_response',
-      user: {
-        user_id: 'bot',
-        user_name: null,
-        user_location: {},
-        user_language: null,
-        user_type: null,
-        phone_number_id: '916352927215',
-        test_user: false,
-        experts: {},
-        audience: [],
-        patient_details: {},
-        created_timestamp: null,
-        activity_timestamp: null,
-        last_conversations: []
-      },
+      message_category: null,
+      user: null,
       message_context: {
-        message_id: 'OD5vXDpUnOXsC2DIOgTRB07sv',
+        message_id: 'd2a38e7e-97dc-4783-8028-b1d7a0b3ad2b',
         message_type: 'interactive_list_reply',
-        message_source_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
-        message_english_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
+        message_source_text: null,
+        message_english_text: null,
         media_info: null,
         additional_info: {
-          verification_status: 'pending',
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+              '\n' +
+              '1. त्वचा को ठंडे पानी से धोएं।\n' +
+              '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+              '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+              '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+              '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+            'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          has_follow_up_questions: true,
           related_questions: [
-            'Can I use deodorant during radiation therapy?',
-            'What should I do if my skin becomes itchy?',
-            'Can I swim in a pool during radiation therapy?'
-          ]
+            'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+              '\n' +
+              '1. त्वचा को ठंडे पानी से धोएं।\n' +
+              '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+              '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+              '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+              '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+            'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          corrected_en_text: '*Question:* Can I take a bath after radiotherapy?\n' +
+            '*Answer:* Yes, you can take a bath after radiotherapy, but avoid using soap, oil, cream, or spray over the treated area. Be gentle with your skin, use lukewarm or cold water, and pat dry with a soft towel. Always follow any specific recommendations from your healthcare provider regarding skin care.',
+          corrected_source_text: 'हाँ, आप रेडियोथेरेपी के बाद स्नान कर सकते हैं, लेकिन उपचारित क्षेत्र पर साबुन, तेल, क्रीम या स्प्रे का उपयोग करने से बचें। अपनी त्वचा के साथ कोमल रहें, गुनगुने या ठंडे पानी का उपयोग करें, और मुलायम तौलिये से धीरे-धीरे सुखाएं। त्वचा की देखभाल के बारे में अपने स्वास्थ्य सेवा प्रदाता की विशेष सिफारिशों का हमेशा पालन करें।',
+          modified_timestamp: '1762759537'
         }
       },
       reply_context: {
-        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
         reply_type: null,
         reply_source_text: null,
         reply_english_text: null,
@@ -157,12 +118,12 @@
       cross_conversation_id: null,
       cross_conversation_context: null,
       incoming_timestamp: null,
-      outgoing_timestamp: 1762340121
+      outgoing_timestamp: null
     },
-    timestamp: '1762340121'
+    timestamp: '1762759465'
   },
   {
-    _id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
+    _id: 'XGjHUg8iUIn8fi5NwX8xw7YZR',
     message_data: {
       channel_type: 'qikchat',
       message_category: 'bot_to_byoebexpert_verification',
@@ -182,18 +143,18 @@
         last_conversations: []
       },
       message_context: {
-        message_id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
-        message_type: 'interactive_button_reply',
+        message_id: 'XGjHUg8iUIn8fi5NwX8xw7YZR',
+        message_type: 'template_button',
         message_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
           '\n' +
-          '*Question:* Can I take a bath after my radiotherapy session?\n' +
-          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '*Question:* Can I take a bath after radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath after radiotherapy, but avoid using soap, oil, cream, or spray over the treated area. Be gentle with your skin, use lukewarm or cold water, and pat dry with a soft towel. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
           '\n' +
           'Is the answer correct?',
         message_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
           '\n' +
-          '*Question:* Can I take a bath after my radiotherapy session?\n' +
-          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '*Question:* Can I take a bath after radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath after radiotherapy, but avoid using soap, oil, cream, or spray over the treated area. Be gentle with your skin, use lukewarm or cold water, and pat dry with a soft towel. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
           '\n' +
           'Is the answer correct?',
         media_info: null,
@@ -201,7 +162,7 @@
           verification_status: 'verified',
           correction_en_text: null,
           correction_source_text: null,
-          modified_timestamp: '1762340142'
+          modified_timestamp: '1762759532'
         }
       },
       reply_context: null,
@@ -211,7 +172,7 @@
           user_id: '002',
           user_name: null,
           user_location: {},
-          user_language: 'en',
+          user_language: 'hi',
           user_type: 'byoebuser',
           phone_number_id: '916352927215',
           test_user: false,
@@ -228,22 +189,42 @@
             message_category: null,
             user: null,
             message_context: {
-              message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+              message_id: '42b35186-6103-414c-a652-348c5f7d9f64',
               message_type: 'interactive_list_reply',
               message_source_text: null,
               message_english_text: null,
               media_info: null,
               additional_info: {
+                emoji: null,
                 verification_status: 'verified',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
                 related_questions: [
-                  'Can I use deodorant during radiation therapy?',
-                  'What should I do if my skin becomes itchy?',
-                  'Can I swim in a pool during radiation therapy?'
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
                 ]
               }
             },
             reply_context: {
-              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
               reply_type: null,
               reply_source_text: null,
               reply_english_text: null,
@@ -261,22 +242,42 @@
             message_category: null,
             user: null,
             message_context: {
-              message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+              message_id: 'd2a38e7e-97dc-4783-8028-b1d7a0b3ad2b',
               message_type: 'interactive_list_reply',
               message_source_text: null,
               message_english_text: null,
               media_info: null,
               additional_info: {
+                emoji: null,
                 verification_status: 'verified',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
                 related_questions: [
-                  'Can I use deodorant during radiation therapy?',
-                  'What should I do if my skin becomes itchy?',
-                  'Can I swim in a pool during radiation therapy?'
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
                 ]
               }
             },
             reply_context: {
-              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
               reply_type: null,
               reply_source_text: null,
               reply_english_text: null,
@@ -294,10 +295,67 @@
       incoming_timestamp: null,
       outgoing_timestamp: null
     },
-    timestamp: '1762340121'
+    timestamp: '1762759465'
   },
   {
-    _id: 'ytrLJpmlKFpA19TW6RioFuUe3',
+    _id: '42b35186-6103-414c-a652-348c5f7d9f64',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: null,
+      user: null,
+      message_context: {
+        message_id: '42b35186-6103-414c-a652-348c5f7d9f64',
+        message_type: 'interactive_list_reply',
+        message_source_text: null,
+        message_english_text: null,
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'pending',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+              '\n' +
+              '1. त्वचा को ठंडे पानी से धोएं।\n' +
+              '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+              '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+              '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+              '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+            'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+              '\n' +
+              '1. त्वचा को ठंडे पानी से धोएं।\n' +
+              '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+              '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+              '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+              '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+            'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759465'
+  },
+  {
+    _id: 'R0ZB13LX1zg4cMqd6XALQYlCz',
     message_data: {
       channel_type: 'qikchat',
       message_category: 'bot_to_byoebuser_response',
@@ -317,21 +375,21 @@
         last_conversations: []
       },
       message_context: {
-        message_id: 'ytrLJpmlKFpA19TW6RioFuUe3',
+        message_id: 'R0ZB13LX1zg4cMqd6XALQYlCz',
         message_type: 'regular_audio',
         message_source_text: '',
         message_english_text: '',
         media_info: null,
         additional_info: {
-          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_bbeb0298da1d43c69a4214d8caadda01.mp3?st=2025-11-05T10%3A55%3A20Z&se=2025-11-05T11%3A55%3A20Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-05T10%3A55%3A20Z&ske=2025-11-05T11%3A55%3A20Z&sks=b&skv=2025-01-05&sig=qPBHWGJy7vYj4uT014XS41DhNfVMYpxK74Q6A8akjSU%3D',
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_c193e0068f48447cb4d7665b977cfd7e.mp3?st=2025-11-10T07%3A24%3A23Z&se=2025-11-10T08%3A24%3A23Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A24%3A23Z&ske=2025-11-10T08%3A24%3A23Z&sks=b&skv=2025-01-05&sig=flz6lblhnlPc/4PfdDCqtEKGgLu1Nqem1YclINORWL4%3D',
           mime_type: 'audio/wav',
-          audio_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
+          audio_text: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।',
           emoji: null,
           verification_status: 'pending'
         }
       },
       reply_context: {
-        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
         reply_type: null,
         reply_source_text: null,
         reply_english_text: null,
@@ -342,59 +400,22 @@
       cross_conversation_id: null,
       cross_conversation_context: null,
       incoming_timestamp: null,
-      outgoing_timestamp: 1762340121
+      outgoing_timestamp: 1762759465
     },
-    timestamp: '1762340121'
+    timestamp: '1762759465'
   },
   {
-    _id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+    _id: 'OiTwlAEc0qCEXR06KZC4p6fiE',
     message_data: {
       channel_type: 'qikchat',
-      message_category: null,
-      user: null,
-      message_context: {
-        message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
-        message_type: 'interactive_list_reply',
-        message_source_text: null,
-        message_english_text: null,
-        media_info: null,
-        additional_info: {
-          verification_status: 'pending',
-          related_questions: [
-            'Can I use deodorant during radiation therapy?',
-            'What should I do if my skin becomes itchy?',
-            'Can I swim in a pool during radiation therapy?'
-          ]
-        }
-      },
-      reply_context: {
-        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
-        reply_type: null,
-        reply_source_text: null,
-        reply_english_text: null,
-        media_info: null,
-        message_category: null,
-        additional_info: null
-      },
-      cross_conversation_id: null,
-      cross_conversation_context: null,
-      incoming_timestamp: null,
-      outgoing_timestamp: null
-    },
-    timestamp: '1762340121'
-  },
-  {
-    _id: 'Kq1DFu2RYckD7C5diewvhSW3r',
-    message_data: {
-      channel_type: 'qikchat',
-      message_category: 'bot_to_byoebexpert',
+      message_category: 'bot_to_byoebuser_response',
       user: {
-        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_id: 'bot',
         user_name: null,
         user_location: {},
-        user_language: 'en',
-        user_type: 'byoebexpert',
-        phone_number_id: '919739811075',
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
         test_user: false,
         experts: {},
         audience: [],
@@ -404,119 +425,58 @@
         last_conversations: []
       },
       message_context: {
-        message_id: 'Kq1DFu2RYckD7C5diewvhSW3r',
-        message_type: 'regular_text',
-        message_source_text: 'Thank you for verifiying the answer.',
-        message_english_text: 'Thank you for verifiying the answer.',
+        message_id: 'OiTwlAEc0qCEXR06KZC4p6fiE',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।',
+        message_english_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
         media_info: null,
-        additional_info: null
+        additional_info: {
+          emoji: null,
+          verification_status: 'pending',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+              '\n' +
+              '1. त्वचा को ठंडे पानी से धोएं।\n' +
+              '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+              '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+              '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+              '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+            'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+              '\n' +
+              '1. त्वचा को ठंडे पानी से धोएं।\n' +
+              '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+              '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+              '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+              '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+            'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+          ]
+        }
       },
       reply_context: {
-        reply_id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
+        reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
         reply_type: null,
         reply_source_text: null,
         reply_english_text: null,
         media_info: null,
         message_category: null,
-        additional_info: {
-          emoji: null,
-          verification_status: 'verified',
-          modified_timestamp: '1762340142'
-        }
+        additional_info: null
       },
       cross_conversation_id: null,
-      cross_conversation_context: {
-        user: {
-          user_id: '002',
-          user_name: null,
-          user_location: {},
-          user_language: 'en',
-          user_type: 'byoebuser',
-          phone_number_id: '916352927215',
-          test_user: false,
-          experts: {},
-          audience: [],
-          patient_details: {},
-          created_timestamp: null,
-          activity_timestamp: null,
-          last_conversations: []
-        },
-        messages_context: [
-          {
-            channel_type: 'qikchat',
-            message_category: null,
-            user: null,
-            message_context: {
-              message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
-              message_type: 'interactive_list_reply',
-              message_source_text: null,
-              message_english_text: null,
-              media_info: null,
-              additional_info: {
-                verification_status: 'pending',
-                related_questions: [
-                  'Can I use deodorant during radiation therapy?',
-                  'What should I do if my skin becomes itchy?',
-                  'Can I swim in a pool during radiation therapy?'
-                ]
-              }
-            },
-            reply_context: {
-              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
-              reply_type: null,
-              reply_source_text: null,
-              reply_english_text: null,
-              media_info: null,
-              message_category: null,
-              additional_info: null
-            },
-            cross_conversation_id: null,
-            cross_conversation_context: null,
-            incoming_timestamp: null,
-            outgoing_timestamp: null
-          },
-          {
-            channel_type: 'qikchat',
-            message_category: null,
-            user: null,
-            message_context: {
-              message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
-              message_type: 'interactive_list_reply',
-              message_source_text: null,
-              message_english_text: null,
-              media_info: null,
-              additional_info: {
-                verification_status: 'pending',
-                related_questions: [
-                  'Can I use deodorant during radiation therapy?',
-                  'What should I do if my skin becomes itchy?',
-                  'Can I swim in a pool during radiation therapy?'
-                ]
-              }
-            },
-            reply_context: {
-              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
-              reply_type: null,
-              reply_source_text: null,
-              reply_english_text: null,
-              media_info: null,
-              message_category: null,
-              additional_info: null
-            },
-            cross_conversation_id: null,
-            cross_conversation_context: null,
-            incoming_timestamp: null,
-            outgoing_timestamp: null
-          }
-        ]
-      },
+      cross_conversation_context: null,
       incoming_timestamp: null,
-      outgoing_timestamp: null
+      outgoing_timestamp: 1762759465
     },
-    timestamp: '1762340148'
+    timestamp: '1762759465'
   },
   {
-    _id: 'IupaAj6IXF8uKgGaMZTRrVmNW',
+    _id: 'HWpUFbqXwGo9gt1GAhLrJGhLf',
     message_data: {
       channel_type: 'qikchat',
       message_category: 'bot_to_byoebuser_response',
@@ -524,7 +484,7 @@
         user_id: '002',
         user_name: null,
         user_location: {},
-        user_language: 'en',
+        user_language: 'hi',
         user_type: 'byoebuser',
         phone_number_id: '916352927215',
         test_user: false,
@@ -536,30 +496,29 @@
         last_conversations: []
       },
       message_context: {
-        message_id: 'IupaAj6IXF8uKgGaMZTRrVmNW',
+        message_id: 'HWpUFbqXwGo9gt1GAhLrJGhLf',
         message_type: 'regular_text',
-        message_source_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
-          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
-        message_english_text: '*Question:* Can I take a bath after my radiotherapy session?\n' +
-          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.',
+        message_source_text: 'हाँ, आप रेडियोथेरेपी के बाद स्नान कर सकते हैं, लेकिन उपचारित क्षेत्र पर साबुन, तेल, क्रीम या स्प्रे का उपयोग करने से बचें। अपनी त्वचा के साथ कोमल रहें, गुनगुने या ठंडे पानी का उपयोग करें, और मुलायम तौलिये से धीरे-धीरे सुखाएं। त्वचा की देखभाल के बारे में अपने स्वास्थ्य सेवा प्रदाता की विशेष सिफारिशों का हमेशा पालन करें।',
+        message_english_text: '*Question:* Can I take a bath after radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath after radiotherapy, but avoid using soap, oil, cream, or spray over the treated area. Be gentle with your skin, use lukewarm or cold water, and pat dry with a soft towel. Always follow any specific recommendations from your healthcare provider regarding skin care.',
         media_info: null,
         additional_info: {
-          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_bcb21549a65a4a20a80e03551656c0a5.mp3?st=2025-11-05T10%3A55%3A46Z&se=2025-11-05T11%3A55%3A46Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-05T10%3A55%3A46Z&ske=2025-11-05T11%3A55%3A46Z&sks=b&skv=2025-01-05&sig=KHxBF8bItTR0ImjukplXWiKaAVhW4iApF8Ye3GYAwqM%3D',
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_0bee84b25b4647b49b07eb938ad04391.mp3?st=2025-11-10T07%3A25%3A35Z&se=2025-11-10T08%3A25%3A35Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A25%3A35Z&ske=2025-11-10T08%3A25%3A35Z&sks=b&skv=2025-01-05&sig=1gDfPz6GKB3uS43lI9ZXiTIis1guRiO7K24EXvBrjVE%3D',
           mime_type: 'audio/wav',
-          qikchat_audio_id: 'n3kAafGD00PUrjs6TgzRnpkp7'
+          qikchat_audio_id: 'yU8C7kEwZZEnNcnPvONTtv0Qv'
         }
       },
       reply_context: {
-        reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+        reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
         reply_type: null,
         reply_source_text: null,
         reply_english_text: null,
         media_info: null,
         message_category: null,
         additional_info: {
-          update_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+          update_id: 'd2a38e7e-97dc-4783-8028-b1d7a0b3ad2b',
           verification_status: 'verified',
-          modified_timestamp: '1762340147'
+          modified_timestamp: '1762759537'
         }
       },
       cross_conversation_id: null,
@@ -567,10 +526,10 @@
       incoming_timestamp: null,
       outgoing_timestamp: null
     },
-    timestamp: '1762340148'
+    timestamp: '1762759538'
   },
   {
-    _id: 'MYDdsbDBagskIASxl5ZDTYRxP',
+    _id: 'GUIBAPgCyzH5V20EUUgj6JqNU',
     message_data: {
       channel_type: 'qikchat',
       message_category: [ 'byoebexpert_to_bot' ],
@@ -591,33 +550,30 @@
         ],
         patient_details: {},
         created_timestamp: 1759916945,
-        activity_timestamp: 1762340142,
+        activity_timestamp: 1762759532,
         last_conversations: []
       },
       message_context: {
-        message_id: 'MYDdsbDBagskIASxl5ZDTYRxP',
+        message_id: 'GUIBAPgCyzH5V20EUUgj6JqNU',
         message_type: 'interactive_button_reply',
         message_source_text: 'Yes',
         message_english_text: 'Yes',
         media_info: null,
-        additional_info: {
-          button_id: 'f1d8a0f3-8899-4010-8443-f66ff571c155',
-          button_title: 'Yes'
-        }
+        additional_info: { button_id: 'Yes', button_title: 'Yes' }
       },
       reply_context: {
-        reply_id: 'x3QAb5S1JLRWmp07vEEDs6pVr',
-        reply_type: 'interactive_button_reply',
+        reply_id: 'XGjHUg8iUIn8fi5NwX8xw7YZR',
+        reply_type: 'template_button',
         reply_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
           '\n' +
-          '*Question:* Can I take a bath after my radiotherapy session?\n' +
-          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '*Question:* Can I take a bath after radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath after radiotherapy, but avoid using soap, oil, cream, or spray over the treated area. Be gentle with your skin, use lukewarm or cold water, and pat dry with a soft towel. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
           '\n' +
           'Is the answer correct?',
         reply_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
           '\n' +
-          '*Question:* Can I take a bath after my radiotherapy session?\n' +
-          '*Answer:* Yes, you can take a bath after your radiotherapy session, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.\n' +
+          '*Question:* Can I take a bath after radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath after radiotherapy, but avoid using soap, oil, cream, or spray over the treated area. Be gentle with your skin, use lukewarm or cold water, and pat dry with a soft towel. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
           '\n' +
           'Is the answer correct?',
         media_info: null,
@@ -630,7 +586,7 @@
           user_id: '002',
           user_name: null,
           user_location: {},
-          user_language: 'en',
+          user_language: 'hi',
           user_type: 'byoebuser',
           phone_number_id: '916352927215',
           test_user: false,
@@ -647,22 +603,42 @@
             message_category: null,
             user: null,
             message_context: {
-              message_id: '55b3dd50-561f-4207-b5e4-ac37c9f7ae95',
+              message_id: '42b35186-6103-414c-a652-348c5f7d9f64',
               message_type: 'interactive_list_reply',
               message_source_text: null,
               message_english_text: null,
               media_info: null,
               additional_info: {
+                emoji: null,
                 verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
                 related_questions: [
-                  'Can I use deodorant during radiation therapy?',
-                  'What should I do if my skin becomes itchy?',
-                  'Can I swim in a pool during radiation therapy?'
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
                 ]
               }
             },
             reply_context: {
-              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
               reply_type: null,
               reply_source_text: null,
               reply_english_text: null,
@@ -680,22 +656,42 @@
             message_category: null,
             user: null,
             message_context: {
-              message_id: '72038f8c-c1fe-4a47-9556-e6f66d139ae5',
+              message_id: 'd2a38e7e-97dc-4783-8028-b1d7a0b3ad2b',
               message_type: 'interactive_list_reply',
               message_source_text: null,
               message_english_text: null,
               media_info: null,
               additional_info: {
+                emoji: null,
                 verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
                 related_questions: [
-                  'Can I use deodorant during radiation therapy?',
-                  'What should I do if my skin becomes itchy?',
-                  'Can I swim in a pool during radiation therapy?'
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
                 ]
               }
             },
             reply_context: {
-              reply_id: 'md1MgWWxrKAyrIymPeX8Zse4s',
+              reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
               reply_type: null,
               reply_source_text: null,
               reply_english_text: null,
@@ -713,6 +709,2202 @@
       incoming_timestamp: null,
       outgoing_timestamp: null
     },
-    timestamp: '1762340148'
+    timestamp: '1762759538'
+  },
+  {
+    _id: '7Dqkas97nBkhOdYvValFANaDO',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebexpert',
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: '7Dqkas97nBkhOdYvValFANaDO',
+        message_type: 'regular_text',
+        message_source_text: 'Thank you for verifiying the answer.',
+        message_english_text: 'Thank you for verifiying the answer.',
+        media_info: null,
+        additional_info: null
+      },
+      reply_context: {
+        reply_id: 'XGjHUg8iUIn8fi5NwX8xw7YZR',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          modified_timestamp: '1762759532'
+        }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '42b35186-6103-414c-a652-348c5f7d9f64',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'd2a38e7e-97dc-4783-8028-b1d7a0b3ad2b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं: \n' +
+                    '\n' +
+                    '1. त्वचा को ठंडे पानी से धोएं।\n' +
+                    '2. मॉइस्चराइज़र का उपयोग करें।\n' +
+                    '3. खुजली वाली जगह पर ठंडी पट्टी रखें।\n' +
+                    '4. खुजली कम करने वाली क्रीम या लोशन लगाएं।\n' +
+                    '5. अगर खुजली बढ़ती है या ठीक नहीं होती, तो डॉक्टर से सलाह लें।',
+                  'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: 'CzPbFSpzSPu9lBEEZ7bD7T5SN',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759538'
+  },
+  {
+    _id: 'UPrhDfStdTgYywWutJ6ieOHPS',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'UPrhDfStdTgYywWutJ6ieOHPS',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_2bc828db3bc44726b8ec33f8040677ba.mp3?st=2025-11-10T07%3A26%3A11Z&se=2025-11-10T08%3A26%3A11Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A26%3A11Z&ske=2025-11-10T08%3A26%3A11Z&sks=b&skv=2025-01-05&sig=fEZMnHktSVKfA8Z9O50wn8HneTfpyTkrHK3JLaV75KE%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?',
+          emoji: null,
+          verification_status: null
+        }
+      },
+      reply_context: {
+        reply_id: '6Emb2K5BLUwzDiUOPpDjIzAhc',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759572
+    },
+    timestamp: '1762759572'
+  },
+  {
+    _id: 'Jp0ZwhUZjgvKLEpjQ1cTHuudD',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'Jp0ZwhUZjgvKLEpjQ1cTHuudD',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?',
+        message_english_text: 'मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?',
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'पेल्विक कैंसर के लिए ब्लैडर प्रोटोकॉल क्या है?',
+            'मैं अपने इलाज करने वाले डॉक्टर से सीधे कैसे बात कर सकता हूँ?',
+            'अगर मैं इलाज छोड़ दूं तो मुझे किसे सूचित करना चाहिए?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'पेल्विक कैंसर के लिए ब्लैडर प्रोटोकॉल क्या है?',
+            'मैं अपने इलाज करने वाले डॉक्टर से सीधे कैसे बात कर सकता हूँ?',
+            'अगर मैं इलाज छोड़ दूं तो मुझे किसे सूचित करना चाहिए?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: '6Emb2K5BLUwzDiUOPpDjIzAhc',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759572
+    },
+    timestamp: '1762759572'
+  },
+  {
+    _id: '6Emb2K5BLUwzDiUOPpDjIzAhc',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: 'Akshat Sanghvi',
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
+        audience: [],
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759532,
+        last_conversations: [
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          }
+        ]
+      },
+      message_context: {
+        message_id: '6Emb2K5BLUwzDiUOPpDjIzAhc',
+        message_type: 'regular_audio',
+        message_source_text: 'Blah blah blah',
+        message_english_text: 'Blah blah blah',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/703908756089948.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        additional_info: { llm_query_type: 'incomprehensible' }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759572',
+    message_class: 'incomprehensible'
+  },
+  {
+    _id: 'on4y6CCkncug3ZOzgxlMgvbYG',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: 'Akshat Sanghvi',
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
+        audience: [],
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759532,
+        last_conversations: [
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          }
+        ]
+      },
+      message_context: {
+        message_id: 'on4y6CCkncug3ZOzgxlMgvbYG',
+        message_type: 'regular_audio',
+        message_source_text: 'कौन हो तुमपर?',
+        message_english_text: 'Who are you?',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/1835207434538343.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        additional_info: { llm_query_type: 'small-talk' }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759580',
+    message_class: 'small-talk'
+  },
+  {
+    _id: 'h2WPKfX0RjEuGOL2hmbr48onK',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'h2WPKfX0RjEuGOL2hmbr48onK',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।',
+        message_english_text: 'यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।',
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'अगर आपकी त्वचा में खुजली हो रही है, तो आप ठंडे पानी से धो सकते हैं, मॉइस्चराइज़र लगा सकते हैं, और ढीले कपड़े पहन सकते हैं। अगर खुजली बनी रहती है, तो डॉक्टर से सलाह लें।',
+            'मैं 2/10 से अधिक दर्द स्कोर कैसे रिपोर्ट करूँ?',
+            'क्या मैं अपनी रेडिएशन ट्रीटमेंट का समय बदल सकता हूँ?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'अगर आपकी त्वचा में खुजली हो रही है, तो आप ठंडे पानी से धो सकते हैं, मॉइस्चराइज़र लगा सकते हैं, और ढीले कपड़े पहन सकते हैं। अगर खुजली बनी रहती है, तो डॉक्टर से सलाह लें।',
+            'मैं 2/10 से अधिक दर्द स्कोर कैसे रिपोर्ट करूँ?',
+            'क्या मैं अपनी रेडिएशन ट्रीटमेंट का समय बदल सकता हूँ?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'gwS2jk4o0yaO81jzOXqhfDQpo',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759580
+    },
+    timestamp: '1762759580'
+  },
+  {
+    _id: 'yLhCUTFnNz0uwZqEssTRcw7lo',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'yLhCUTFnNz0uwZqEssTRcw7lo',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_1610022d79c14f8ea96a203ff147e136.mp3?st=2025-11-10T07%3A26%3A19Z&se=2025-11-10T08%3A26%3A19Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A26%3A19Z&ske=2025-11-10T08%3A26%3A19Z&sks=b&skv=2025-01-05&sig=U5l6HC4CyXGtSPZ2ZTtsxfawebtl65T%2BnRrA67mW01g%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'मैं एक ऑन्कोलॉजी सहायक हूँ जो मरीजों को शिक्षा देने और कैंसर उपचार, विशेष रूप से रेडियोथेरेपी से संबंधित प्रश्नों का उत्तर देने के लिए डिज़ाइन किया गया हूँ। जबकि मैं पूर्व-सत्यापित जानकारी के आधार पर मार्गदर्शन प्रदान कर सकता हूँ, मैं आपके स्वास्थ्य सेवा प्रदाता के साथ सीधे संवाद का विकल्प नहीं हूँ। व्यक्तिगत चिकित्सा सलाह के लिए, कृपया अपने उपचार करने वाले डॉक्टर से परामर्श करें।',
+          emoji: null,
+          verification_status: null
+        }
+      },
+      reply_context: {
+        reply_id: 'on4y6CCkncug3ZOzgxlMgvbYG',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759580
+    },
+    timestamp: '1762759580'
+  },
+  {
+    _id: '6C3U4ZldDCrXjGDTuz4hdKXji',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: '6C3U4ZldDCrXjGDTuz4hdKXji',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'मैं एक ऑन्कोलॉजी सहायक हूँ जो मरीजों को शिक्षा देने और कैंसर उपचार, विशेष रूप से रेडियोथेरेपी से संबंधित प्रश्नों का उत्तर देने के लिए डिज़ाइन किया गया हूँ। जबकि मैं पूर्व-सत्यापित जानकारी के आधार पर मार्गदर्शन प्रदान कर सकता हूँ, मैं आपके स्वास्थ्य सेवा प्रदाता के साथ सीधे संवाद का विकल्प नहीं हूँ। व्यक्तिगत चिकित्सा सलाह के लिए, कृपया अपने उपचार करने वाले डॉक्टर से परामर्श करें।',
+        message_english_text: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.',
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'रेडियोथेरेपी के दौरान आवाज में बदलाव को कैसे संभालें?',
+            'अगर मेरा दर्द स्कोर 2/10 से ज्यादा हो जाए तो मुझे क्या करना चाहिए?',
+            'उपचार के दौरान मेरी पहचान कैसे सुरक्षित रहती है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'रेडियोथेरेपी के दौरान आवाज में बदलाव को कैसे संभालें?',
+            'अगर मेरा दर्द स्कोर 2/10 से ज्यादा हो जाए तो मुझे क्या करना चाहिए?',
+            'उपचार के दौरान मेरी पहचान कैसे सुरक्षित रहती है?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'on4y6CCkncug3ZOzgxlMgvbYG',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759580
+    },
+    timestamp: '1762759580'
+  },
+  {
+    _id: 'gwS2jk4o0yaO81jzOXqhfDQpo',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: 'Akshat Sanghvi',
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
+        audience: [],
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759532,
+        last_conversations: [
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          }
+        ]
+      },
+      message_context: {
+        message_id: 'gwS2jk4o0yaO81jzOXqhfDQpo',
+        message_type: 'regular_audio',
+        message_source_text: 'आज का मौसम कैसा है?',
+        message_english_text: 'How is the weather today?',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/833101326312170.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        additional_info: { llm_query_type: 'out-of-scope' }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759580',
+    message_class: 'out-of-scope'
+  },
+  {
+    _id: 'Xg5RjZVSiOlmhMzyP3lfkm588',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'Xg5RjZVSiOlmhMzyP3lfkm588',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_c91fb263a1d447a486c2b1c200088ae1.mp3?st=2025-11-10T07%3A26%3A19Z&se=2025-11-10T08%3A26%3A19Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A26%3A19Z&ske=2025-11-10T08%3A26%3A19Z&sks=b&skv=2025-01-05&sig=iEzfe%2BkxIb3vW5HVUEfrwxtB%2B6lGJ8CuaXhQNrrBohg%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।',
+          emoji: null,
+          verification_status: null
+        }
+      },
+      reply_context: {
+        reply_id: 'gwS2jk4o0yaO81jzOXqhfDQpo',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759580
+    },
+    timestamp: '1762759580'
+  },
+  {
+    _id: 'ShDwwLdUSi4V0SUNuAEWIMXEt',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: 'Akshat Sanghvi',
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
+        audience: [],
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759532,
+        last_conversations: [
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          }
+        ]
+      },
+      message_context: {
+        message_id: 'ShDwwLdUSi4V0SUNuAEWIMXEt',
+        message_type: 'regular_audio',
+        message_source_text: 'तुम मुझे परिशान क्यों कर रहे हैं।',
+        message_english_text: 'Why are you bothering me?',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/2059189261500843.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        additional_info: { llm_query_type: 'small-talk' }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759581',
+    message_class: 'small-talk'
+  },
+  {
+    _id: 'fMPDQ7lQwopMXtlNmlek6dU1k',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'fMPDQ7lQwopMXtlNmlek6dU1k',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'मुझे समझ है कि आप शायद परेशान या निराश महसूस कर रहे हैं, और यह पूरी तरह से सामान्य है कि कठिन समय में ऐसे भावनाएँ होती हैं। अगर आपके पास आपके इलाज या भावनात्मक स्वास्थ्य के बारे में कोई विशेष चिंता या सवाल हैं, तो मैं मदद करने के लिए यहाँ हूँ। कृपया अपनी देखभाल से संबंधित कुछ भी पूछने में संकोच न करें, और याद रखें कि आपका स्वास्थ्य देखभाल टीम भी आपकी सहायता के लिए उपलब्ध है।',
+        message_english_text: "I understand that you might be feeling overwhelmed or frustrated, and it's completely normal to have these feelings during a challenging time. If you have specific concerns or questions about your treatment or emotional health, I'm here to help. Please feel free to ask anything related to your care, and remember that your healthcare team is also available to support you.",
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'रेडिएशन थेरेपी के दौरान दर्द को कैसे संभाल सकते हैं?',
+            'अगर मेरा दर्द स्कोर 2/10 से ऊपर है तो मुझे क्या करना चाहिए?',
+            'रेडिएशन थेरेपी से मुझे कौन-कौन से साइड इफेक्ट्स हो सकते हैं?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'रेडिएशन थेरेपी के दौरान दर्द को कैसे संभाल सकते हैं?',
+            'अगर मेरा दर्द स्कोर 2/10 से ऊपर है तो मुझे क्या करना चाहिए?',
+            'रेडिएशन थेरेपी से मुझे कौन-कौन से साइड इफेक्ट्स हो सकते हैं?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'ShDwwLdUSi4V0SUNuAEWIMXEt',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759581
+    },
+    timestamp: '1762759581'
   }
 ]
+Type "it" for more
+[mongos] oncobotdb> it
+[
+  {
+    _id: 'BMPFzSuW2KxCqV4xqFyabLjVs',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'BMPFzSuW2KxCqV4xqFyabLjVs',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_66c3c14573c545e0b211ee808cfff521.mp3?st=2025-11-10T07%3A26%3A19Z&se=2025-11-10T08%3A26%3A19Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A26%3A19Z&ske=2025-11-10T08%3A26%3A19Z&sks=b&skv=2025-01-05&sig=FJU5k7H1GMi1ULTv6//pISNXxFJLCdCSqSpa/ZAGw7Q%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'मुझे समझ है कि आप शायद परेशान या निराश महसूस कर रहे हैं, और यह पूरी तरह से सामान्य है कि कठिन समय में ऐसे भावनाएँ होती हैं। अगर आपके पास आपके इलाज या भावनात्मक स्वास्थ्य के बारे में कोई विशेष चिंता या सवाल हैं, तो मैं मदद करने के लिए यहाँ हूँ। कृपया अपनी देखभाल से संबंधित कुछ भी पूछने में संकोच न करें, और याद रखें कि आपका स्वास्थ्य देखभाल टीम भी आपकी सहायता के लिए उपलब्ध है।',
+          emoji: null,
+          verification_status: null
+        }
+      },
+      reply_context: {
+        reply_id: 'ShDwwLdUSi4V0SUNuAEWIMXEt',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759581
+    },
+    timestamp: '1762759581'
+  },
+  {
+    _id: 'XxQvGtEmIqAp6A6gnj6Udod9o',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'XxQvGtEmIqAp6A6gnj6Udod9o',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_969fadd8c08d4e94a9fc6b08599e4e52.mp3?st=2025-11-10T07%3A27%3A08Z&se=2025-11-10T08%3A27%3A08Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A27%3A08Z&ske=2025-11-10T08%3A27%3A08Z&sks=b&skv=2025-01-05&sig=pwnogETvBaWUYH4X3kWDFSQOBqDTskKr9sFP0Ue5wXk%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?',
+          emoji: null,
+          verification_status: null
+        }
+      },
+      reply_context: {
+        reply_id: 'Epp8pCYWHarp2RUJAdxevjdO9',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759629
+    },
+    timestamp: '1762759629'
+  },
+  {
+    _id: 'Epp8pCYWHarp2RUJAdxevjdO9',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: 'Akshat Sanghvi',
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
+        audience: [],
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759586,
+        last_conversations: [
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          }
+        ]
+      },
+      message_context: {
+        message_id: 'Epp8pCYWHarp2RUJAdxevjdO9',
+        message_type: 'regular_audio',
+        message_source_text: 'कहां से आए हूँ?',
+        message_english_text: 'Where have you come from?',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/25110809281918778.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        additional_info: { llm_query_type: 'incomprehensible' }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759629',
+    message_class: 'incomprehensible'
+  },
+  {
+    _id: 'Lfh6mGtzN540GtAwdwQBe1iOM',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'Lfh6mGtzN540GtAwdwQBe1iOM',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?',
+        message_english_text: 'मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?',
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'अगर मेरा दर्द स्कोर 2/10 से ज्यादा हो जाए तो मुझे क्या करना चाहिए?',
+            'साप्ताहिक समीक्षा के दौरान डॉक्टर के साथ क्या होता है?',
+            'क्या मैं रोज़ाना इलाज के लिए यात्रा कर सकता हूँ अगर मेरा गृहनगर पास में है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'अगर मेरा दर्द स्कोर 2/10 से ज्यादा हो जाए तो मुझे क्या करना चाहिए?',
+            'साप्ताहिक समीक्षा के दौरान डॉक्टर के साथ क्या होता है?',
+            'क्या मैं रोज़ाना इलाज के लिए यात्रा कर सकता हूँ अगर मेरा गृहनगर पास में है?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: 'Epp8pCYWHarp2RUJAdxevjdO9',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759629
+    },
+    timestamp: '1762759629'
+  },
+  {
+    _id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: null,
+      user: null,
+      message_context: {
+        message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+        message_type: 'interactive_list_reply',
+        message_source_text: null,
+        message_english_text: null,
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+            'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+            'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          corrected_en_text: "You should avoid taking a bath immediately before radiotherapy unless advised otherwise by your healthcare provider. It's important to follow specific instructions regarding skin care in the treatment area to ensure the best outcomes. Always consult your healthcare provider for personalized guidance.",
+          corrected_source_text: 'आपको रेडियोथेरेपी से पहले तुरंत स्नान करने से बचना चाहिए, जब तक कि आपके स्वास्थ्य सेवा प्रदाता द्वारा अन्यथा सलाह न दी जाए। उपचार क्षेत्र में त्वचा की देखभाल के लिए विशेष निर्देशों का पालन करना महत्वपूर्ण है ताकि सर्वोत्तम परिणाम सुनिश्चित हो सकें। हमेशा व्यक्तिगत मार्गदर्शन के लिए अपने स्वास्थ्य सेवा प्रदाता से परामर्श करें।',
+          modified_timestamp: '1762759648'
+        }
+      },
+      reply_context: {
+        reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759630'
+  },
+  {
+    _id: 'tdgnVjSwi4iQPtwad5svCQ6Zd',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'tdgnVjSwi4iQPtwad5svCQ6Zd',
+        message_type: 'regular_audio',
+        message_source_text: '',
+        message_english_text: '',
+        media_info: null,
+        additional_info: {
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_d0ccbf3939dd49dcb353d614203b4558.mp3?st=2025-11-10T07%3A27%3A08Z&se=2025-11-10T08%3A27%3A08Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A27%3A08Z&ske=2025-11-10T08%3A27%3A08Z&sks=b&skv=2025-01-05&sig=QqP1J7pRKu7x2a5mCEiTB5sfysJDpoB1y/kLNJ/WZw4%3D',
+          mime_type: 'audio/wav',
+          audio_text: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।',
+          emoji: null,
+          verification_status: 'pending'
+        }
+      },
+      reply_context: {
+        reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759630
+    },
+    timestamp: '1762759630'
+  },
+  {
+    _id: '1B54pHCMLAdH7mTnFeXCNS26u',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'byoebuser_to_bot',
+      user: {
+        user_id: '002',
+        user_name: 'Akshat Sanghvi',
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {
+          byoebexpert: [ '919739811075' ],
+          byoebexpert2: [ '919741363511' ]
+        },
+        audience: [],
+        patient_details: { date_of_birth: '1985-03-15', gender: 'Male', age: 21 },
+        created_timestamp: 1761388632,
+        activity_timestamp: 1762759586,
+        last_conversations: [
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          },
+          {
+            question: 'Can I take a bath after radiotherapy?',
+            answer: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+          },
+          {
+            question: 'Who are you?',
+            answer: 'I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.'
+          }
+        ]
+      },
+      message_context: {
+        message_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+        message_type: 'regular_audio',
+        message_source_text: 'क्या मैं रेडियो थेरापी के पहले नहा सकता हूँ?',
+        message_english_text: 'Can I take a bath before radiotherapy?',
+        media_info: {
+          media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/1185573163546309.ogg',
+          mime_type: 'audio/ogg; codecs=opus',
+          media_type: 'audio/wav',
+          media_url: null
+        },
+        additional_info: { llm_query_type: 'medical' }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759630',
+    message_class: 'medical'
+  },
+  {
+    _id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: null,
+      user: null,
+      message_context: {
+        message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+        message_type: 'interactive_list_reply',
+        message_source_text: null,
+        message_english_text: null,
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'pending',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+            'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+            'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759630'
+  },
+  {
+    _id: 'ZImuzNgPoukObdE1lqE0hvv3O',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebexpert_verification',
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'ZImuzNgPoukObdE1lqE0hvv3O',
+        message_type: 'interactive_button_reply',
+        message_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath before radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath before radiotherapy, but be gentle with the skin in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap directly on the treatment area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
+          '\n' +
+          'Is the answer correct?',
+        message_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath before radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath before radiotherapy, but be gentle with the skin in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap directly on the treatment area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
+          '\n' +
+          'Is the answer correct?',
+        media_info: null,
+        additional_info: {
+          verification_status: 'verified',
+          correction_en_text: 'no you prolly cannot take a bath before radiotherapy',
+          correction_source_text: 'no you prolly cannot take a bath before radiotherapy',
+          modified_timestamp: '1762759642'
+        }
+      },
+      reply_context: null,
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'verified',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'verified',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759630'
+  },
+  {
+    _id: 'eX7gPVvEJOqIQdDjTn9tDrEFZ',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: 'bot',
+        user_name: null,
+        user_location: {},
+        user_language: null,
+        user_type: null,
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'eX7gPVvEJOqIQdDjTn9tDrEFZ',
+        message_type: 'interactive_list_reply',
+        message_source_text: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।',
+        message_english_text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.',
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'pending',
+          description: 'संबंधित प्रश्न',
+          row_texts: [
+            'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+            'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+          ],
+          has_follow_up_questions: true,
+          related_questions: [
+            'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+            'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+            'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+          ]
+        }
+      },
+      reply_context: {
+        reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: null
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: null,
+      incoming_timestamp: null,
+      outgoing_timestamp: 1762759630
+    },
+    timestamp: '1762759630'
+  },
+  {
+    _id: 'WUp3Uq3Tpd2m8Z5XbSLbotbDe',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: [ 'byoebexpert_to_bot' ],
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [
+          '918123273694',
+          '916352927215',
+          '918375066113',
+          '918861000105'
+        ],
+        patient_details: {},
+        created_timestamp: 1759916945,
+        activity_timestamp: 1762759637,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'WUp3Uq3Tpd2m8Z5XbSLbotbDe',
+        message_type: 'interactive_button_reply',
+        message_source_text: 'No',
+        message_english_text: 'No',
+        media_info: null,
+        additional_info: {
+          button_id: '2f81347f-1b6a-47da-997a-0dcab4cbd252',
+          button_title: 'No'
+        }
+      },
+      reply_context: {
+        reply_id: 'ZImuzNgPoukObdE1lqE0hvv3O',
+        reply_type: 'interactive_button_reply',
+        reply_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath before radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath before radiotherapy, but be gentle with the skin in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap directly on the treatment area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
+          '\n' +
+          'Is the answer correct?',
+        reply_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath before radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath before radiotherapy, but be gentle with the skin in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap directly on the treatment area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
+          '\n' +
+          'Is the answer correct?',
+        media_info: null,
+        message_category: 'bot_to_byoebexpert_verification',
+        additional_info: { verification_status: 'pending' }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759638'
+  },
+  {
+    _id: '2lQESfU5WdH7GDxzyK0gde4Wb',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebexpert',
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: '2lQESfU5WdH7GDxzyK0gde4Wb',
+        message_type: 'regular_text',
+        message_source_text: 'Noted. Please provide the correct answer. Reply by tagging the original verification message',
+        message_english_text: 'Noted. Please provide the correct answer. Reply by tagging the original verification message',
+        media_info: null,
+        additional_info: null
+      },
+      reply_context: {
+        reply_id: 'ZImuzNgPoukObdE1lqE0hvv3O',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'waiting',
+          modified_timestamp: '1762759637'
+        }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759638'
+  },
+  {
+    _id: 'VOA7dKfEIhtXp3TLIPn7EqHC1',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebuser_response',
+      user: {
+        user_id: '002',
+        user_name: null,
+        user_location: {},
+        user_language: 'hi',
+        user_type: 'byoebuser',
+        phone_number_id: '916352927215',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'VOA7dKfEIhtXp3TLIPn7EqHC1',
+        message_type: 'regular_text',
+        message_source_text: 'आपको रेडियोथेरेपी से पहले तुरंत स्नान करने से बचना चाहिए, जब तक कि आपके स्वास्थ्य सेवा प्रदाता द्वारा अन्यथा सलाह न दी जाए। उपचार क्षेत्र में त्वचा की देखभाल के लिए विशेष निर्देशों का पालन करना महत्वपूर्ण है ताकि सर्वोत्तम परिणाम सुनिश्चित हो सकें। हमेशा व्यक्तिगत मार्गदर्शन के लिए अपने स्वास्थ्य सेवा प्रदाता से परामर्श करें।',
+        message_english_text: "You should avoid taking a bath immediately before radiotherapy unless advised otherwise by your healthcare provider. It's important to follow specific instructions regarding skin care in the treatment area to ensure the best outcomes. Always consult your healthcare provider for personalized guidance.",
+        media_info: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          audio_url: 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_2de3ac729962476bb73fc8e2f1a70db9.mp3?st=2025-11-10T07%3A27%3A27Z&se=2025-11-10T08%3A27%3A27Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-10T07%3A27%3A27Z&ske=2025-11-10T08%3A27%3A27Z&sks=b&skv=2025-01-05&sig=K1BZV0ZIU2uDH5uIvT4saqHy1bewseGfXGEqMKpDXG0%3D',
+          mime_type: 'audio/wav',
+          qikchat_audio_id: '3C8WtnthYzyanEXEEsXa48LrD'
+        }
+      },
+      reply_context: {
+        reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: {
+          update_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+          verification_status: 'verified',
+          modified_timestamp: '1762759648'
+        }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759649'
+  },
+  {
+    _id: 'C6ndcbbJnYsPrHaDGFk4E1ttH',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: 'bot_to_byoebexpert',
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [],
+        patient_details: {},
+        created_timestamp: null,
+        activity_timestamp: null,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'C6ndcbbJnYsPrHaDGFk4E1ttH',
+        message_type: 'regular_text',
+        message_source_text: 'Thank you for verifiying the answer.',
+        message_english_text: 'Thank you for verifiying the answer.',
+        media_info: null,
+        additional_info: null
+      },
+      reply_context: {
+        reply_id: 'ZImuzNgPoukObdE1lqE0hvv3O',
+        reply_type: null,
+        reply_source_text: null,
+        reply_english_text: null,
+        media_info: null,
+        message_category: null,
+        additional_info: {
+          emoji: null,
+          verification_status: 'verified',
+          correction_source: 'no you prolly cannot take a bath before radiotherapy',
+          correction_en: 'no you prolly cannot take a bath before radiotherapy',
+          modified_timestamp: '1762759642'
+        }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759649'
+  },
+  {
+    _id: 'ttQiMiLmY3nCfAuv828Tmtd68',
+    message_data: {
+      channel_type: 'qikchat',
+      message_category: [ 'byoebexpert_to_bot' ],
+      user: {
+        user_id: 'd7022499fc5fbcd34df184209477a79f',
+        user_name: null,
+        user_location: {},
+        user_language: 'en',
+        user_type: 'byoebexpert',
+        phone_number_id: '919739811075',
+        test_user: false,
+        experts: {},
+        audience: [
+          '918123273694',
+          '916352927215',
+          '918375066113',
+          '918861000105'
+        ],
+        patient_details: {},
+        created_timestamp: 1759916945,
+        activity_timestamp: 1762759640,
+        last_conversations: []
+      },
+      message_context: {
+        message_id: 'ttQiMiLmY3nCfAuv828Tmtd68',
+        message_type: 'regular_text',
+        message_source_text: 'no you prolly cannot take a bath before radiotherapy',
+        message_english_text: 'no you prolly cannot take a bath before radiotherapy',
+        media_info: null,
+        additional_info: null
+      },
+      reply_context: {
+        reply_id: 'ZImuzNgPoukObdE1lqE0hvv3O',
+        reply_type: 'interactive_button_reply',
+        reply_source_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath before radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath before radiotherapy, but be gentle with the skin in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap directly on the treatment area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
+          '\n' +
+          'Is the answer correct?',
+        reply_english_text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n' +
+          '\n' +
+          '*Question:* Can I take a bath before radiotherapy?\n' +
+          '*Answer:* Yes, you can take a bath before radiotherapy, but be gentle with the skin in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap directly on the treatment area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care.\n' +
+          '\n' +
+          'Is the answer correct?',
+        media_info: null,
+        message_category: 'bot_to_byoebexpert_verification',
+        additional_info: { verification_status: 'pending' }
+      },
+      cross_conversation_id: null,
+      cross_conversation_context: {
+        user: {
+          user_id: '002',
+          user_name: null,
+          user_location: {},
+          user_language: 'hi',
+          user_type: 'byoebuser',
+          phone_number_id: '916352927215',
+          test_user: false,
+          experts: {},
+          audience: [],
+          patient_details: {},
+          created_timestamp: null,
+          activity_timestamp: null,
+          last_conversations: []
+        },
+        messages_context: [
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: '9d30359c-3de9-4af0-8b1d-cd154636289c',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          },
+          {
+            channel_type: 'qikchat',
+            message_category: null,
+            user: null,
+            message_context: {
+              message_id: 'f09e2d0e-e43e-4b84-a96d-6fc979d5fc0b',
+              message_type: 'interactive_list_reply',
+              message_source_text: null,
+              message_english_text: null,
+              media_info: null,
+              additional_info: {
+                emoji: null,
+                verification_status: 'pending',
+                description: 'संबंधित प्रश्न',
+                row_texts: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ],
+                has_follow_up_questions: true,
+                related_questions: [
+                  'क्या मैं रेडियोथेरेपी के दौरान साबुत त्वचा पर डियोडरेंट का उपयोग कर सकता हूँ?',
+                  'अगर इलाज के दौरान आपकी त्वचा में खुजली होती है तो आपको क्या करना चाहिए?',
+                  'क्या रेडियोथेरेपी के दौरान पूल में तैरना सुरक्षित है?'
+                ]
+              }
+            },
+            reply_context: {
+              reply_id: '1B54pHCMLAdH7mTnFeXCNS26u',
+              reply_type: null,
+              reply_source_text: null,
+              reply_english_text: null,
+              media_info: null,
+              message_category: null,
+              additional_info: null
+            },
+            cross_conversation_id: null,
+            cross_conversation_context: null,
+            incoming_timestamp: null,
+            outgoing_timestamp: null
+          }
+        ]
+      },
+      incoming_timestamp: null,
+      outgoing_timestamp: null
+    },
+    timestamp: '1762759649'
+  }
+]
+[mongos] oncobotdb>

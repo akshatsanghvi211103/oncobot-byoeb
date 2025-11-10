@@ -324,6 +324,7 @@ class ByoebUserGenerateResponse(Handler):
         emoji = None,
         status = None,
         generate_audio: bool = False,
+        english_text: str = None,
     ) -> List[ByoebMessageContext]:
         from byoeb.chat_app.configuration.dependency_setup import text_translator
         from byoeb.chat_app.configuration.dependency_setup import speech_translator
@@ -357,6 +358,16 @@ class ByoebUserGenerateResponse(Handler):
         
         print(f"🔤 TRANSLATION DEBUG: Final result: '{message_source_text}'")
         print(f"🔤 TRANSLATION DEBUG: Translation used: {not (user_language == 'en' or is_already_localized)}")
+        
+        # Determine English text to store in database
+        if english_text is not None:
+            # Use provided English text (for waiting messages from bot_config.json)
+            message_english_text = english_text
+            print(f"🔤 ENGLISH TEXT: Using provided English text: '{message_english_text}'")
+        else:
+            # Use original response_text as English text (default behavior)
+            message_english_text = response_text
+            print(f"🔤 ENGLISH TEXT: Using response_text as English: '{message_english_text}'")
         
         # Simplified to text-only responses
         print(f"� Creating user response message...")
@@ -393,7 +404,7 @@ class ByoebUserGenerateResponse(Handler):
                     message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                     message_type=MessageTypes.INTERACTIVE_LIST.value,
                     message_source_text=message_source_text,  # Use full message for body
-                    message_english_text=response_text,
+                    message_english_text=message_english_text,
                     additional_info={
                         **status_info,
                         **interactive_list_additional_info
@@ -428,7 +439,7 @@ class ByoebUserGenerateResponse(Handler):
                     message_id=str(uuid.uuid4()),  # Will be replaced with QikChat ID after sending
                     message_type=MessageTypes.REGULAR_TEXT.value,
                     message_source_text=message_source_text,
-                    message_english_text=response_text,
+                    message_english_text=message_english_text,
                     additional_info={
                         **status_info
                     }
@@ -877,26 +888,32 @@ class ByoebUserGenerateResponse(Handler):
         elif query_type == "out-of-scope":
             answer = bot_config["template_messages"]["user"]["out_of_scope"].get(message.user.user_language,
                      "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
+            english_answer = bot_config["template_messages"]["user"]["out_of_scope"].get("en",
+                           "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
                 response_text=answer,  # Send the out-of-scope message directly
                 emoji=None,
                 status=None,
                 related_questions=related_questions,
-                generate_audio=True
+                generate_audio=True,
+                english_text=english_answer
             )
             print(f"✅ Out-of-scope message sent directly to user (no expert verification needed)")
             return [message] + byoeb_user_messages + [read_reciept_message]
         elif query_type == "incomprehensible":
             answer = bot_config["template_messages"]["user"]["incomprehensible"].get(message.user.user_language,
                      "I apologize, but I couldn't understand your question. Could you please rephrase it?")
+            english_answer = bot_config["template_messages"]["user"]["incomprehensible"].get("en",
+                           "I did not understand your question. Could you please rephrase or provide more details?")
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
                 response_text=answer,  # Send the incomprehensible message directly
                 emoji=None,
                 status=None,
                 related_questions=related_questions,
-                generate_audio=True
+                generate_audio=True,
+                english_text=english_answer
             )
             print(f"✅ Incomprehensible message sent directly to user (no expert verification needed)")
             return [message] + byoeb_user_messages + [read_reciept_message]
@@ -915,12 +932,19 @@ class ByoebUserGenerateResponse(Handler):
                 # Use staff waiting message for logistical queries or byoebexpert2
                 waiting_message = bot_config["template_messages"]["user"]["waiting_answer_logistical"].get(user_lang, 
                                  "Please wait while we verify the answer with our staff.")
+                waiting_message_english = bot_config["template_messages"]["user"]["waiting_answer_logistical"].get("en", 
+                                         "Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.")
                 print(f"📋 Using staff waiting message for {'logistical query' if query_type == 'logistical' else 'byoebexpert2 expert'}")
             else:
                 # Use default doctor waiting message for medical queries
                 waiting_message = bot_config["template_messages"]["user"]["waiting_answer_medical"].get(user_lang, 
                                  "Please wait while we verify the answer with our expert.")
+                waiting_message_english = bot_config["template_messages"]["user"]["waiting_answer_medical"].get("en", 
+                                         "Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.")
                 print(f"👨‍⚕️ Using doctor waiting message for medical query")
+            
+            print(f"🔤 WAITING MESSAGE: Localized ({user_lang}): '{waiting_message}'")
+            print(f"🔤 WAITING MESSAGE: English: '{waiting_message_english}'")
             
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
@@ -928,7 +952,8 @@ class ByoebUserGenerateResponse(Handler):
                 emoji=None,  # Remove emoji reactions as requested
                 status=constants.PENDING,
                 related_questions=related_questions,  # Add related questions to waiting message
-                generate_audio=True  # Generate TTS audio for waiting message
+                generate_audio=True,  # Generate TTS audio for waiting message
+                english_text=waiting_message_english  # Pass English version for database storage
             )
             print(f"✅ Waiting message{'s' if len(byoeb_user_messages) > 1 else ''} sent to user (in {message.user.user_language})")
             

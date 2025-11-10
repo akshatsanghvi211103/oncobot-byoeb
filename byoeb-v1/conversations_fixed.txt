@@ -1,0 +1,121 @@
+Conversation Analysis Report
+==================================================
+Generated: 2025-11-10 23:26:23
+Total conversations: 8
+
+CONVERSATION 1
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): क्या मैं रेडियो थेरपी के बाद नहा सकता हूँ?
+Patient Message (English): Can I take a bath after radiotherapy?
+Message Timestamp: 2025-11-10 23:15:11
+Message Modality: audio
+Message/Query Class: medical
+Message Language: hi
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।
+
+================================================================================
+
+CONVERSATION 2
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): कहां से आए हूँ?
+Patient Message (English): Where have you come from?
+Message Timestamp: 2025-11-10 23:16:04
+Message Modality: audio
+Message/Query Class: incomprehensible
+Message Language: hi
+Final Response (2025-11-10 23:16:04) to user: I did not understand your question. Could you please rephrase or provide more details?
+Final Response (Indic): मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?
+Final Response Timestamp: 1762796764
+
+================================================================================
+
+CONVERSATION 3
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): क्या मैं रेडियो थेरापी के पहले नहा सकता हूँ?
+Patient Message (English): Can I take a bath before radiotherapy?
+Message Timestamp: 2025-11-10 23:16:40
+Message Modality: audio
+Message/Query Class: medical
+Message Language: hi
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।
+
+================================================================================
+
+CONVERSATION 4
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): कौन हो तुमपर?
+Patient Message (English): Who are you?
+Message Timestamp: 2025-11-10 23:16:39
+Message Modality: audio
+Message/Query Class: small-talk
+Message Language: hi
+Final Response (2025-11-10 23:16:39) to user: I am an oncology assistant designed to provide educational support to cancer patients, particularly those undergoing radiotherapy. While I can offer information and answer questions, I am not a substitute for direct communication with your healthcare provider. For specific medical advice, please consult your treating doctor.
+Final Response (Indic): मैं एक ऑन्कोलॉजी सहायक हूँ जो कैंसर मरीजों को शैक्षिक सहायता प्रदान करने के लिए बनाया गया हूँ, विशेष रूप से उन लोगों के लिए जो रेडियोथेरेपी ले रहे हैं। मैं जानकारी प्रदान कर सकता हूँ और सवालों के जवाब दे सकता हूँ, लेकिन मैं आपके स्वास्थ्य सेवा प्रदाता के साथ सीधे संवाद का विकल्प नहीं हूँ। विशेष चिकित्सा सलाह के लिए, कृपया अपने इलाज करने वाले डॉक्टर से परामर्श करें।
+Final Response Timestamp: 1762796799
+
+================================================================================
+
+CONVERSATION 5
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): आज का मौसम कैसा है?
+Patient Message (English): How is the weather today?
+Message Timestamp: 2025-11-10 23:21:18
+Message Modality: audio
+Message/Query Class: out-of-scope
+Message Language: hi
+Final Response (2025-11-10 23:21:18) to user: This is outside the scope of my current knowledge. You can ask me any cancer related questions.
+Final Response (Indic): यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।
+Final Response Timestamp: 1762797078
+
+================================================================================
+
+CONVERSATION 6
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): Blah blah blah
+Patient Message (English): Blah blah blah
+Message Timestamp: 2025-11-10 23:21:51
+Message Modality: audio
+Message/Query Class: incomprehensible
+Message Language: hi
+Final Response (2025-11-10 23:21:51) to user: I did not understand your question. Could you please rephrase or provide more details?
+Final Response (Indic): मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?
+Final Response Timestamp: 1762797111
+
+================================================================================
+
+CONVERSATION 7
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): तुम मुझे परिशान क्यों कर रहे हैं।
+Patient Message (English): Why are you bothering me?
+Message Timestamp: 2025-11-10 23:21:56
+Message Modality: audio
+Message/Query Class: small-talk
+Message Language: hi
+Final Response (2025-11-10 23:21:56) to user: I understand that you might be feeling overwhelmed or frustrated, and it's completely normal to have these feelings during a challenging time like cancer treatment. If you have specific concerns or questions, I'm here to help with any oncology-related information you might need. Please feel free to ask anything, and remember that your healthcare team is also available to support you.
+Final Response (Indic): मुझे समझ में आता है कि आप शायद थकान या निराशा महसूस कर रहे होंगे, और कैंसर उपचार जैसे चुनौतीपूर्ण समय में ये भावनाएँ होना पूरी तरह से सामान्य है। अगर आपके पास कोई विशेष चिंता या सवाल हैं, तो मैं यहाँ किसी भी ऑन्कोलॉजी से संबंधित जानकारी में आपकी मदद करने के लिए हूँ। कृपया कुछ भी पूछने में संकोच न करें, और याद रखें कि आपका स्वास्थ्य देखभाल टीम भी आपकी सहायता के लिए उपलब्ध है।
+Final Response Timestamp: 1762797116
+
+================================================================================
+
+CONVERSATION 8
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): mera appointment kab hai?
+Patient Message (English): When is my appointment?
+Message Timestamp: 2025-11-10 23:24:36
+Message Modality: text
+Message/Query Class: logistical
+Message Language: hi
+Response Text (English): Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): मैं के-एम-सी के स्टाफ से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।
+
+================================================================================

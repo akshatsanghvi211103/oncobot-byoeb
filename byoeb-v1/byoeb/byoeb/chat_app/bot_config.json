@@ -164,7 +164,7 @@
             }
         },
         "user": {
-            "onboarding": "user_reminders"
+            "onboarding": "continuin"
         }
     }
 }

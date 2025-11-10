@@ -27,7 +27,7 @@ from byoeb_core.models.byoeb.message_context import ByoebMessageContext, Message
 from byoeb.models.message_category import MessageCategory
 
 # Constants
-TEMPLATE_NAME = "user_reminders"  # Template name for inactive users
+TEMPLATE_NAME = "continuin"  # Template name for inactive users
 MAX_LAST_ACTIVE_DURATION_SECONDS = 86400  # 24 hours
 
 # Load bot configuration

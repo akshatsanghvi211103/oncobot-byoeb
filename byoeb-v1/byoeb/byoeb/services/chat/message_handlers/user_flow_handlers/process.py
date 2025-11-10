@@ -43,6 +43,11 @@ class ByoebUserProcess(Handler):
             
             # Speech to text
             audio_to_text = await speech_translator_whisper.aspeech_to_text(audio_message_wav, source_language)
+            print(f"🎤 AUDIO TO TEXT: '{audio_to_text}' (in {source_language})")
+            
+            # Set the original language text as message_source_text BEFORE translation
+            message.message_context.message_source_text = audio_to_text
+            print(f"🔤 AUDIO SOURCE TEXT SET: '{message.message_context.message_source_text}'")
             
             # Translate to English if needed
             if source_language != "en":
@@ -51,6 +56,7 @@ class ByoebUserProcess(Handler):
                     source_language=source_language,
                     target_language="en"
                 )
+                print(f"🔤 AUDIO TRANSLATION: '{audio_to_text}' -> '{translated_en_text}'")
             else:
                 translated_en_text = audio_to_text
             

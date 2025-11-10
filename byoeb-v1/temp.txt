@@ -1,0 +1,113 @@
+Conversation Analysis Report
+==================================================
+Generated: 2025-11-10 14:28:09
+Total conversations: 7
+
+CONVERSATION 1
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): क्या मैं रेडियो थेरपी के बाद नहा सकता हूँ?
+Patient Message (English): Can I take a bath after radiotherapy?
+Message Timestamp: 2025-11-10 12:54:25
+Message Modality: audio
+Message/Query Class: medical
+Message Language: hi
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert)
+
+================================================================================
+
+CONVERSATION 2
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): Blah blah blah
+Patient Message (English): Blah blah blah
+Message Timestamp: 2025-11-10 12:56:12
+Message Modality: audio
+Message/Query Class: incomprehensible
+Message Language: hi
+Final Response (English) to user: मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?
+Final Response (Indic): मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?
+Final Response Timestamp: 2025-11-10 12:56:12
+
+================================================================================
+
+CONVERSATION 3
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): कौन हो तुमपर?
+Patient Message (English): Who are you?
+Message Timestamp: 2025-11-10 12:56:20
+Message Modality: audio
+Message/Query Class: small-talk
+Message Language: hi
+Final Response (English) to user: I am an oncology assistant designed to provide patient education and answer questions related to cancer treatment, particularly radiotherapy. While I can offer guidance based on pre-verified information, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your treating doctor.
+Final Response (Indic): मैं एक ऑन्कोलॉजी सहायक हूँ जो मरीजों को शिक्षा देने और कैंसर उपचार, विशेष रूप से रेडियोथेरेपी से संबंधित प्रश्नों का उत्तर देने के लिए डिज़ाइन किया गया हूँ। जबकि मैं पूर्व-सत्यापित जानकारी के आधार पर मार्गदर्शन प्रदान कर सकता हूँ, मैं आपके स्वास्थ्य सेवा प्रदाता के साथ सीधे संवाद का विकल्प नहीं हूँ। व्यक्तिगत चिकित्सा सलाह के लिए, कृपया अपने उपचार करने वाले डॉक्टर से परामर्श करें।
+Final Response Timestamp: 2025-11-10 12:56:20
+
+================================================================================
+
+CONVERSATION 4
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): आज का मौसम कैसा है?
+Patient Message (English): How is the weather today?
+Message Timestamp: 2025-11-10 12:56:20
+Message Modality: audio
+Message/Query Class: out-of-scope
+Message Language: hi
+Final Response (English) to user: यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।
+Final Response (Indic): यह मेरी वर्तमान जानकारी के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।
+Final Response Timestamp: 2025-11-10 12:56:20
+
+================================================================================
+
+CONVERSATION 5
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): तुम मुझे परिशान क्यों कर रहे हैं।
+Patient Message (English): Why are you bothering me?
+Message Timestamp: 2025-11-10 12:56:21
+Message Modality: audio
+Message/Query Class: small-talk
+Message Language: hi
+Final Response (English) to user: I understand that you might be feeling overwhelmed or frustrated, and it's completely normal to have these feelings during a challenging time. If you have specific concerns or questions about your treatment or emotional health, I'm here to help. Please feel free to ask anything related to your care, and remember that your healthcare team is also available to support you.
+Final Response (Indic): मुझे समझ है कि आप शायद परेशान या निराश महसूस कर रहे हैं, और यह पूरी तरह से सामान्य है कि कठिन समय में ऐसे भावनाएँ होती हैं। अगर आपके पास आपके इलाज या भावनात्मक स्वास्थ्य के बारे में कोई विशेष चिंता या सवाल हैं, तो मैं मदद करने के लिए यहाँ हूँ। कृपया अपनी देखभाल से संबंधित कुछ भी पूछने में संकोच न करें, और याद रखें कि आपका स्वास्थ्य देखभाल टीम भी आपकी सहायता के लिए उपलब्ध है।
+Final Response Timestamp: 2025-11-10 12:56:21
+
+================================================================================
+
+CONVERSATION 6
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): कहां से आए हूँ?
+Patient Message (English): Where have you come from?
+Message Timestamp: 2025-11-10 12:57:09
+Message Modality: audio
+Message/Query Class: incomprehensible
+Message Language: hi
+Final Response (English) to user: मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?
+Final Response (Indic): मुझे आपका प्रश्न समझ में नहीं आया। क्या आप इसे दोबारा समझा सकते हैं या थोड़ा विस्तार से बता सकते हैं?
+Final Response Timestamp: 2025-11-10 12:57:09
+
+================================================================================
+
+CONVERSATION 7
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): क्या मैं रेडियो थेरापी के पहले नहा सकता हूँ?
+Patient Message (English): Can I take a bath before radiotherapy?
+Message Timestamp: 2025-11-10 12:57:10
+Message Modality: audio
+Message/Query Class: medical
+Message Language: hi
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert)
+Final Response (English) to user: You should avoid taking a bath immediately before radiotherapy unless advised otherwise by your healthcare provider. It's important to follow specific instructions regarding skin care in the treatment area to ensure the best outcomes. Always consult your healthcare provider for personalized guidance.
+Final Response (Indic): आपको रेडियोथेरेपी से पहले तुरंत स्नान करने से बचना चाहिए, जब तक कि आपके स्वास्थ्य सेवा प्रदाता द्वारा अन्यथा सलाह न दी जाए। उपचार क्षेत्र में त्वचा की देखभाल के लिए विशेष निर्देशों का पालन करना महत्वपूर्ण है ताकि सर्वोत्तम परिणाम सुनिश्चित हो सकें। हमेशा व्यक्तिगत मार्गदर्शन के लिए अपने स्वास्थ्य सेवा प्रदाता से परामर्श करें।
+Final Response Timestamp: 2025-11-10 12:57:29
+
+================================================================================
+
