@@ -125,7 +125,131 @@ class ByoebExpertGenerateResponse(Handler):
         
         # If alternative parsing fails, return empty dict
         return {}
+
+    def __parse_message_patient_info(self, message: str) -> dict:
+        """
+        Parser for verification messages that include patient information.
+        Handles format like:
+        *Patient Info*: Name, Age: X, Gender: Y, DOB: Z
+        
+        *Question:* ...
+        *Answer:* ...
+        
+        Is the answer correct?
+        """
+        try:
+            # Split by lines and find the key sections
+            lines = message.strip().split('\n')
+            
+            question = ""
+            answer_lines = []
+            in_answer_section = False
+            
+            for line in lines:
+                line = line.strip()
+                
+                # Skip empty lines and patient info
+                if not line or line.startswith("*Patient Info*:"):
+                    continue
+                    
+                # Find question line
+                if line.startswith("*Question:*"):
+                    question = line.replace("*Question:*", "").strip()
+                    continue
+                
+                # Find answer start
+                if line.startswith("*Answer:*"):
+                    answer_lines.append(line.replace("*Answer:*", "").strip())
+                    in_answer_section = True
+                    continue
+                
+                # Stop at footer
+                if "Is the answer correct?" in line:
+                    break
+                    
+                # Collect answer lines
+                if in_answer_section:
+                    answer_lines.append(line)
+            
+            # Join answer lines
+            answer = '\n'.join(answer_lines).strip()
+            
+            if question and answer:
+                return {
+                    "Question": question,
+                    "Bot_Answer": answer
+                }
+                
+        except Exception as e:
+            print(f"❌ Error parsing message with patient info: {e}")
+        
+        return {}
     
+    def __parse_translated_text(self, text: str, user_language: str) -> dict:
+        """
+        Parse translated text for Hindi and Kannada to extract question and answer parts.
+        Handles format like:
+        प्रश्न: <question>
+        उत्तर: <answer>
+        
+        Or:
+        ಪ್ರಶ್ನೆ: <question>
+        ಉತ್ತರ: <answer>
+        """
+        if user_language == "hi":
+            # Hindi parsing
+            lines = text.strip().split('\n')
+            question = ""
+            answer_lines = []
+            in_answer_section = False
+            
+            for line in lines:
+                line = line.strip()
+                if line.startswith("प्रश्न:"):
+                    question = line.replace("प्रश्न:", "").strip()
+                elif line.startswith("उत्तर:"):
+                    answer_lines.append(line.replace("उत्तर:", "").strip())
+                    in_answer_section = True
+                elif in_answer_section:
+                    answer_lines.append(line)
+            
+            answer = '\n'.join(answer_lines).strip()
+            if question and answer:
+                return {"Question": question, "Answer": answer}
+                
+        elif user_language == "kn":
+            # Kannada parsing
+            lines = text.strip().split('\n')
+            question = ""
+            answer_lines = []
+            in_answer_section = False
+            
+            for line in lines:
+                line = line.strip()
+                if line.startswith("ಪ್ರಶ್ನೆ:"):
+                    question = line.replace("ಪ್ರಶ್ನೆ:", "").strip()
+                elif line.startswith("ಉತ್ತರ:"):
+                    answer_lines.append(line.replace("ಉತ್ತರ:", "").strip())
+                    in_answer_section = True
+                elif in_answer_section:
+                    answer_lines.append(line)
+            
+            answer = '\n'.join(answer_lines).strip()
+            if question and answer:
+                return {"Question": question, "Answer": answer}
+        
+        # Fallback: if parsing fails, use "see below" and clean the text
+        if user_language == "hi":
+            # Hindi fallback
+            cleaned_text = text.replace('\n', '. ').strip()
+            return {"Question": "नीचे देखें", "Answer": cleaned_text}
+        elif user_language == "kn":
+            # Kannada fallback
+            cleaned_text = text.replace('\n', '. ').strip()
+            return {"Question": "ಕೆಳಗೆ ನೋಡಿ", "Answer": cleaned_text}
+        
+        # For English or other languages, return empty dict
+        return {}
 
     def __get_user_prompt(
         self,
@@ -384,14 +508,31 @@ class ByoebExpertGenerateResponse(Handler):
                         original_question = "Your question"  # Default fallback
                         if (byoeb_message.reply_context and 
                             byoeb_message.reply_context.reply_english_text):
-                            parsed_verification = self.__parse_message(byoeb_message.reply_context.reply_english_text)
+                            parsed_verification = self.__parse_message_patient_info(byoeb_message.reply_context.reply_english_text)
+                            print("COMING HERE 1", byoeb_message.reply_context.reply_english_text)
+                            print("done")
                             if not parsed_verification.get("Question"):
                                 parsed_verification = self.__parse_message_alternative(byoeb_message.reply_context.reply_english_text)
                             original_question = parsed_verification.get("Question", "Your question")
+                            corrected_answer = parsed_verification.get("Bot_Answer", "")
                         
                         user_language = user.user_language
                         if user_language == "en":
                             user_language = user_language + "_US"
+
+                        print("Here, text_message", text_message)
+                        print("done now")
+                        
+                        # Parse translated text for Hindi/Kannada template parameters
+                        template_question = original_question
+                        template_answer = corrected_answer
+                        if user.user_language in ["hi", "kn"]:
+                            parsed_translated = self.__parse_translated_text(text_message, user.user_language)
+                            if parsed_translated.get("Question") and parsed_translated.get("Answer"):
+                                template_question = parsed_translated["Question"]
+                                template_answer = parsed_translated["Answer"]
+                                print(f"🔧 DEBUG: Using translated template params - Q: '{template_question}', A: '{template_answer}'")
+                        
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
@@ -400,7 +541,7 @@ class ByoebExpertGenerateResponse(Handler):
                             additional_info={
                                 constants.TEMPLATE_NAME: "bot_temp",
                                 constants.TEMPLATE_LANGUAGE: user_language,
-                                constants.TEMPLATE_PARAMETERS: [original_question, text_message]
+                                constants.TEMPLATE_PARAMETERS: [template_question, template_answer]
                             }
                         )
                     else:
@@ -473,6 +614,18 @@ class ByoebExpertGenerateResponse(Handler):
                         user_language = user.user_language
                         if user_language == "en":
                             user_language = user_language + "_US"
+                        print("COMING HERE 2")
+                        
+                        # Parse translated text for Hindi/Kannada template parameters
+                        template_question = original_question
+                        template_answer = text_message
+                        if user.user_language in ["hi", "kn"]:
+                            parsed_translated = self.__parse_translated_text(text_message, user.user_language)
+                            if parsed_translated.get("Question") and parsed_translated.get("Answer"):
+                                template_question = parsed_translated["Question"]
+                                template_answer = parsed_translated["Answer"]
+                                print(f"🔧 DEBUG: Using translated template params - Q: '{template_question}', A: '{template_answer}'")
+                        
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
@@ -481,7 +634,7 @@ class ByoebExpertGenerateResponse(Handler):
                             additional_info={
                                 constants.TEMPLATE_NAME: "bot_temp",
                                 constants.TEMPLATE_LANGUAGE: user_language,
-                                constants.TEMPLATE_PARAMETERS: [original_question, text_message]
+                                constants.TEMPLATE_PARAMETERS: [template_question, template_answer]
                             }
                         )
                     else:
@@ -689,15 +842,17 @@ class ByoebExpertGenerateResponse(Handler):
             print(f"🔧 Correction text: '{correction}'")
             
             print(f"🔧 DEBUG: Original verification text for correction (after NO): '{verification_message}'")
-            parsed_message = self.__parse_message(verification_message)
+            parsed_message = self.__parse_message_patient_info(verification_message)
             print(f"🔧 DEBUG: Parsed verification message for correction (after NO): {parsed_message}")
             
             if "Question" not in parsed_message or "Bot_Answer" not in parsed_message:
                 print(f"❌ ERROR: Question or Bot_Answer not found in parsed message (after NO). Available keys: {list(parsed_message.keys())}")
-                print(f"🔧 DEBUG: Attempting alternative parsing for correction (after NO)...")
-                # Alternative parsing for new format
-                parsed_message = self.__parse_message_alternative(verification_message)
-                print(f"🔧 DEBUG: Alternative parsed message for correction (after NO): {parsed_message}")
+                print(f"🔧 DEBUG: Attempting fallback parsing for correction (after NO)...")
+                # Try original parsing methods as fallback
+                parsed_message = self.__parse_message(verification_message)
+                if "Question" not in parsed_message or "Bot_Answer" not in parsed_message:
+                    parsed_message = self.__parse_message_alternative(verification_message)
+                print(f"🔧 DEBUG: Fallback parsed message for correction (after NO): {parsed_message}")
                 
             question = parsed_message.get("Question", "")
             bot_answer = parsed_message.get("Bot_Answer", "")
@@ -730,7 +885,18 @@ class ByoebExpertGenerateResponse(Handler):
             augmented_prompts = self.__augment(user_prompt)
             llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
             print(f"🔧 LLM corrected response: '{response_text}'")
+
+            user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
             
+            # Format the corrected answer with Question/Answer format
+            # format the response based on the language
+            # if user_lang_here == "en":
+            formatted_response = f"Question: {question}\nAnswer: {response_text}"
+            if user_lang_here == "hi":
+                formatted_response = f"प्रश्न: {question}\nउत्तर: {response_text}"
+            elif user_lang_here == "kn":
+                formatted_response = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {response_text}"
+
             # Send thank you message to expert
             byoeb_expert_messages = self.__create_expert_message(
                 self.EXPERT_THANK_YOU_MESSAGE,
@@ -741,7 +907,7 @@ class ByoebExpertGenerateResponse(Handler):
             
             # Send corrected answer to user
             byoeb_user_messages = await self.__create_user_message(
-                response_text,
+                formatted_response,
                 message,
                 None,  # Remove emoji reactions as requested
                 constants.VERIFIED,
@@ -755,15 +921,17 @@ class ByoebExpertGenerateResponse(Handler):
             
             # Parse the verification message to get the original answer
             print(f"🔧 DEBUG: Original verification text: '{reply_context.reply_english_text}'")
-            parsed_message = self.__parse_message(reply_context.reply_english_text)
+            parsed_message = self.__parse_message_patient_info(reply_context.reply_english_text)
             print(f"🔧 DEBUG: Parsed verification message: {parsed_message}")
             
             if "Bot_Answer" not in parsed_message:
                 print(f"❌ ERROR: Bot_Answer not found in parsed message. Available keys: {list(parsed_message.keys())}")
-                print(f"🔧 DEBUG: Attempting alternative parsing...")
-                # Alternative parsing for new format
-                parsed_message = self.__parse_message_alternative(reply_context.reply_english_text)
-                print(f"🔧 DEBUG: Alternative parsed message: {parsed_message}")
+                print(f"🔧 DEBUG: Attempting fallback parsing...")
+                # Try original parsing methods as fallback
+                parsed_message = self.__parse_message(reply_context.reply_english_text)
+                if "Bot_Answer" not in parsed_message:
+                    parsed_message = self.__parse_message_alternative(reply_context.reply_english_text)
+                print(f"🔧 DEBUG: Fallback parsed message: {parsed_message}")
                 
             question = parsed_message.get("Question", "")
             bot_answer = parsed_message.get("Bot_Answer", "")
@@ -795,16 +963,25 @@ class ByoebExpertGenerateResponse(Handler):
             
             print(f"🔧 DEBUG: Created expert message with text: '{self.EXPERT_THANK_YOU_MESSAGE}'")
 
-            print(f"Translating bot answer to user's language: {message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')}")
+            user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
+            print(f"Translating bot answer to user's language: {user_lang_here}")
 
+            # Format bot answer with Question/Answer format
+            formatted_bot_answer = f"Question: {question}\nAnswer: {bot_answer}"
+            if user_lang_here == "hi":
+                formatted_bot_answer = f"प्रश्न: {question}\nउत्तर: {bot_answer}"
+            elif user_lang_here == "kn":
+                formatted_bot_answer = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {bot_answer}"
+            
             # Translate bot answer to user's language before sending
             from byoeb.chat_app.configuration.dependency_setup import text_translator
 
             translated_bot_answer = await text_translator.atranslate_text(
-                input_text=bot_answer,
+                input_text=formatted_bot_answer,
                 source_language="en",
                 target_language=message.cross_conversation_context.get(constants.USER, {}).get("user_language", "en")
             )
+            # TODO see here what is the output of translation
 
             # Generate TTS audio for the translated text (FIX: Add missing audio generation)
             media_additional_info = {}
@@ -852,19 +1029,30 @@ class ByoebExpertGenerateResponse(Handler):
                 user_language=user.get("user_language", "en"),
                 phone_number_id=user.get("phone_number_id")
             )
-            
+            print("COMING HERE 3")
             # Create message context (always start as regular text)
             if user_language == "en":
                 user_language = user_language + "_US"
+            
+            # Parse translated text for Hindi/Kannada template parameters
+            template_question = question
+            template_answer = bot_answer
+            if user_obj.user_language in ["hi", "kn"]:
+                parsed_translated = self.__parse_translated_text(translated_bot_answer, user_obj.user_language)
+                if parsed_translated.get("Question") and parsed_translated.get("Answer"):
+                    template_question = parsed_translated["Question"]
+                    template_answer = parsed_translated["Answer"]
+                    print(f"🔧 DEBUG: Using translated template params (case 3) - Q: '{template_question}', A: '{template_answer}'")
+            
             message_context = MessageContext(
                 message_id=str(uuid.uuid4()),
                 message_type=MessageTypes.REGULAR_TEXT.value,
-                message_english_text=bot_answer,  # Original English text
+                message_english_text=formatted_bot_answer,  # Formatted English text
                 message_source_text=translated_bot_answer,  # Already translated text
                 additional_info=media_additional_info if is_active_user else {
                     constants.TEMPLATE_NAME: "bot_temp",
                     constants.TEMPLATE_LANGUAGE: user_language,
-                    constants.TEMPLATE_PARAMETERS: [question, translated_bot_answer]
+                    constants.TEMPLATE_PARAMETERS: [template_question, template_answer]
                 }
             )
             
@@ -978,15 +1166,17 @@ class ByoebExpertGenerateResponse(Handler):
             print(f"🔧 Correction text: '{correction}'")
             
             print(f"🔧 DEBUG: Original verification text for correction: '{verification_message}'")
-            parsed_message = self.__parse_message(verification_message)
+            parsed_message = self.__parse_message_patient_info(verification_message)
             print(f"🔧 DEBUG: Parsed verification message for correction: {parsed_message}")
             
             if "Question" not in parsed_message or "Bot_Answer" not in parsed_message:
                 print(f"❌ ERROR: Question or Bot_Answer not found in parsed message. Available keys: {list(parsed_message.keys())}")
-                print(f"🔧 DEBUG: Attempting alternative parsing for correction...")
-                # Alternative parsing for new format
-                parsed_message = self.__parse_message_alternative(verification_message)
-                print(f"🔧 DEBUG: Alternative parsed message for correction: {parsed_message}")
+                print(f"🔧 DEBUG: Attempting fallback parsing for correction...")
+                # Try original parsing methods as fallback
+                parsed_message = self.__parse_message(verification_message)
+                if "Question" not in parsed_message or "Bot_Answer" not in parsed_message:
+                    parsed_message = self.__parse_message_alternative(verification_message)
+                print(f"🔧 DEBUG: Fallback parsed message for correction: {parsed_message}")
                 
             question = parsed_message.get("Question", "")
             bot_answer = parsed_message.get("Bot_Answer", "")
@@ -1020,6 +1210,15 @@ class ByoebExpertGenerateResponse(Handler):
             llm_response, response_text = await llm_client.agenerate_response(augmented_prompts)
             print(f"🔧 LLM corrected response: '{response_text}'")
             
+            user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
+
+            # Format the corrected answer with Question/Answer format
+            formatted_response = f"Question: {question}\nAnswer: {response_text}"
+            if user_lang_here == "hi":
+                formatted_response = f"प्रश्न: {question}\nउत्तर: {response_text}"
+            elif user_lang_here == "kn":
+                formatted_response = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {response_text}"
+            
             # Send thank you message to expert
             byoeb_expert_messages = self.__create_expert_message(
                 self.EXPERT_THANK_YOU_MESSAGE,
@@ -1030,7 +1229,7 @@ class ByoebExpertGenerateResponse(Handler):
             
             # Send corrected answer to user
             byoeb_user_messages = await self.__create_user_message(
-                response_text,
+                formatted_response,
                 message,
                 None,  # Remove emoji reactions as requested
                 constants.VERIFIED,

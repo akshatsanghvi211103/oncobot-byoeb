@@ -21,7 +21,7 @@ class Conversation(BaseModel):
 
 class MessageConsmerService:
 
-    __timeout_seconds = 60
+    __timeout_seconds = 180
     def __init__(
         self,
         config,

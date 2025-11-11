@@ -80,7 +80,7 @@
             "queue_bot": "oncobot-queue",
             "queue_channel": "channelmessages",
             "messages_per_page": 5,
-            "visibility_timeout": 30,
+            "visibility_timeout": 180,
             "time_to_live": 604800
         }
     },

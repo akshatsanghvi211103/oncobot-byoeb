@@ -145,6 +145,7 @@ class ConversationAnalyzerFixed:
             "response_text_eng": "---",
             "response_text_indic": "---",
             "expert_phone": "---",
+            "expert_type": "---",
             "expert_verification": "---",
             "expert_feedback": "---",
             "final_response_eng": "---",
@@ -208,6 +209,7 @@ class ConversationAnalyzerFixed:
             
             if user_type in ["byoebexpert", "byoebexpert2"]:
                 conv_data["expert_phone"] = user_phone
+                conv_data["expert_type"] = user_type
                 
                 # Yes/No verification
                 if english_text.lower().strip() in ["yes", "no"]:
@@ -271,7 +273,11 @@ class ConversationAnalyzerFixed:
             if conv_data['expert_verification'] != "---":
                 output_lines.append("")
                 output_lines.append("--- Expert Interaction ---")
-                output_lines.append(f"Expert Phone Number: {conv_data['expert_phone']} (Type: byoebexpert)")
+                
+                # Map expert type to readable format
+                expert_type_readable = "medical" if conv_data['expert_type'] == "byoebexpert" else "logistical" if conv_data['expert_type'] == "byoebexpert2" else conv_data['expert_type']
+                
+                output_lines.append(f"Expert Phone Number: {conv_data['expert_phone']} (Type: {conv_data['expert_type']} - {expert_type_readable})")
                 output_lines.append(f"Expert Verification (Yes/No): {conv_data['expert_verification']}")
                 
                 if conv_data['expert_feedback'] != "---":
@@ -302,7 +308,7 @@ async def main():
     await analyzer.fetch_users_info()
     
     # Fetch messages after timestamp
-    timestamp = "1762796657"  # Using string format as in original
+    timestamp = "1762885222"  # Using string format as in original
     messages = await analyzer.fetch_messages_after_timestamp(timestamp)
     
     print("🚀 Starting fixed conversation analysis...")

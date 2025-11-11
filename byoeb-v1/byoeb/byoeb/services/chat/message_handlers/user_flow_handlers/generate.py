@@ -344,9 +344,10 @@ class ByoebUserGenerateResponse(Handler):
         
         # Check if response_text is already localized (contains non-ASCII chars suggesting it's already translated)
         # or if user_language is English - in both cases, skip translation
-        is_already_localized = not all(ord(char) < 128 for char in response_text) and user_language != "en"
+        # is_already_localized = not all(ord(char) < 128 for char in response_text) and user_language != "en"
         
-        if user_language == "en" or is_already_localized:
+        # if user_language == "en" or is_already_localized: #TODO : sometimes the text is english but semantics is hindi (transliteration)
+        if user_language == "en":
             print(f"🔤 TRANSLATION DEBUG: Skipping translation - {'English target' if user_language == 'en' else 'Already localized text detected'}")
             message_source_text = response_text
         else:
@@ -357,7 +358,8 @@ class ByoebUserGenerateResponse(Handler):
             )
         
         print(f"🔤 TRANSLATION DEBUG: Final result: '{message_source_text}'")
-        print(f"🔤 TRANSLATION DEBUG: Translation used: {not (user_language == 'en' or is_already_localized)}")
+        # print(f"🔤 TRANSLATION DEBUG: Translation used: {not (user_language == 'en' or is_already_localized)}")
+        print(f"🔤 TRANSLATION DEBUG: Translation used: {not (user_language == 'en')}")
         
         # Determine English text to store in database
         if english_text is not None:
@@ -640,7 +642,12 @@ class ByoebUserGenerateResponse(Handler):
             patient_info = "No patient info available"
         
         # Template parameters: {{1}} = Patient Info, {{2}} = Question, {{3}} = Answer
-        template_parameters = [patient_info, verification_question, verification_bot_answer]
+        # Strip new lines from each parameter before sending
+        template_parameters = [
+            patient_info.replace('\n', ' ').strip(),
+            verification_question.replace('\n', ' ').strip(),
+            verification_bot_answer.replace('\n', ' ').strip()
+        ]
         
         additional_info = self.__get_expert_additional_info(
             template_parameters,
@@ -875,9 +882,10 @@ class ByoebUserGenerateResponse(Handler):
         # FLOW CHANGE: Handle small-talk vs medical/logistical queries differently
         if query_type == "small-talk":
             # For small-talk, send direct answer without expert verification
+            formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {answer}"
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
-                response_text=answer,  # Send the actual LLM answer directly
+                response_text=formatted_answer,  # Send the actual LLM answer directly
                 emoji=None,
                 status=None,
                 related_questions=related_questions,
@@ -886,34 +894,42 @@ class ByoebUserGenerateResponse(Handler):
             print(f"✅ Small-talk answer sent directly to user (no expert verification needed)")
             return [message] + byoeb_user_messages + [read_reciept_message]
         elif query_type == "out-of-scope":
-            answer = bot_config["template_messages"]["user"]["out_of_scope"].get(message.user.user_language,
-                     "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
+            # answer = bot_config["template_messages"]["user"]["out_of_scope"].get(message.user.user_language,
+            #          "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
             english_answer = bot_config["template_messages"]["user"]["out_of_scope"].get("en",
                            "This is outside the scope of my current knowledge. You can ask me any cancer related questions.")
+            
+            # formatted_answer = f"Question: {message.message_context.message_source_text}\nAnswer: {answer}"
+            # formatted_answer = f"Question: {message.message_context.message_source_text}\nAnswer: {english_answer}"
+            # formatted_english_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
+            formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
-                response_text=answer,  # Send the out-of-scope message directly
+                response_text=formatted_answer,  # Send the out-of-scope message directly
                 emoji=None,
                 status=None,
                 related_questions=related_questions,
                 generate_audio=True,
-                english_text=english_answer
+                # english_text=formatted_english_answer
             )
             print(f"✅ Out-of-scope message sent directly to user (no expert verification needed)")
             return [message] + byoeb_user_messages + [read_reciept_message]
         elif query_type == "incomprehensible":
-            answer = bot_config["template_messages"]["user"]["incomprehensible"].get(message.user.user_language,
-                     "I apologize, but I couldn't understand your question. Could you please rephrase it?")
+            # answer = bot_config["template_messages"]["user"]["incomprehensible"].get(message.user.user_language,
+            #          "I apologize, but I couldn't understand your question. Could you please rephrase it?")
             english_answer = bot_config["template_messages"]["user"]["incomprehensible"].get("en",
                            "I did not understand your question. Could you please rephrase or provide more details?")
+            # formatted_answer = f"Question: {message.message_context.message_source_text}\nAnswer: {answer}"
+            # formatted_english_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
+            formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
-                response_text=answer,  # Send the incomprehensible message directly
+                response_text=formatted_answer,  # Send the incomprehensible message directly
                 emoji=None,
                 status=None,
                 related_questions=related_questions,
                 generate_audio=True,
-                english_text=english_answer
+                # english_text=formatted_english_answer
             )
             print(f"✅ Incomprehensible message sent directly to user (no expert verification needed)")
             return [message] + byoeb_user_messages + [read_reciept_message]

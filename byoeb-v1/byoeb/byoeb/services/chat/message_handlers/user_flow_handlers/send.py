@@ -67,8 +67,10 @@ class ByoebUserSendResponse(Handler):
             constants.MESSAGE_DB_QUERIES: message_db_queries,
             constants.USER_DB_QUERIES: user_db_queries
         }
-        
-    async def is_active_user(self, user_id: str):
+
+    async def is_active_user(self, user_id: str, expert: bool = False):
+        # if expert:
+        #     return True
         try:
             result = await self._user_db_service.get_user_activity_timestamp(user_id)
             if result is None:
@@ -107,7 +109,7 @@ class ByoebUserSendResponse(Handler):
         print(f"🔧 Handling expert message for: {expert_message_context.user.phone_number_id}")
         print(f"🔧 Expert user_id: {expert_message_context.user.user_id}")
         
-        is_active_user = await self.is_active_user(expert_message_context.user.user_id)
+        is_active_user = await self.is_active_user(expert_message_context.user.user_id, expert=True)
         print(f"🔧 Expert is_active_user: {is_active_user}")
         
         expert_requests = await channel_service.prepare_requests(expert_message_context)

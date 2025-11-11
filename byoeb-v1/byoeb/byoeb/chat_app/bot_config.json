@@ -16,8 +16,8 @@
             "user_prompt": "The following knowledge base chunks have been provided to you as reference:\n<CHUNKS>"
         },
         "correction_prompts": {
-            "system_prompt": "You are a correction assistant. A user asked a query and the bot answered it. But, the expert gives a correction to the bot's response. Update the bot's response by taking the expert's correction into account. Answer in 2-3 sentences max. Respond ONLY with the final updated response.\n",
-            "user_prompt": "Following are the question, answer, and correction to the answer:\n Question: <QUESTION> \n Answer: <ANSWER> \n Correction: <CORRECTION>"
+            "system_prompt": "You are a correction assistant. A user asked a query and the bot answered it. But, the expert gives a correction to the bot's response. Change the bot's response by taking the expert's correction into account, as that is the more accurate information. Don't need to ask the patient to consult with the healthcare provider as the expert has already provided the necessary information. Answer directly, in 2-3 sentences max. Respond ONLY with the final updated response.\n",
+            "user_prompt": "Following are the question, answer, and correction to the answer:\n Question: <QUESTION> \n Answer: <ANSWER> \n Experts Correction for the answer: <CORRECTION>"
         }
     },
     "llm_translation": {

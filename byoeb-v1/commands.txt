@@ -40,3 +40,6 @@ Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurew
 +917259517399 - Dr Shirley Assigned - failed
 
 Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "917259517399", "user_id": "013", "user_name": "Dr Rabia", "user_language": "kn", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1985-03-15", "gender": "Female", "age": 38 }, "experts": { "byoebexpert": ["919969557231"], "byoebexpert2": ["917022488975"] } }]'
+
+
+[mongos] oncobotdb> db.messages.countDocuments({ $expr: { $gt: [ { $toDouble: "$timestamp" }, 1761801990 ] } })
