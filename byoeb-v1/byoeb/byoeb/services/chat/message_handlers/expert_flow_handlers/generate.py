@@ -239,6 +239,7 @@ class ByoebExpertGenerateResponse(Handler):
                 return {"Question": question, "Answer": answer}
         
         # Fallback: if parsing fails, use "see below" and clean the text
+        print("Using fallback")
         if user_language == "hi":
             # Hindi fallback
             cleaned_text = text.replace('\n', '. ').strip()
@@ -353,6 +354,7 @@ class ByoebExpertGenerateResponse(Handler):
         emoji = None,
         status = None,
         related_questions = None,
+        english_text = None,
     ):
         from byoeb.chat_app.configuration.dependency_setup import speech_translator
         from byoeb.chat_app.configuration.dependency_setup import text_translator
@@ -398,16 +400,16 @@ class ByoebExpertGenerateResponse(Handler):
         
         # Generate audio for all verified answers (both corrections and approvals)
         if status == constants.VERIFIED:
-            message_en_text = text_message
+            message_en_text = english_text if english_text is not None else text_message
             
             # Check if this is an expert correction case
             is_correction = (byoeb_message.reply_context 
                            and byoeb_message.reply_context.additional_info
-                           and byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.WAITING)
+                           and byoeb_message.reply_context.additional_info.get(constants.VERIFICATION_STATUS) == constants.PENDING)
             
             if is_correction:
                 print("🔧 DEBUG: Expert correction case - preparing corrected message")
-                # For expert corrections, translate the corrected response to user's language
+                # For expert corrections, translate the formatted response to user's language
                 translated_text = await text_translator.atranslate_text(
                     input_text=text_message,
                     source_language="en",
@@ -418,7 +420,7 @@ class ByoebExpertGenerateResponse(Handler):
                 text_message = translated_text
             else:
                 print("🔧 DEBUG: Expert approval case - preparing verified message")
-                # For expert approvals, use the verified answer template with the translated response
+                # For expert approvals, translate the formatted response to user's language
                 translated_text = await text_translator.atranslate_text(
                     input_text=text_message if message_en_text else text_message,
                     source_language="en",
@@ -427,6 +429,7 @@ class ByoebExpertGenerateResponse(Handler):
                 
                 # For expert approvals, send the actual translated answer directly
                 text_message = translated_text
+
             
             print(f"🔧 DEBUG: Final message text: '{text_message[:100]}...'")
             
@@ -536,8 +539,8 @@ class ByoebExpertGenerateResponse(Handler):
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
-                            # message_english_text=message_en_text, #TODO
-                            # message_source_text=text_message, #TODO
+                            message_english_text=message_en_text,
+                            message_source_text=text_message,
                             additional_info={
                                 constants.TEMPLATE_NAME: "bot_temp",
                                 constants.TEMPLATE_LANGUAGE: user_language,
@@ -629,8 +632,8 @@ class ByoebExpertGenerateResponse(Handler):
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
                             message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
-                            # message_english_text=message_en_text, #TODO
-                            # message_source_text=text_message, #TODO
+                            message_english_text=message_en_text,
+                            message_source_text=text_message,
                             additional_info={
                                 constants.TEMPLATE_NAME: "bot_temp",
                                 constants.TEMPLATE_LANGUAGE: user_language,
@@ -889,13 +892,15 @@ class ByoebExpertGenerateResponse(Handler):
             user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
             
             # Format the corrected answer with Question/Answer format
-            # format the response based on the language
-            # if user_lang_here == "en":
-            formatted_response = f"Question: {question}\nAnswer: {response_text}"
-            if user_lang_here == "hi":
-                formatted_response = f"प्रश्न: {question}\nउत्तर: {response_text}"
-            elif user_lang_here == "kn":
-                formatted_response = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {response_text}"
+            # Keep English version for database storage
+            formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+            
+            # Format response based on the user language for display
+            formatted_response = formatted_response_en  # Default to English
+            # if user_lang_here == "hi":
+            #     formatted_response = f"प्रश्न: {question}\nउत्तर: {response_text}"
+            # elif user_lang_here == "kn":
+            #     formatted_response = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {response_text}"
 
             # Send thank you message to expert
             byoeb_expert_messages = self.__create_expert_message(
@@ -911,7 +916,8 @@ class ByoebExpertGenerateResponse(Handler):
                 message,
                 None,  # Remove emoji reactions as requested
                 constants.VERIFIED,
-                []  # Empty list to suppress related questions in final verified answer
+                [],  # Empty list to suppress related questions in final verified answer
+                formatted_response_en  # Pass English version for database storage
             )
 
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
@@ -967,15 +973,19 @@ class ByoebExpertGenerateResponse(Handler):
             print(f"Translating bot answer to user's language: {user_lang_here}")
 
             # Format bot answer with Question/Answer format
-            formatted_bot_answer = f"Question: {question}\nAnswer: {bot_answer}"
-            if user_lang_here == "hi":
-                formatted_bot_answer = f"प्रश्न: {question}\nउत्तर: {bot_answer}"
-            elif user_lang_here == "kn":
-                formatted_bot_answer = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {bot_answer}"
+            # Keep English version for database storage
+            formatted_bot_answer_en = f"Question: {question}\nAnswer: {bot_answer}"
+            
+            # Format bot answer based on user language for display
+            formatted_bot_answer = formatted_bot_answer_en  # Default to English
+            # if user_lang_here == "hi":
+            #     formatted_bot_answer = f"प्रश्न: {question}\nउत्तर: {bot_answer}"
+            # elif user_lang_here == "kn":
+            #     formatted_bot_answer = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {bot_answer}"
             
             # Translate bot answer to user's language before sending
             from byoeb.chat_app.configuration.dependency_setup import text_translator
-
+            print("here now, ", formatted_bot_answer)
             translated_bot_answer = await text_translator.atranslate_text(
                 input_text=formatted_bot_answer,
                 source_language="en",
@@ -1047,7 +1057,7 @@ class ByoebExpertGenerateResponse(Handler):
             message_context = MessageContext(
                 message_id=str(uuid.uuid4()),
                 message_type=MessageTypes.REGULAR_TEXT.value,
-                message_english_text=formatted_bot_answer,  # Formatted English text
+                message_english_text=formatted_bot_answer_en,  # English version for database
                 message_source_text=translated_bot_answer,  # Already translated text
                 additional_info=media_additional_info if is_active_user else {
                     constants.TEMPLATE_NAME: "bot_temp",
@@ -1123,8 +1133,8 @@ class ByoebExpertGenerateResponse(Handler):
                 responses, message_ids = await channel_service.send_requests([template_message])
                 print(f"📋 Template message sent to inactive user: {responses}")
                 
-                # Clear byoeb_user_messages since we already sent the message
-                byoeb_user_messages = []
+                # Keep byoeb_user_messages for database storage (don't clear)
+                byoeb_user_messages = [new_user_message]
             else:
                 print("🔘 User is active, will send regular message through normal flow")
                 byoeb_user_messages = [new_user_message]
@@ -1213,11 +1223,15 @@ class ByoebExpertGenerateResponse(Handler):
             user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
 
             # Format the corrected answer with Question/Answer format
-            formatted_response = f"Question: {question}\nAnswer: {response_text}"
-            if user_lang_here == "hi":
-                formatted_response = f"प्रश्न: {question}\nउत्तर: {response_text}"
-            elif user_lang_here == "kn":
-                formatted_response = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {response_text}"
+            # Keep English version for database storage
+            formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+            
+            # Format response based on the user language for display
+            formatted_response = formatted_response_en  # Default to English
+            # if user_lang_here == "hi":
+            #     formatted_response = f"प्रश्न: {question}\nउत्तर: {response_text}"
+            # elif user_lang_here == "kn":
+            #     formatted_response = f"ಪ್ರಶ್ನೆ: {question}\nಉತ್ತರ: {response_text}"
             
             # Send thank you message to expert
             byoeb_expert_messages = self.__create_expert_message(
@@ -1233,7 +1247,8 @@ class ByoebExpertGenerateResponse(Handler):
                 message,
                 None,  # Remove emoji reactions as requested
                 constants.VERIFIED,
-                []  # Empty list to suppress related questions in final verified answer
+                [],  # Empty list to suppress related questions in final verified answer
+                formatted_response_en  # Pass English version for database storage
             )
         else:
             # print("❓ Branch: No matching condition - sending default message")

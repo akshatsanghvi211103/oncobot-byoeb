@@ -1,12 +1,16 @@
+DEBUG PRODUCER: Message ID in message: None
+DEBUG PRODUCER: Payload ID: D2ZWG01Xhb3gdvlj5SZd3IUqO
+DEBUG PRODUCER: Using payload ID as fallback: D2ZWG01Xhb3gdvlj5SZd3IUqO
+
 === QIKCHAT MESSAGE CONVERSION DEBUG ===
 📥 Converting message: {
   "from": "916352927215",
-  "timestamp": "2025-11-05T05:32:53.000Z",
+  "timestamp": "2025-11-12T05:44:08.000Z",
   "text": {
-    "body": "whatis cancer again?"
+    "body": "\u0915\u094d\u092f\u093e \u092e\u0948\u0902 \u0930\u0947\u0921\u093f\u092f\u094b\u0925\u0947\u0930\u0947\u092a\u0940 \u0915\u0947 \u092c\u093e\u0926 \u0938\u094d\u0928\u093e\u0928 \u0915\u0930 \u0938\u0915\u0924\u093e\u00a0\u0939\u0942\u0901?"
   },
   "type": "text",
-  "id": "MLvW21NqBlyoyhTgYqVkOF0r5"
+  "id": "D2ZWG01Xhb3gdvlj5SZd3IUqO"
 }
 📝 Detected message type: text
 ✅ Converting as regular message
@@ -17,33 +21,34 @@
 [DEBUG] Looking up users by phone_numbers: ['916352927215']
 [DEBUG] get_users_by_phone_numbers called with phone_numbers: ['916352927215']
 [DEBUG] Using collection: 'users'
-C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.11\Lib\site-packages\motor\core.py:171: UserWarning: You appear to be connected to a CosmosDB cluster. For more information regarding feature compatibility and support please visit https://www.mongodb.com/supportability/cosmosdb
+C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.11\Lib\site-packages\motor\core.py:171: UserWarning: You appear to be connected to a CosmosDB cluster. For more information regarding feature compatibility and support please visit https://www.mongodb.com/supportability/cosmosdb       
   delegate = self.__delegate_class__(*args, **kwargs)
-[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': '002', 'User': {'user_id': '002', 'user_name': 'Akshat Sanghvi', 'user_location': {}, 'user_language': 'en', 'user_type': 'byoebuser', 'phone_number_id': '916352927215', 'test_user': False, 'experts': {'byoebexpert': ['919739811075'], 'byoebexpert2': ['919741363511']}, 'audience': [], 'patient_details': {'date_of_birth': '1985-03-15', 'gender': 'Male', 'age': 21}, 'created_timestamp': 1761388632, 'activity_timestamp': 1762320058, 'last_conversations': [{'question': 'what is cancer in 1 word?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'what is radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'what si cancer?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}]}, 'timestamp': '1761388632'}]
+[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': '002', 'User': {'user_id': '002', 'user_name': 'Akshat Sanghvi', 'user_location': {}, 'user_language': 'hi', 'user_type': 'byoebuser', 'phone_number_id': '916352927215', 'test_user': False, 'experts': {'byoebexpert': ['919739811075'], 'byoebexpert2': ['919741363511']}, 'audience': [], 'patient_details': {'date_of_birth': '1985-03-15', 'gender': 'Male', 'age': 21}, 'created_timestamp': 1761388632, 'activity_timestamp': 1762925239, 'last_conversations': [{'question': 'What are the side effects of radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'Can I take a bath after radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'Can I take a bath after radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}]}, 'timestamp': '1761388632'}]
 [DEBUG] Retrieved user by phone - user_id: '002', phone_number_id: '916352927215', user_name: 'Akshat Sanghvi', conversations: 3
 🔍 GET_BOT_MESSAGES: Database returned 0 results
 ❌ GET_BOT_MESSAGES: No messages found in database
 🔍 Let's check what IDs actually exist in the database...
-🔍 Recent messages in database (last hour): 27
-   Recent 1: ID=JEY2t5C2RshqlQyMxEkGBqAPq, Text='what is cancer in 1 word?...'
-   Recent 2: ID=KxiltXztJMBeqKX0h01Kr3E3b, Text='Let me check with a KMC doctor and get back to you...'
-   Recent 3: ID=hBF2G1m05JVVJQALTd3AVMk7S, Text='Let me check with a KMC doctor and get back to you...'
+🔍 Recent messages in database (last hour): 76
+   Recent 1: ID=mGAu8W39qlpkvWKRfdFG94bfX, Text='Question: Can I take a bath after radiotherapy?
+An...'
+   Recent 2: ID=lPQMquhQuEaFPl9JX6JvGTEdM, Text='...'
 ❌ Failed to get recent messages for debug: 'NoneType' object is not subscriptable
 [DEBUG] Looking for user with phone_number_id: '916352927215' in 1 retrieved users
 [DEBUG] Found existing user with user_id: '002', user_name: 'Akshat Sanghvi', phone_number_id: '916352927215', conversations: 3
 🔍 PROCESSING MESSAGE: Category=byoebuser_to_bot, UserType=byoebuser
-🔍 Message Text: whatis cancer again?
+🔍 Message Text: क्या मैं रेडियोथेरेपी के बाद स्नान कर सकता हूँ?
 🔍 Added USER conversation to processing queue
-🧵 Generated conversation_thread_id: thread_f5bb10ce5cea9fd5
-🧵 Added conversation_thread_id to original user message: MLvW21NqBlyoyhTgYqVkOF0r5
+🔤 USER PROCESS: Translating 'क्या मैं रेडियोथेरेपी के बाद स्नान कर सकता हूँ?' from hi to en
+Thread ID: 9596, Variable Address: 1903547757952, client address: 1903199034640
+🔤 USER PROCESS: Translation result: 'Can I take a bath after radiotherapy?'
 
 === RESPONSE GENERATION DEBUG ===
-📝 Original message: 'whatis cancer again?'
-📤 English message for KB: 'whatis cancer again?'
-👤 User: 916352927215 (language: en)
+📝 Original message: 'क्या मैं रेडियोथेरेपी के बाद स्नान कर सकता हूँ?'
+📤 English message for KB: 'Can I take a bath after radiotherapy?'
+👤 User: 916352927215 (language: hi)
 
 🔍 MULTI-KB SEARCH DEBUG:
-🔍 Query: 'whatis cancer again?'
+🔍 Query: 'Can I take a bath after radiotherapy?'
 🔍 Searching 4 knowledge bases...
 🔍 Searching KB1 (Q&A pairs) with filter: source eq 'oncobot_knowledge_base'
 🔍 KB1 returned 3 Q&A results
@@ -56,14 +61,13 @@ C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.
 🔍 Total chunks retrieved: 7 (KB1: 3, KB2: 2, KB3: 2, KB1_Expert: 0)
 
 === KB CONTEXT RETRIEVED (7 chunks) ===
-Query: whatis cancer again?
+Query: Can I take a bath after radiotherapy?
 Chunk 1:
-  Question: What is cancer ?
+  Question: Can I use soap on the rest of my body while undergoing radiation therapy?
   Source: oncobot_knowledge_base
-  Content: Question: What is cancer ?
-Answer: Cancer is a disease in which some cells of the body grow uncontrollably. They lose the ability to stop multiplying. It occurs due to multiple factors. This abnormal ...
+  Content: Question: Can I use soap on the rest of my body while undergoing radiation therapy?
+Answer: Yes, you can use mild soap on the rest of your body while undergoing radiation therapy. However, be gentle a...
   ---
-  ...
 === END KB CONTEXT ===
 
 
@@ -74,7 +78,7 @@ Message 1 (system):
 You have access to four knowledge bases:
 - KB1: Q&A pairs covering general oncology topics
 - KB2 & KB3: Detailed radiation therapy treatment guides and procedures
-- KB1_Expert: Expert-validated corrections and high-priority answers (marked with [EXPERT-VALIDATED])
+- KB1_Expert: Expert-validated corrections and high-priority answers (marked with [EXPERT-VALIDATED])    
 
 Guidelines for answering:
 - USE [EXPERT-VALIDATED] content ONLY when it is directly r...
@@ -82,52 +86,61 @@ Message 2 (user):
   Content: The following knowledge base context has been retrieved from multiple sources to help answer your question. Content marked with [EXPERT-VALIDATED] has been specifically reviewed by medical professionals - use this content ONLY if it directly relates to the user's question:
 
 KNOWLEDGE BASE CONTEXT:
-Question: What is cancer ?
-Answer: Cancer is a disease in which some cells of the body grow uncontrollably. They lose the ability to stop multiplying. It occurs due to multiple factors. This abnormal m...
-🔍 Question being processed: 'whatis cancer again?'
+Question: Can I use soap on the rest of my body while undergoing radiation therapy?
+Answer: Yes, you can use mild soap on the rest of your body while undergoing radiation therapy. However, be gentle an...
+🔍 Question being processed: 'Can I take a bath after radiotherapy?'
 🔍 Number of chunks: 7
 === END FULL LLM INPUT DEBUG ===
 
 
 === LLM RESPONSE DEBUG ===
 🔤 Raw LLM response_text: '<BEGIN RESPONSE>
-Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.
+Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.
 <END RESPONSE>
 
 <BEGIN QUERY TYPE>
 medical
 <END QUERY TYPE>'
-🔤 Response length: 421
+🔤 Response length: 410
 🔤 Contains 'Sorry': False
 🔤 Contains 'assist': False
 === END LLM RESPONSE DEBUG ===
 
-Generated answer:  Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.
+Generated answer:  Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.
 Query the type:  medical
-finding here ['What are local symptoms of cancer?', 'How is radiation therapy administered?', 'What foods should be avoided during radiotherapy?']
+Query the type:  medical
+📊 CLASSIFICATION_FIX: Set original message category to 'byoebuser_to_bot' for proper filtering
+finding here ['Can I use deodorant during radiation therapy?', 'What should I do if my skin becomes itchy?', 'Is it safe to swim in a pool during treatment?']
+Thread ID: 9596, Variable Address: 1903537012608, client address: 1903199034640
+Thread ID: 9596, Variable Address: 1903537012608, client address: 1903199034640
+Thread ID: 9596, Variable Address: 1903537012608, client address: 1903199034640
+✅ Translated 3 related questions to hi
 👨‍⚕️ Using doctor waiting message for medical query
-🔗 DEBUG: Storing original user question ID for reply context: MLvW21NqBlyoyhTgYqVkOF0r5
-🔤 TRANSLATION DEBUG: About to translate message to en
-🔤 TRANSLATION DEBUG: Input text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
-🔤 TRANSLATION DEBUG: Skipping translation - English target
-🔤 TRANSLATION DEBUG: Final result: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
-🔤 TRANSLATION DEBUG: Translation used: False
+🔤 WAITING MESSAGE: Localized (hi): 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बे          ेझिझक और प्रश्न पूछें।'
+🔤 WAITING MESSAGE: English: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+🔗 DEBUG: Storing original user question ID for reply context: D2ZWG01Xhb3gdvlj5SZd3IUqO
+🔤 TRANSLATION DEBUG: About to translate message to hi
+🔤 TRANSLATION DEBUG: Input text: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझि          िझक और प्रश्न पूछें।'
+Thread ID: 9596, Variable Address: 1903537012608, client address: 1903199034640
+🔤 TRANSLATION DEBUG: Final result: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बे          ेझिझक और प्रश्न पूछें।'
+🔤 TRANSLATION DEBUG: Translation used: True
+🔤 ENGLISH TEXT: Using provided English text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
 � Creating user response message...
 🔗 Adding 3 follow-up questions to interactive list
-🔗 DEBUG: Creating reply context - user message ID: MLvW21NqBlyoyhTgYqVkOF0r5
-🔗 DEBUG: Created main waiting message reply context with reply_id: MLvW21NqBlyoyhTgYqVkOF0r5
-🔗 DEBUG: Main waiting message ID: 6881e6f7-2a8c-48e0-b9b5-1bcfdfdd86a4
+🔗 DEBUG: Creating reply context - user message ID: D2ZWG01Xhb3gdvlj5SZd3IUqO
+🔗 DEBUG: Created main waiting message reply context with reply_id: D2ZWG01Xhb3gdvlj5SZd3IUqO
+🔗 DEBUG: Main waiting message ID: 3e12905a-2701-4542-ba73-a21e8bc2dc7d
 🎵 Generating TTS audio again for message...
 running tts now
 running tts now again
-🔧 SPEECH DEBUG - SUCCESS: Generated 119232 bytes of audio
-🔧 TTS DEBUG - Received audio_bytes: <class 'bytes'>, length: 119232
+🔧 SPEECH DEBUG - SUCCESS: Generated 109152 bytes of audio
+🔧 TTS DEBUG - Received audio_bytes: <class 'bytes'>, length: 109152
 running tts now again 2
 🎵 TTS audio message generated successfully with SAS URL
-🔗 DEBUG: Audio message reply context reply_id: MLvW21NqBlyoyhTgYqVkOF0r5
-🔗 DEBUG: Audio message ID: 38972f82-78af-4b4f-8397-325bc7f6260b
+🔗 DEBUG: Audio message reply context reply_id: D2ZWG01Xhb3gdvlj5SZd3IUqO
+🔗 DEBUG: Audio message ID: 29a85dae-a86f-45f4-9b39-b349a677d1b2
 💬 Returning 2 messages: ['interactive_list_reply', 'regular_audio']
-✅ Waiting messages sent to user (in en)
+✅ Waiting messages sent to user (in hi)
 👨‍⚕️ Creating expert verification message...
 expert result {'byoebexpert': ['919739811075'], 'byoebexpert2': ['919741363511']}
 expert result 2 ('919739811075', 'byoebexpert') medical
@@ -137,14 +150,17 @@ expert result 2 ('919739811075', 'byoebexpert') medical
 🔧 Expert additional_info template_language: en (type: <class 'str'>)
 📋 Template parameters created:
   {1} Patient Info: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
-  {2} Question: whatis cancer again?
-  {3} Answer: Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.
+  {2} Question: Can I take a bath after radiotherapy?
+  {3} Answer: Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.
 👨‍⚕️ Expert message created with patient info in template format
 ✅ Expert verification message created
-🎉 Complete! Generated 4 messages (waiting messages to user + expert verification + read receipt)
-🔍 MESSAGE BREAKDOWN: Total=4, User=2, Expert=1, ReadReceipt=1
-🔍 User message 1: Type=interactive_list_reply, ID=6881e6f7-2a8c-48e0-b9b5-1bcfdfdd86a4
-🔍 User message 2: Type=regular_audio, ID=38972f82-78af-4b4f-8397-325bc7f6260b
+🎉 Complete! Generated 5 messages (original user message + waiting messages + expert verification + read receipt)
+📥 INCOMING: regular_text, ID=D2ZWG01Xhb3gdvlj5SZd3IUqO
+📤 OUTGOING: interactive_list_reply, ID=3e12905a-2701-4542-ba73-a21e8bc2dc7d
+📤 OUTGOING: regular_audio, ID=29a85dae-a86f-45f4-9b39-b349a677d1b2
+🔍 MESSAGE BREAKDOWN: Total=5, Incoming=1, Outgoing=2, Expert=1, ReadReceipt=1
+🔍 User message 1: Type=interactive_list_reply, ID=3e12905a-2701-4542-ba73-a21e8bc2dc7d
+🔍 User message 2: Type=regular_audio, ID=29a85dae-a86f-45f4-9b39-b349a677d1b2
 🔧 DEBUG: Using channel_type='qikchat' -> service=QikchatService
 💬 Sending response: Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ...
 🏷️ Query type: medical
@@ -156,11 +172,11 @@ Checking interactive list - has description: True, has row_texts: True, row_text
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
 📤 Sending 1 requests
-📤 Request 1: {'to_contact': '916352927215', 'type': 'interactive', 'interactive': {'type': 'list', 'body': {'text': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, 'action': {'button': 'Related questions', 'sections': [{'title': '', 'rows': [{'id': 'option_0', 'title': 'Q1', 'description': 'What are local symptoms of cancer?'}, {'id': 'option_1', 'title': 'Q2', 'description': 'How is radiation therapy administered?'}, {'id': 'option_2', 'title': 'Q3', 'description': 'What foods should be avoided during radiotherapy?'}]}]}}, 'context': {'message_id': 'MLvW21NqBlyoyhTgYqVkOF0r5'}}      
+📤 Request 1: {'to_contact': '916352927215', 'type': 'interactive', 'interactive': {'type': 'list', 'body': {'text': 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'},               , 'action': {'button': 'संबंधित प्रश्न', 'sections': [{'title': '', 'rows': [{'id': 'option_0', 'title': '   'Q1', 'description': 'क्या मैं रेडिएशन थेरेपी के दौरान डियोडरेंट का उपयोग कर सकता हूँ?'}, {'id': 'option_1          1', 'title': 'Q2', 'description': 'अगर आपकी त्वचा में खुजली हो रही है तो आप निम्नलिखित उपाय कर सकते हैं:..        ..'}, {'id': 'option_2', 'title': 'Q3', 'description': 'क्या इलाज के दौरान पूल में तैरना सुरक्षित है?'}]}]        ]}}, 'context': {'message_id': 'D2ZWG01Xhb3gdvlj5SZd3IUqO'}}
 📤 Got 1 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'gNGCoobKZzdbkQJujopLMYfqF', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-11-05T05:33:49.810Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: gNGCoobKZzdbkQJujopLMYfqF
-📤 Final message_ids: ['gNGCoobKZzdbkQJujopLMYfqF']
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'WN3euHgFQNd2u1jx4Nhopcj4e', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-11-12T05:44:57.758Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: WN3euHgFQNd2u1jx4Nhopcj4e
+📤 Final message_ids: ['WN3euHgFQNd2u1jx4Nhopcj4e']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
 
@@ -183,11 +199,11 @@ Checking interactive list - has description: False, has row_texts: False, row_te
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
 📤 Sending 1 requests
-📤 Request 1: {'to_contact': '916352927215', 'type': 'audio', 'audio': {'link': 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_ca5e6717b0174312a9d47055d26a3b9f.mp3?st=2025-11-05T05%3A33%3A49Z&se=2025-11-05T06%3A33%3A49Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-05T05%3A33%3A49Z&ske=2025-11-05T06%3A33%3A49Z&sks=b&skv=2025-01-05&sig=8upWi8/ulf93MkdgzNFPe98pcsbsEcdNwVcovtB9Vz4%3D'}, 'context': {'message_id': 'MLvW21NqBlyoyhTgYqVkOF0r5'}}
+📤 Request 1: {'to_contact': '916352927215', 'type': 'audio', 'audio': {'link': 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_383fd488399844358b7e763e3cb782f1.mp3?st=2025-11-12T05%3A44%3A55Z&se=2025-11-12T06%3A44%3A55Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-12T05%3A44%3A55Z&ske=2025-11-12T06%3A44%3A55Z&sks=b&skv=2025-01-05&sig=%2BWv7CBNYHb8n0fje2UKsefbGEwBDvPnPOB24kUMhIPE%3D'}, 'context': {'message_id': 'D2ZWG01Xhb3gdvlj5SZd3IUqO'}}
 📤 Got 1 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Yav32x1XgmmblYpgu4vLPXKBa', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-11-05T05:33:49.985Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: Yav32x1XgmmblYpgu4vLPXKBa
-📤 Final message_ids: ['Yav32x1XgmmblYpgu4vLPXKBa']
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Ai02gpwdF1N46LWw4UjSGVWHp', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-11-12T05:44:57.934Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: Ai02gpwdF1N46LWw4UjSGVWHp
+📤 Final message_ids: ['Ai02gpwdF1N46LWw4UjSGVWHp']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
 
@@ -199,21 +215,21 @@ Checking interactive list - has description: False, has row_texts: False, row_te
 
 🔧 Handling expert message for: 919739811075
 🔧 Expert user_id: d7022499fc5fbcd34df184209477a79f
-Last active duration 752.861728
+Last active duration 886.584982
 Cached False
 🔧 Expert is_active_user: True
 🔘 Sending interactive button to active expert
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
 📤 Sending 1 requests
-📤 Request 1: {'to_contact': '919739811075', 'type': 'interactive', 'interactive': {'type': 'button', 'body': {'text': "*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n\n*Question:* whatis cancer again?\n*Answer:* Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.\n\nIs the answer correct?"}, 'action': {'buttons': [{'type': 'reply', 'reply': {'id': '9d538364-54f6-4465-b46d-9387cd829a8a', 'title': 'Yes'}}, {'type': 'reply', 'reply': {'id': '298584ad-61d7-4e48-9c0f-151f53c85a6d', 'title': 'No'}}]}}}
+📤 Request 1: {'to_contact': '919739811075', 'type': 'interactive', 'interactive': {'type': 'button', 'body': {'text': '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15\n\n*Question:* Can I take a bath after radiotherapy?\n*Answer:* Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.\n\nIs the answer correct?'}, 'action': {'buttons': [{'type': 'reply', 'reply': {'id': '5107f97b-daa9-48ba-a8e3-8e496107c369', 'title': 'Yes'}}, {'type': 'reply', 'reply': {'id': '5fd6777b-8e5e-42d3-aa23-fe0c328892a5', 'title': 'No'}}]}}}
 📤 Got 1 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'bSuGY19YSkuRX6nHGoPgwhHKX', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-05T05:33:50.447Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: bSuGY19YSkuRX6nHGoPgwhHKX
-📤 Final message_ids: ['bSuGY19YSkuRX6nHGoPgwhHKX']
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Tqkv8kmlpk03K6zz9M5uDUPmo', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-12T05:44:58.430Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: Tqkv8kmlpk03K6zz9M5uDUPmo
+📤 Final message_ids: ['Tqkv8kmlpk03K6zz9M5uDUPmo']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
-responses [{'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'bSuGY19YSkuRX6nHGoPgwhHKX', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-05T05:33:50.447Z', 'status': 'processing'}]}]
+responses [{'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Tqkv8kmlpk03K6zz9M5uDUPmo', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-12T05:44:58.430Z', 'status': 'processing'}]}]
 📌 Skipping emoji reaction (emoji is None)
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
@@ -225,59 +241,68 @@ responses [{'status': True, 'message': 'Messages queued successfully', 'data': [
 ✅ Sent 2 user messages and expert verifier message!
 ✅ Response sent successfully!
 🔍 CREATE_CONV DEBUG:
-   byoeb_user_message.message_context.message_id: 6881e6f7-2a8c-48e0-b9b5-1bcfdfdd86a4
-   byoeb_user_message.reply_context.reply_id: MLvW21NqBlyoyhTgYqVkOF0r5
-🔗 REPLY_CONTEXT_FIX: Using reply_context.reply_id as original user question ID: MLvW21NqBlyoyhTgYqVkOF0r5
-🔗 REPLY_CONTEXT_FIX: Bot message 1 reply_id set to: MLvW21NqBlyoyhTgYqVkOF0r5 (QikChat ID: gNGCoobKZzdbkQJujopLMYfqF)
-🔗 REPLY_CONTEXT_FIX: Bot message 2 reply_id set to: MLvW21NqBlyoyhTgYqVkOF0r5 (QikChat ID: Yav32x1XgmmblYpgu4vLPXKBa)
+   byoeb_user_message.message_context.message_id: 3e12905a-2701-4542-ba73-a21e8bc2dc7d
+   byoeb_user_message.reply_context.reply_id: D2ZWG01Xhb3gdvlj5SZd3IUqO
+🔗 REPLY_CONTEXT_FIX: Using reply_context.reply_id as original user question ID: D2ZWG01Xhb3gdvlj5SZd3IUqO
+🎵 AUDIO_URL_FIX: Using original message 1 additional_info
+🔗 REPLY_CONTEXT_FIX: Bot message 1 reply_id set to: D2ZWG01Xhb3gdvlj5SZd3IUqO (QikChat ID: WN3euHgFQNd2u1jx4Nhopcj4e)
+🎵 AUDIO_URL_FIX: Using original message 2 additional_info
+🎵 AUDIO_URL_FIX: Found audio_url in original message: https://smartkcstorage1.blob.core.windows.net/onco...
+🔗 REPLY_CONTEXT_FIX: Bot message 2 reply_id set to: D2ZWG01Xhb3gdvlj5SZd3IUqO (QikChat ID: Ai02gpwdF1N46LWw4UjSGVWHp)
 🔧 EXPERT MESSAGE ID DEBUG:
-   Original expert ID: b89fd2ba-7846-4e23-8717-3fc6fa849481
+   Original expert ID: 02d4da59-ee89-4c56-bf91-1ded14c11380
    Expert responses count: 1
-   First expert response: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'bSuGY19YSkuRX6nHGoPgwhHKX', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-05T05:33:50.447Z', 'status': 'processing'}]}
+   First expert response: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Tqkv8kmlpk03K6zz9M5uDUPmo', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-12T05:44:58.430Z', 'status': 'processing'}]}
+🧹 FILTER_DUPLICATES: Before filtering - 2 entries in messages_context
+🧹 FILTER_DUPLICATES: Keeping entry: 694d16d8-bd72-4f3c-8d34-f04b0e88fca7 (UUID: True, Corrected: False) 
+🧹 FILTER_DUPLICATES: Keeping entry: bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19 (UUID: True, Corrected: False) 
+🧹 FILTER_DUPLICATES: After filtering - 2 entries remaining
 🔧 CREATE_CROSS_CONV: Processing 1 expert responses
-🔧 CREATE_CROSS_CONV: Expert response 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'bSuGY19YSkuRX6nHGoPgwhHKX', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-05T05:33:50.447Z', 'status': 'processing'}]}
+🔧 CREATE_CROSS_CONV: Expert response 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Tqkv8kmlpk03K6zz9M5uDUPmo', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-12T05:44:58.430Z', 'status': 'processing'}]}
 🔧 CREATE_CROSS_CONV: Top-level message ID: None
 🔧 CREATE_CROSS_CONV: Checking data array with 1 items
-🔧 CREATE_CROSS_CONV: Found message ID in data[0]: bSuGY19YSkuRX6nHGoPgwhHKX
-🔧 CREATE_CROSS_CONV: Final extracted expert message ID: bSuGY19YSkuRX6nHGoPgwhHKX
-🔧 CREATE_CROSS_CONV: Original expert message ID: b89fd2ba-7846-4e23-8717-3fc6fa849481
-🔧 CREATE_CROSS_CONV: Updated expert message ID: b89fd2ba-7846-4e23-8717-3fc6fa849481 -> bSuGY19YSkuRX6nHGoPgwhHKX
-🔧 CREATE_CROSS_CONV: Expert message will be stored with Qikchat ID: bSuGY19YSkuRX6nHGoPgwhHKX
+🔧 CREATE_CROSS_CONV: Found message ID in data[0]: Tqkv8kmlpk03K6zz9M5uDUPmo
+🔧 CREATE_CROSS_CONV: Final extracted expert message ID: Tqkv8kmlpk03K6zz9M5uDUPmo
+🔧 CREATE_CROSS_CONV: Original expert message ID: 02d4da59-ee89-4c56-bf91-1ded14c11380
+🔧 CREATE_CROSS_CONV: Updated expert message ID: 02d4da59-ee89-4c56-bf91-1ded14c11380 -> Tqkv8kmlpk03K6zz9M5uDUPmo
+🔧 CREATE_CROSS_CONV: Expert message will be stored with Qikchat ID: Tqkv8kmlpk03K6zz9M5uDUPmo
 🔧 CREATE_CROSS_CONV: Returning 3 messages for database storage
-   Message 1: ID=b8d87e42-b55c-4399-b042-fc8c25ef56b7, Type=interactive_list_reply, Text='...'
-   Message 2: ID=deab52be-630e-4440-a126-dd4d637bc8a0, Type=interactive_list_reply, Text='...'
-   Message 3: ID=bSuGY19YSkuRX6nHGoPgwhHKX, Type=interactive_button_reply, Text='*Patient Info*: Akshat Sanghvi, Age: 21, Gender: M...'
-   Expert ID after create_cross_conv: bSuGY19YSkuRX6nHGoPgwhHKX
+   Message 1: ID=694d16d8-bd72-4f3c-8d34-f04b0e88fca7, Type=interactive_list_reply, Text='...'
+   Message 2: ID=bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19, Type=interactive_list_reply, Text='...'
+   Message 3: ID=Tqkv8kmlpk03K6zz9M5uDUPmo, Type=interactive_button_reply, Text='*Patient Info*: Akshat Sanghvi, Age: 21, Gender: M...'
+   Expert ID after create_cross_conv: Tqkv8kmlpk03K6zz9M5uDUPmo
    ID changed: True
-   ℹ️ Expert message will be stored in database with correct QikChat ID: bSuGY19YSkuRX6nHGoPgwhHKX
-📎 Using original message ID from reply context: MLvW21NqBlyoyhTgYqVkOF0r5
+   ℹ️ Expert message will be stored in database with correct QikChat ID: Tqkv8kmlpk03K6zz9M5uDUPmo       
+🔍 CLASSIFICATION_FIX: Found original user message with ID D2ZWG01Xhb3gdvlj5SZd3IUqO
+🔍 CLASSIFICATION_FIX: Using original user message with preserved classification
+📎 Using original message ID from reply context: D2ZWG01Xhb3gdvlj5SZd3IUqO
 🔧 Created USER_TO_BOT message:
-   ID: MLvW21NqBlyoyhTgYqVkOF0r5
-   Text: 'whatis cancer again?...'
+   ID: D2ZWG01Xhb3gdvlj5SZd3IUqO
+   Text: 'Can I take a bath after radiotherapy?...'
 
 === USER HANDLER MESSAGE STORAGE DEBUG ===
 📊 Total conversations to store: 6
-  1. ID: MLvW21NqBlyoyhTgYqVkOF0r5
+  1. ID: D2ZWG01Xhb3gdvlj5SZd3IUqO
      Category: byoebuser_to_bot
-     Type: interactive_list_reply
-     Text: 'whatis cancer again?...'
-  2. ID: gNGCoobKZzdbkQJujopLMYfqF
+     Type: regular_text
+     Text: 'Can I take a bath after radiotherapy?...'
+  2. ID: WN3euHgFQNd2u1jx4Nhopcj4e
      Category: bot_to_byoebuser_response
      Type: interactive_list_reply
      Text: 'Let me check with a KMC doctor and get back to you...'
-  3. ID: Yav32x1XgmmblYpgu4vLPXKBa
+  3. ID: Ai02gpwdF1N46LWw4UjSGVWHp
      Category: bot_to_byoebuser_response
-     Type: interactive_list_reply
-     Text: 'Let me check with a KMC doctor and get back to you...'
-  4. ID: b8d87e42-b55c-4399-b042-fc8c25ef56b7
+     Type: regular_audio
+     Text: '...'
+  4. ID: 694d16d8-bd72-4f3c-8d34-f04b0e88fca7
      Category: None
      Type: interactive_list_reply
      Text: '...'
-  5. ID: deab52be-630e-4440-a126-dd4d637bc8a0
+  5. ID: bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19
      Category: None
      Type: interactive_list_reply
      Text: '...'
-  6. ID: bSuGY19YSkuRX6nHGoPgwhHKX
+  6. ID: Tqkv8kmlpk03K6zz9M5uDUPmo
      Category: bot_to_byoebexpert_verification
      Type: interactive_button_reply
      Text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: M...'
@@ -285,294 +310,318 @@ responses [{'status': True, 'message': 'Messages queued successfully', 'data': [
 
 🔍 MESSAGE_CREATE_QUERIES: Processing 6 messages for database storage
 🔍 MESSAGE_CREATE_QUERIES: Message 1
-   Message ID: MLvW21NqBlyoyhTgYqVkOF0r5
-   Message Type: interactive_list_reply
-   Conversation Thread ID: None
+   Message ID: D2ZWG01Xhb3gdvlj5SZd3IUqO
+   Message Type: regular_text
+   Message Class: medical
    Is Expert Verification: False
-   Text Preview: whatis cancer again?...
+   QikChat Audio ID: None
+   Text Preview: Can I take a bath after radiotherapy?...
 🔍 MESSAGE_CREATE_QUERIES: Message 2
-   Message ID: gNGCoobKZzdbkQJujopLMYfqF
+   Message ID: WN3euHgFQNd2u1jx4Nhopcj4e
    Message Type: interactive_list_reply
-   Conversation Thread ID: None
+   Message Class: Not classified
    Is Expert Verification: False
-   Text Preview: Let me check with a KMC doctor and get back to you with a verified answer. Until...
+   QikChat Audio ID: None
+   Text Preview: Let me check with a KMC doctor and get back to you with a verified answer. Until...     
 🔍 MESSAGE_CREATE_QUERIES: Message 3
-   Message ID: Yav32x1XgmmblYpgu4vLPXKBa
-   Message Type: interactive_list_reply
-   Conversation Thread ID: None
-   Is Expert Verification: False
-   Text Preview: Let me check with a KMC doctor and get back to you with a verified answer. Until...
+   Message ID: Ai02gpwdF1N46LWw4UjSGVWHp
+   Message Type: regular_audio
+   Message Class: Not classified
+   Is Expert Verification:
+   QikChat Audio ID: None
+   Text Preview: ...
 🔍 MESSAGE_CREATE_QUERIES: Message 4
-   Message ID: b8d87e42-b55c-4399-b042-fc8c25ef56b7
+   Message ID: 694d16d8-bd72-4f3c-8d34-f04b0e88fca7
    Message Type: interactive_list_reply
-   Conversation Thread ID: None
+   Message Class: Not classified
    Is Expert Verification: None
+   QikChat Audio ID: None
    Text Preview: ...
 🔍 MESSAGE_CREATE_QUERIES: Message 5
-   Message ID: deab52be-630e-4440-a126-dd4d637bc8a0
+   Message ID: bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19
    Message Type: interactive_list_reply
-   Conversation Thread ID: None
+   Message Class: Not classified
    Is Expert Verification: None
+   QikChat Audio ID: None
    Text Preview: ...
 🔍 MESSAGE_CREATE_QUERIES: Message 6
-   Message ID: bSuGY19YSkuRX6nHGoPgwhHKX
+   Message ID: Tqkv8kmlpk03K6zz9M5uDUPmo
    Message Type: interactive_button_reply
-   Conversation Thread ID: None
+   Message Class: Not classified
    Is Expert Verification: True
+   QikChat Audio ID: None
    Text Preview: *Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
 
 *Questio...
 🔍 MESSAGE_CREATE_QUERIES: Generated 6 database create queries
-Saving conversation history: Q: whatis cancer again? | A: Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ...      
+🔍 FINAL_QUERIES_DEBUG: About to return 6 queries:
+   Query 1: ID=D2ZWG01Xhb3gdvlj5SZd3IUqO, has_text=True, has_audio=False
+   Query 2: ID=WN3euHgFQNd2u1jx4Nhopcj4e, has_text=True, has_audio=False
+   Query 3: ID=Ai02gpwdF1N46LWw4UjSGVWHp, has_text=False, has_audio=True
+   Query 4: ID=694d16d8-bd72-4f3c-8d34-f04b0e88fca7, has_text=False, has_audio=False
+   Query 5: ID=bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19, has_text=False, has_audio=False
+   Query 6: ID=Tqkv8kmlpk03K6zz9M5uDUPmo, has_text=True, has_audio=False
+Saving conversation history: Q: Can I take a bath after radiotherapy? | A: Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ...
 🔍 PROCESSING RESULTS: Got 1 results from handlers
 ✅ Result 0: MSG_CREATE=6, MSG_UPDATE=0, USER_CREATE=0, USER_UPDATE=1
 Executing database queries - User updates: 1, Message creates: 6
 🔍 EXECUTE_QUERIES: Starting execution with queries: ['create', 'update']
 🔍 EXECUTE_QUERIES: Executing 6 CREATE operations
-   CREATE 1: Message ID = MLvW21NqBlyoyhTgYqVkOF0r5
-   CREATE 2: Message ID = gNGCoobKZzdbkQJujopLMYfqF
-   CREATE 3: Message ID = Yav32x1XgmmblYpgu4vLPXKBa
-   CREATE 4: Message ID = b8d87e42-b55c-4399-b042-fc8c25ef56b7
-   CREATE 5: Message ID = deab52be-630e-4440-a126-dd4d637bc8a0
-   CREATE 6: Message ID = bSuGY19YSkuRX6nHGoPgwhHKX
+   CREATE 1: Message ID = D2ZWG01Xhb3gdvlj5SZd3IUqO
+   CREATE 2: Message ID = WN3euHgFQNd2u1jx4Nhopcj4e
+   CREATE 3: Message ID = Ai02gpwdF1N46LWw4UjSGVWHp
+   CREATE 4: Message ID = 694d16d8-bd72-4f3c-8d34-f04b0e88fca7
+   CREATE 5: Message ID = bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19
+   CREATE 6: Message ID = Tqkv8kmlpk03K6zz9M5uDUPmo
 ✅ EXECUTE_QUERIES: CREATE operations completed successfully
-   Result: (['MLvW21NqBlyoyhTgYqVkOF0r5', 'gNGCoobKZzdbkQJujopLMYfqF', 'Yav32x1XgmmblYpgu4vLPXKBa', 'b8d87e42-b55c-4399-b042-fc8c25ef56b7', 'deab52be-630e-4440-a126-dd4d637bc8a0', 'bSuGY19YSkuRX6nHGoPgwhHKX'], None)
-Database operations completed in 0.68 seconds
+   Result: (['D2ZWG01Xhb3gdvlj5SZd3IUqO', 'WN3euHgFQNd2u1jx4Nhopcj4e', 'Ai02gpwdF1N46LWw4UjSGVWHp', '694d16d8-bd72-4f3c-8d34-f04b0e88fca7', 'bdd39cf6-7d37-44d7-b1a0-1cc5e011dc19', 'Tqkv8kmlpk03K6zz9M5uDUPmo'], None)
+Database operations completed in 0.64 seconds
 hi there
 DEBUG PRODUCER: Message ID in message: None
-DEBUG PRODUCER: Payload ID: gOkOmShezg2YkfSGa0zHYm1kR
-DEBUG PRODUCER: Using payload ID as fallback: gOkOmShezg2YkfSGa0zHYm1kR
+DEBUG PRODUCER: Payload ID: CvJH7zUfOU3w4ZRS226y8bs9s
+DEBUG PRODUCER: Using payload ID as fallback: CvJH7zUfOU3w4ZRS226y8bs9s
 
 === QIKCHAT MESSAGE CONVERSION DEBUG ===
 📥 Converting message: {
   "from": "919739811075",
-  "timestamp": "2025-11-05T05:34:02.000Z",
+  "timestamp": "2025-11-12T05:45:06.000Z",
   "interactive": {
     "type": "button_reply",
     "button_reply": {
-      "id": "9d538364-54f6-4465-b46d-9387cd829a8a",
-      "title": "Yes"
+      "id": "5fd6777b-8e5e-42d3-aa23-fe0c328892a5",
+      "title": "No"
     }
   },
   "type": "interactive",
   "context": {
-    "messageId": "bSuGY19YSkuRX6nHGoPgwhHKX"
+    "messageId": "Tqkv8kmlpk03K6zz9M5uDUPmo"
   },
-  "id": "gOkOmShezg2YkfSGa0zHYm1kR"
+  "id": "CvJH7zUfOU3w4ZRS226y8bs9s"
 }
 📝 Detected message type: interactive
 🔘 Converting as interactive message
-🔍 Interactive context data found: {'messageId': 'bSuGY19YSkuRX6nHGoPgwhHKX'}
-🔗 INTERACTIVE REPLY CONTEXT FOUND: reply_to_message_id = bSuGY19YSkuRX6nHGoPgwhHKX
+🔍 Interactive context data found: {'messageId': 'Tqkv8kmlpk03K6zz9M5uDUPmo'}
+🔗 INTERACTIVE REPLY CONTEXT FOUND: reply_to_message_id = Tqkv8kmlpk03K6zz9M5uDUPmo
 ✅ Interactive conversion successful
-   - Reply ID: bSuGY19YSkuRX6nHGoPgwhHKX
+   - Reply ID: Tqkv8kmlpk03K6zz9M5uDUPmo
 === END QIKCHAT MESSAGE CONVERSION DEBUG ===
 
+INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
 [DEBUG] Looking up users by phone_numbers: ['919739811075']
 [DEBUG] get_users_by_phone_numbers called with phone_numbers: ['919739811075']
 [DEBUG] Using collection: 'users'
-[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': 'd7022499fc5fbcd34df184209477a79f', 'User': {'user_id': 'd7022499fc5fbcd34df184209477a79f', 'user_name': None, 'user_location': {}, 'user_language': 'en', 'user_type': 'byoebexpert', 'phone_number_id': '919739811075', 'test_user': False, 'experts': {}, 'audience': ['918123273694', '916352927215', '918375066113', '918861000105'], 'patient_details': {}, 'created_timestamp': 1759916945, 'activity_timestamp': 1762320078, 'last_conversations': []}, 'timestamp': '1759916945'}]
+[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': 'd7022499fc5fbcd34df184209477a79f', 'User': {'user_id': 'd7022499fc5fbcd34df184209477a79f', 'user_name': None, 'user_location': {}, 'user_language': 'en', 'user_type': 'byoebexpert', 'phone_number_id': '919739811075', 'test_user': False, 'experts': {}, 'audience': ['918375066113', '918123273694', '918861000105', '916352927215'], 'patient_details': {}, 'created_timestamp': 1759916945, 'activity_timestamp': 1762925411, 'last_conversations': []}, 'timestamp': '1759916945'}]
 [DEBUG] Retrieved user by phone - user_id: 'd7022499fc5fbcd34df184209477a79f', phone_number_id: '919739811075', user_name: 'None', conversations: 0
 🔍 GET_BOT_MESSAGES: Database returned 1 results
 ✅ GET_BOT_MESSAGES: Found matching messages
-   Found 1: ID=bSuGY19YSkuRX6nHGoPgwhHKX
-🤖 Bot message 0: ID=bSuGY19YSkuRX6nHGoPgwhHKX
+   Found 1: ID=Tqkv8kmlpk03K6zz9M5uDUPmo
+🤖 Bot message 0: ID=Tqkv8kmlpk03K6zz9M5uDUPmo
 [DEBUG] Looking for user with phone_number_id: '919739811075' in 1 retrieved users
 [DEBUG] Found existing user with user_id: 'd7022499fc5fbcd34df184209477a79f', user_name: 'None', phone_number_id: '919739811075', conversations: 0
-� Expert message debug - reply_id: bSuGY19YSkuRX6nHGoPgwhHKX, bot_message found: True
-🔍 Reply context exists: reply_id=bSuGY19YSkuRX6nHGoPgwhHKX
+� Expert message debug - reply_id: Tqkv8kmlpk03K6zz9M5uDUPmo, bot_message found: True
+🔍 Reply context exists: reply_id=Tqkv8kmlpk03K6zz9M5uDUPmo
 🔍 PROCESSING MESSAGE: Category=('byoebexpert_to_bot',), UserType=byoebexpert
-🔍 Message Text: Yes
+🔍 Message Text: No
 🔍 Added EXPERT conversation to processing queue
 
 === EXPERT MESSAGE CONSUMER DEBUG ===
 👨‍⚕️ Processing expert message from: 919739811075
-💬 Message text: 'Yes'
+💬 Message text: 'No'
 📝 Message type: interactive_button_reply
-🔗 Reply ID: bSuGY19YSkuRX6nHGoPgwhHKX
+🔗 Reply ID: Tqkv8kmlpk03K6zz9M5uDUPmo
 🔗 Reply additional info: {'verification_status': 'pending'}
 === END EXPERT MESSAGE CONSUMER DEBUG ===
 
+Translation skipped - same language
 
 === EXPERT GENERATE RESPONSE DEBUG ===
 📧 Processing expert message from: 919739811075
-💬 Message text: 'Yes'
+💬 Message text: 'No'
 📝 Message type: interactive_button_reply
 🔗 Reply context exists: True
-🔗 Reply ID: bSuGY19YSkuRX6nHGoPgwhHKX
+🔗 Reply ID: Tqkv8kmlpk03K6zz9M5uDUPmo
 🔗 Reply message category: bot_to_byoebexpert_verification
 🔗 Reply additional_info keys: ['verification_status']
 🔗 Verification status: pending
-✅ Branch: Expert clicked YES - sending approved answer to user and thank you to expert
-🔧 DEBUG: Original verification text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
-
-*Question:* whatis cancer again?
-*Answer:* Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.
-
-Is the answer correct?'
-🔧 DEBUG: Parsed verification message: {}
-❌ ERROR: Bot_Answer not found in parsed message. Available keys: []
-🔧 DEBUG: Attempting alternative parsing...
-🔧 DEBUG: Alternative parsed message: {'Question': '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15', 'Bot_Answer': "*Question:* whatis cancer again?\n*Answer:* Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support."}
-🔧 DEBUG: Final extracted question: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15' bot_answer: '*Question:* whatis cancer again?
-*Answer:* Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.'
-🔧 DEBUG: Expert thank you message: 'Thank you for verifiying the answer.'
-🔧 DEBUG: Created expert message with text: 'Thank you for verifiying the answer.'
-Translating bot answer to user's language: en
-🔧 SPEECH DEBUG - SUCCESS: Generated 362880 bytes of audio
-🔧 TTS DEBUG - Received audio_bytes: <class 'bytes'>, length: 362880
-🔧 DEBUG: Audio message generated successfully for YES flow with SAS URL
-Last active duration 26.235185
-Cached False
-🔧 User 002 is_active_user: True
-🔧 DEBUG: Using last message in conversation context: deab52be-630e-4440-a126-dd4d637bc8a0
-🔧 DEBUG: Last message category: 'None'
-🔧 __create_user_reply_context DEBUG: status=verified, cross_conv_message has reply_context=True
-🔧 __create_user_reply_context DEBUG: cross_conv_message.reply_context.reply_id=MLvW21NqBlyoyhTgYqVkOF0r5
-🔧 __create_user_reply_context DEBUG: additional_info exists=False
-🔧 __create_user_reply_context DEBUG: additional_info is None!
-🔧 __create_user_reply_context DEBUG: Checking verified condition:
-  - status == constants.VERIFIED: True (status='verified', VERIFIED='verified')
-  - reply_context is not None: True
-  - additional_info is not None: False
-🔧 __create_user_reply_context DEBUG: Using verified flow, reply_id set to: MLvW21NqBlyoyhTgYqVkOF0r5
-🔧 __create_user_reply_context DEBUG: Final reply_id being returned: MLvW21NqBlyoyhTgYqVkOF0r5
-🔧 DEBUG: Created reply_context with reply_id: MLvW21NqBlyoyhTgYqVkOF0r5
-🔘 User is active, will send regular message through normal flow
-🔧 DEBUG: Created user message with bot_answer: '*Question:* whatis cancer again?
-*Answer:* Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support.'
-🔧 Including original expert message for storage: ID=gOkOmShezg2YkfSGa0zHYm1kR
+❌ Branch: Expert clicked NO - asking for correction, notifying user
+🔧 DEBUG: About to create expert correction message
+🔧 DEBUG: EXPERT_ASK_FOR_CORRECTION = Noted. Please provide the correct answer. Reply by tagging the original verification message
+✅ DEBUG: Expert message created successfully: <class 'list'>
+🔧 Including original expert message for storage: ID=CvJH7zUfOU3w4ZRS226y8bs9s
 🔧 Original expert message category: ('byoebexpert_to_bot',)
-📤 Generated messages: 1 user, 1 expert
+📤 Generated messages: 0 user, 1 expert
 === END EXPERT GENERATE RESPONSE DEBUG ===
 
 
 === EXPERT SEND RESPONSE DEBUG ===
-📨 Processing 4 messages in send handler
-📨 Message 1: user_type='byoebuser', category='bot_to_byoebuser_response'
-📨 Message 2: user_type='byoebexpert', category='bot_to_byoebexpert'
-📨 Message 3: user_type='None', category='read_receipt'
-📨 Message 4: user_type='byoebexpert', category='('byoebexpert_to_bot',)'
-📨 After filtering: 1 read receipts, 1 user messages, 2 expert messages
+📨 Processing 3 messages in send handler
+📨 Message 1: user_type='byoebexpert', category='bot_to_byoebexpert'
+📨 Message 2: user_type='None', category='read_receipt'
+📨 Message 3: user_type='byoebexpert', category='('byoebexpert_to_bot',)'
+📨 After filtering: 1 read receipts, 0 user messages, 2 expert messages
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
 📤 Sending 1 requests
-📤 Request 1: {'to_contact': '919739811075', 'type': 'text', 'text': {'body': 'Thank you for verifiying the answer.'}, 'context': {'message_id': 'bSuGY19YSkuRX6nHGoPgwhHKX'}}
+📤 Request 1: {'to_contact': '919739811075', 'type': 'text', 'text': {'body': 'Noted. Please provide the correct answer. Reply by tagging the original verification message'}, 'context': {'message_id': 'Tqkv8kmlpk03K6zz9M5uDUPmo'}}
 📤 Got 1 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'K5XUxm1MMQgXu0LgYPjBueFKb', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-05T05:34:16.836Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: K5XUxm1MMQgXu0LgYPjBueFKb
-📤 Final message_ids: ['K5XUxm1MMQgXu0LgYPjBueFKb']
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'OzhlI1hS042iZe9XeQycVEf7P', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-11-12T05:45:12.210Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: OzhlI1hS042iZe9XeQycVEf7P
+📤 Final message_ids: ['OzhlI1hS042iZe9XeQycVEf7P']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
-📨 Sending 1 user messages
-📤 __handle_user: Processing 1 user messages
-🔧 __modify_user_messages_context: Processing 1 messages
-🔧 No audio messages found, fixing reply contexts for user messages
-🔧 Original reply_id: MLvW21NqBlyoyhTgYqVkOF0r5
-🔧 Reply_id already looks like valid QikChat message ID, keeping it: MLvW21NqBlyoyhTgYqVkOF0r5
-📤 After modification: 1 messages to send
-📤 Preparing request for message 1/1
-📤 Message type: regular_text
-📤 Message source text length: 387
-📤 Has reply_context: True
-📤 Reply ID: MLvW21NqBlyoyhTgYqVkOF0r5
-Checking interactive list - has description: False, has row_texts: False, row_texts not None: False, result: False
-🎵 Preparing audio message request (async)...
-🎵 Using audio URL: https://smartkcstorage1.blob.core.windows.net/onco...
-🎵 Audio message request prepared
-📤 Successfully prepared 2 requests for message 1
-
-=== QIKCHAT SEND_REQUESTS DEBUG ===
-📤 Sending 2 requests
-📤 Request 1: {'to_contact': '916352927215', 'type': 'text', 'text': {'body': "*Question:* whatis cancer again?\n*Answer:* Cancer is a disease where some cells in the body grow uncontrollably and lose the ability to stop multiplying. This abnormal growth can cause local symptoms like pain, bleeding, or difficulty swallowing, and may spread to other parts of the body. It's important to consult with your healthcare provider for personalized information and support."}, 'context': {'message_id': 'MLvW21NqBlyoyhTgYqVkOF0r5'}}
-📤 Request 2: {'to_contact': '916352927215', 'type': 'audio', 'audio': {'link': 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_faaaed3665984b79bea2fa4640bcbbd4.mp3?st=2025-11-05T05%3A34%3A15Z&se=2025-11-05T06%3A34%3A15Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-11-05T05%3A34%3A15Z&ske=2025-11-05T06%3A34%3A15Z&sks=b&skv=2025-01-05&sig=U6oJRWFmZKNC24EdCSe7etR5T9AWkONegIEcd%2B8%2Bg6k%3D'}, 'context': {'message_id': 'MLvW21NqBlyoyhTgYqVkOF0r5'}}
-📤 Got 2 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': '5OxIsE9n3OaXw8PeJVLlrb6sS', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-11-05T05:34:17.014Z', 'status': 'processing'}]}
-📤 Result 2: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'GxxBXdhWgRB8C5BXVLfmcdsw5', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-11-05T05:34:17.011Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: 5OxIsE9n3OaXw8PeJVLlrb6sS
-📤 Extracted message_id for result 2: GxxBXdhWgRB8C5BXVLfmcdsw5
-📤 Final message_ids: ['5OxIsE9n3OaXw8PeJVLlrb6sS', 'GxxBXdhWgRB8C5BXVLfmcdsw5']
-=== END QIKCHAT SEND_REQUESTS DEBUG ===
-
-📤 Successfully sent message 1, got response: 2 items, message_id: ['5OxIsE9n3OaXw8PeJVLlrb6sS', 'GxxBXdhWgRB8C5BXVLfmcdsw5']
-🔧 FINAL_ANSWER_ID_FIX: Updating 1 message IDs with QikChat IDs
-🔧 FINAL_ANSWER_ID_FIX: Available QikChat IDs: ['5OxIsE9n3OaXw8PeJVLlrb6sS', 'GxxBXdhWgRB8C5BXVLfmcdsw5']
-🔧 FINAL_ANSWER_ID_FIX: Processing message 1
-   - Original ID: 145a563b-caeb-4cb6-b307-04dc131df3e7
-   - Has audio: True
-   - Message type: regular_text
-🔧 FINAL_ANSWER_ID_FIX: Text+Audio message detected
-   - Text QikChat ID: 5OxIsE9n3OaXw8PeJVLlrb6sS
-   - Audio QikChat ID: GxxBXdhWgRB8C5BXVLfmcdsw5
-🔧 FINAL_ANSWER_ID_FIX: Stored audio ID in additional_info: GxxBXdhWgRB8C5BXVLfmcdsw5
-🔧 FINAL_ANSWER_ID_FIX: Message 1 ID updated: 145a563b-caeb-4cb6-b307-04dc131df3e7 -> 5OxIsE9n3OaXw8PeJVLlrb6sS (text), audio ID: GxxBXdhWgRB8C5BXVLfmcdsw5
-📤 No emoji found, skipping final reaction
-🗄️ __prepare_db_queries: Preparing queries for 1 user messages and 2 expert messages
-🗄️ AUDIO_DEBUG: Checking 1 user messages for audio processing
-🗄️ AUDIO_DEBUG: User message 1: ID=5OxIsE9n3OaXw8PeJVLlrb6sS, has_audio=True
-🗄️ Added 1 user response messages for storage
+🔧 EXPERT_ID_FIX: Updating expert message ID: a9fd6d72-07ee-40ba-9818-b1154e67fcf1 -> OzhlI1hS042iZe9XeQycVEf7P
+🔄 Updating expert message ID in database: a9fd6d72-07ee-40ba-9818-b1154e67fcf1 -> OzhlI1hS042iZe9XeQycVEf7P
+🔄 UPDATE_MESSAGE_ID: Starting ID update process
+   Old ID: a9fd6d72-07ee-40ba-9818-b1154e67fcf1
+   New ID: OzhlI1hS042iZe9XeQycVEf7P
+🔄 UPDATE_MESSAGE_ID: Looking for document with old ID: a9fd6d72-07ee-40ba-9818-b1154e67fcf1
+❌ UPDATE_MESSAGE_ID: Message with ID a9fd6d72-07ee-40ba-9818-b1154e67fcf1 not found for update
+🔍 UPDATE_MESSAGE_ID: Checking if message exists in different format...
+❌ UPDATE_MESSAGE_ID: Message not found in nested structure either
+📨 No user messages to send
+🗄️ __prepare_db_queries: Preparing queries for 0 user messages and 2 expert messages
 🗄️ Added 2 expert messages for storage
 
 === EXPERT HANDLER MESSAGE STORAGE DEBUG ===
-📊 Total messages to store: 3
-  1. ID: 5OxIsE9n3OaXw8PeJVLlrb6sS
-     Category: bot_to_byoebuser_response
-     Type: regular_text
-     Has Audio: True
-     QikChat Audio ID: GxxBXdhWgRB8C5BXVLfmcdsw5
-     Text: '*Question:* whatis cancer again?
-*Answer:* Cancer ...'
-  2. ID: aef88871-214c-4b31-accd-1f61796e0ba2
+📊 Total messages to store: 2
+  1. ID: OzhlI1hS042iZe9XeQycVEf7P
      Category: bot_to_byoebexpert
      Type: regular_text
      Has Audio: None
-     Text: 'Thank you for verifiying the answer....'
-  3. ID: gOkOmShezg2YkfSGa0zHYm1kR
+     Text: 'Noted. Please provide the correct answer. Reply by...'
+  2. ID: CvJH7zUfOU3w4ZRS226y8bs9s
      Category: ('byoebexpert_to_bot',)
      Type: interactive_button_reply
      Has Audio: False
-     Text: 'Yes...'
+     Text: 'No...'
 === END EXPERT HANDLER DEBUG ===
 
-🔍 MESSAGE_CREATE_QUERIES: Processing 3 messages for database storage
+🔍 MESSAGE_CREATE_QUERIES: Processing 2 messages for database storage
 🔍 MESSAGE_CREATE_QUERIES: Message 1
-   Message ID: 5OxIsE9n3OaXw8PeJVLlrb6sS
+   Message ID: OzhlI1hS042iZe9XeQycVEf7P
    Message Type: regular_text
-   Conversation Thread ID: None
+   Message Class: Not classified
    Is Expert Verification: False
-   Text Preview: *Question:* whatis cancer again?
-*Answer:* Cancer is a disease where some cells ...
-🔍 MESSAGE_CREATE_QUERIES: Message 2
-   Message ID: aef88871-214c-4b31-accd-1f61796e0ba2
-   Message Type: regular_text
-   Conversation Thread ID: None
-   Is Expert Verification: False
-   Text Preview: Thank you for verifiying the answer....
-C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.11\Lib\site-packages\pydantic\main.py:463: UserWarning: Pydantic serializer warnings:  
+   QikChat Audio ID: None
+   Text Preview: Noted. Please provide the correct answer. Reply by tagging the original verifica...     
+C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.11\Lib\site-packages\pydantic\main.py:463: UserWarning: Pydantic serializer warnings:
   PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [input_value=('byoebexpert_to_bot',), input_type=tuple])
   return self.__pydantic_serializer__.to_python(
-🔍 MESSAGE_CREATE_QUERIES: Message 3
-   Message ID: gOkOmShezg2YkfSGa0zHYm1kR
+🔍 MESSAGE_CREATE_QUERIES: Message 2
+   Message ID: CvJH7zUfOU3w4ZRS226y8bs9s
    Message Type: interactive_button_reply
-   Conversation Thread ID: None
+   Message Class: Not classified
    Is Expert Verification: False
-   Text Preview: Yes...
-🔍 MESSAGE_CREATE_QUERIES: Generated 3 database create queries
-🗄️ Generated 3 CREATE queries
-🗄️ Calling correction_update_query
-🗄️ Calling verification_status_update_query
-🗄️ Generated 4 UPDATE queries
+   QikChat Audio ID: None
+   Text Preview: No...
+🔍 MESSAGE_CREATE_QUERIES: Generated 2 database create queries
+🔍 FINAL_QUERIES_DEBUG: About to return 2 queries:
+   Query 1: ID=OzhlI1hS042iZe9XeQycVEf7P, has_text=True, has_audio=False
+   Query 2: ID=CvJH7zUfOU3w4ZRS226y8bs9s, has_text=True, has_audio=False
+🗄️ Generated 2 CREATE queries
 🗄️ Database queries prepared successfully
 === END EXPERT SEND RESPONSE DEBUG ===
 
 🔍 PROCESSING RESULTS: Got 1 results from handlers
-✅ Result 0: MSG_CREATE=3, MSG_UPDATE=4, USER_CREATE=0, USER_UPDATE=1
-Executing database queries - User updates: 1, Message creates: 3
+✅ Result 0: MSG_CREATE=2, MSG_UPDATE=0, USER_CREATE=0, USER_UPDATE=1
+Executing database queries - User updates: 1, Message creates: 2
 🔍 EXECUTE_QUERIES: Starting execution with queries: ['create', 'update']
-🔍 EXECUTE_QUERIES: Executing 3 CREATE operations
-   CREATE 1: Message ID = 5OxIsE9n3OaXw8PeJVLlrb6sS
-   CREATE 2: Message ID = aef88871-214c-4b31-accd-1f61796e0ba2
-   CREATE 3: Message ID = gOkOmShezg2YkfSGa0zHYm1kR
+🔍 EXECUTE_QUERIES: Executing 2 CREATE operations
+   CREATE 1: Message ID = OzhlI1hS042iZe9XeQycVEf7P
+   CREATE 2: Message ID = CvJH7zUfOU3w4ZRS226y8bs9s
 ✅ EXECUTE_QUERIES: CREATE operations completed successfully
-   Result: (['5OxIsE9n3OaXw8PeJVLlrb6sS', 'aef88871-214c-4b31-accd-1f61796e0ba2', 'gOkOmShezg2YkfSGa0zHYm1kR'], None)
-Database operations completed in 0.79 seconds
+   Result: (['OzhlI1hS042iZe9XeQycVEf7P', 'CvJH7zUfOU3w4ZRS226y8bs9s'], None)
+Database operations completed in 0.62 seconds
+DEBUG PRODUCER: Payload ID: ZuzOBxR8Dt40xmfAM3BVabBGb
+DEBUG PRODUCER: Using payload ID as fallback: ZuzOBxR8Dt40xmfAM3BVabBGb
+
+=== QIKCHAT MESSAGE CONVERSION DEBUG ===
+📥 Converting message: {
+  "from": "919739811075",
+  "timestamp": "2025-11-12T05:45:15.000Z",
+  "text": {
+    "body": "no you cannot"
+  },
+  "type": "text",
+  "context": {
+    "messageId": "Tqkv8kmlpk03K6zz9M5uDUPmo"
+  },
+  "id": "ZuzOBxR8Dt40xmfAM3BVabBGb"
+}
+📝 Detected message type: text
+✅ Converting as regular message
+🔍 Context data found: {'messageId': 'Tqkv8kmlpk03K6zz9M5uDUPmo'}
+🔗 REPLY CONTEXT FOUND: reply_to_message_id = Tqkv8kmlpk03K6zz9M5uDUPmo
+=== NO MEDIA CONTEXT CREATED - message_audio is None ===
+   - Reply ID: Tqkv8kmlpk03K6zz9M5uDUPmo
+=== END QIKCHAT MESSAGE CONVERSION DEBUG ===
+
+INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
+[DEBUG] Looking up users by phone_numbers: ['919739811075']
+[DEBUG] get_users_by_phone_numbers called with phone_numbers: ['919739811075']
+[DEBUG] Using collection: 'users'
+[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': 'd7022499fc5fbcd34df184209477a79f', 'User': {'user_id': 'd7022499fc5fbcd34df184209477a79f', 'user_name': None, 'user_location': {}, 'user_language': 'en', 'user_type': 'byoebexpert', 'phone_number_id': '919739811075', 'test_user': False, 'experts': {}, 'audience': ['918375066113', '918123273694', '918861000105', '916352927215'], 'patient_details': {}, 'created_timestamp': 1759916945, 'activity_timestamp': 1762926312, 'last_conversations': []}, 'timestamp': '1759916945'}]
+[DEBUG] Retrieved user by phone - user_id: 'd7022499fc5fbcd34df184209477a79f', phone_number_id: '919739811075', user_name: 'None', conversations: 0
+🔍 GET_BOT_MESSAGES: Database returned 1 results
+✅ GET_BOT_MESSAGES: Found matching messages
+   Found 1: ID=Tqkv8kmlpk03K6zz9M5uDUPmo
+🤖 Bot message 0: ID=Tqkv8kmlpk03K6zz9M5uDUPmo
+[DEBUG] Looking for user with phone_number_id: '919739811075' in 1 retrieved users
+[DEBUG] Found existing user with user_id: 'd7022499fc5fbcd34df184209477a79f', user_name: 'None', phone_number_id: '919739811075', conversations: 0
+� Expert message debug - reply_id: Tqkv8kmlpk03K6zz9M5uDUPmo, bot_message found: True
+🔍 Reply context exists: reply_id=Tqkv8kmlpk03K6zz9M5uDUPmo
+🔍 PROCESSING MESSAGE: Category=('byoebexpert_to_bot',), UserType=byoebexpert
+🔍 Message Text: no you cannot
+🔍 Added EXPERT conversation to processing queue
+
+=== EXPERT MESSAGE CONSUMER DEBUG ===
+👨‍⚕️ Processing expert message from: 919739811075
+💬 Message text: 'no you cannot'
+📝 Message type: regular_text
+🔗 Reply ID: Tqkv8kmlpk03K6zz9M5uDUPmo
+🔗 Reply additional info: {'verification_status': 'pending'}
+=== END EXPERT MESSAGE CONSUMER DEBUG ===
+
+Translation skipped - same language
+
+=== EXPERT GENERATE RESPONSE DEBUG ===
+📧 Processing expert message from: 919739811075
+💬 Message text: 'no you cannot'
+📝 Message type: regular_text
+🔗 Reply context exists: True
+🔗 Reply ID: Tqkv8kmlpk03K6zz9M5uDUPmo
+🔗 Reply message category: bot_to_byoebexpert_verification
+🔗 Reply additional_info keys: ['verification_status']
+🔗 Verification status: pending
+🔄 Branch: Expert provided correction after clicking NO - generating corrected answer
+🔧 Original verification message: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
+
+*Question:* Can I take a bath after radiotherapy?
+*Answer:* Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.
+
+Is the answer correct?'
+🔧 Correction text: 'no you cannot'
+🔧 DEBUG: Original verification text for correction (after NO): '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
+
+*Question:* Can I take a bath after radiotherapy?
+*Answer:* Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.
+
+Is the answer correct?'
+🔧 DEBUG: Parsed verification message for correction (after NO): {'Question': 'Can I take a bath after radiotherapy?', 'Bot_Answer': 'Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.'}
+🔧 DEBUG: Final extracted for correction (after NO) - question: 'Can I take a bath after radiotherapy?', bot_answer: 'Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.'
+🔧 DEBUG: EXACT TEXT BEING CORRECTED BY LLM (after NO):
+     Question: 'Can I take a bath after radiotherapy?'
+     Original Bot Answer: 'Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.'
+     Expert Correction: 'no you cannot'
+     Final User Prompt to LLM: 'Following are the question, answer, and correction to the answer:        
+ Question: Can I take a bath after radiotherapy?
+ Answer: Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm or cold water and avoid using soap, oil, or creams on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific recommendations from your healthcare provider regarding skin care.
+ Experts Correction for the answer: no you cannot'
+🔧 LLM corrected response: 'No, you should avoid taking a bath immediately after radiotherapy. It's important to follow specific recommendations from your healthcare provider regarding skin care and bathing to ensure proper healing and avoid irritation in the treated area.'
+Last active duration 23.974783
+Cached False
+🔧 User 002 is_active_user: True
+🔘 User is active, will send regular text message False
+🔧 DEBUG: Expert approval case - preparing verified message
+Thread ID: 9596, Variable Address: 1903590223040, client address: 1903199034640
+🔧 DEBUG: Final message text: 'रेडियोथेरेपी के बाद तुरंत स्नान नहीं करना चाहिए। आपके स्वास्थ्य सेवा प्रदा             ाता से त्वचा की देखभाल और स...'
