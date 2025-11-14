@@ -43,3 +43,19 @@ Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurew
 
 
 [mongos] oncobotdb> db.messages.countDocuments({ $expr: { $gt: [ { $toDouble: "$timestamp" }, 1761801990 ] } })
+
+
+
+
+PATIENT ONBOARDING START
+
+
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "918549071301", "user_id": "00001", "user_name": "Gopala", "user_language": "kn", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1954-1-9", "gender": "Male", "age": 71 }, "experts": { "byoebexpert": ["917034432034"], "byoebexpert2": ["917022488975"] } }]'
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "917349170204", "user_id": "00002", "user_name": "Sukesha Naik", "user_language": "kn", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1982-1-1", "gender": "Male", "age": 43 }, "experts": { "byoebexpert": ["917034432034"], "byoebexpert2": ["917022488975"] } }]'
+
+
+Invoke-RestMethod -Uri "https://oncobot-h7fme6hue9f7buds.canadacentral-01.azurewebsites.net/register_users" -Method POST -ContentType "application/json" -Body '[{ "phone_number_id": "916361691731", "user_id": "00003", "user_name": "C S Shreekantappa", "user_language": "kn", "user_type": "byoebuser", "patient_details": { "date_of_birth": "1959-1-1", "gender": "Male", "age": 66 }, "experts": { "byoebexpert": ["917034432034"], "byoebexpert2": ["917022488975"] } }]'
+
+00004th onboarded using the form

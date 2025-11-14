@@ -1,0 +1,424 @@
+Conversation Analysis Report
+==================================================
+Generated: 2025-11-12 14:02:56
+Total conversations: 21
+
+CONVERSATION 1
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): who are you?
+Patient Message (English): who are you?
+Message Timestamp: 2025-11-12 13:53:09
+Message Modality: text
+Message/Query Class: small-talk
+Message Language: en
+Final Response (2025-11-12 13:53:09) to user: Question: who are you?
+Answer: I am an oncology assistant designed to provide educational support to cancer patients, particularly those undergoing radiotherapy. My purpose is to help answer questions related to your treatment and care, but I am not a substitute for direct communication with your healthcare provider. For specific medical advice, please consult with your doctor.
+Final Response (Indic): Question: who are you?
+Answer: I am an oncology assistant designed to provide educational support to cancer patients, particularly those undergoing radiotherapy. My purpose is to help answer questions related to your treatment and care, but I am not a substitute for direct communication with your healthcare provider. For specific medical advice, please consult with your doctor.
+Final Response Timestamp: 1762935789
+
+================================================================================
+
+CONVERSATION 2
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): where have you come from?
+Patient Message (English): where have you come from?
+Message Timestamp: 2025-11-12 13:53:18
+Message Modality: text
+Message/Query Class: incomprehensible
+Message Language: en
+Final Response (2025-11-12 13:53:18) to user: Question: where have you come from?
+Answer: I did not understand your question. Could you please rephrase or provide more details?
+Final Response (Indic): Question: where have you come from?
+Answer: I did not understand your question. Could you please rephrase or provide more details?
+Final Response Timestamp: 1762935798
+
+================================================================================
+
+CONVERSATION 3
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): can i take a bath after my radiotherapy?
+Patient Message (English): can i take a bath after my radiotherapy?
+Message Timestamp: 2025-11-12 13:53:36
+Message Modality: text
+Message/Query Class: medical
+Message Language: en
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): Yes
+Final Response (2025-11-12 13:54:14) to user: Question: can i take a bath after my radiotherapy?
+Answer: Yes, you can take a bath after your radiotherapy sessions. Use warm water and a mild, unscented soap, but avoid using soap on the treatment area. Be gentle with your skin, pat it dry with a soft towel, and avoid rubbing. Always follow any specific skin care instructions provided by your healthcare team. Consult with your healthcare provider for personalized advice.
+Final Response (Indic): Question: can i take a bath after my radiotherapy?
+Answer: Yes, you can take a bath after your radiotherapy sessions. Use warm water and a mild, unscented soap, but avoid using soap on the treatment area. Be gentle with your skin, pat it dry with a soft towel, and avoid rubbing. Always follow any specific skin care instructions provided by your healthcare team. Consult with your healthcare provider for personalized advice.
+Final Response Timestamp: 1762935854
+
+================================================================================
+
+CONVERSATION 4
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): can i take a bath before my radiotherapy?
+Patient Message (English): can i take a bath before my radiotherapy?
+Message Timestamp: 2025-11-12 13:53:48
+Message Modality: text
+Message/Query Class: medical
+Message Language: en
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): No
+Expert Feedback: No you cannot
+Final Response (2025-11-12 13:54:24) to user: Question: can i take a bath before my radiotherapy?
+Answer: No, you should not take a bath before your radiotherapy session.
+Final Response (Indic): Question: can i take a bath before my radiotherapy?
+Answer: No, you should not take a bath before your radiotherapy session.
+Final Response Timestamp: 1762935864
+
+================================================================================
+
+CONVERSATION 5
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): what are the side effects of radiothearpy?
+Patient Message (English): what are the side effects of radiothearpy?
+Message Timestamp: 2025-11-12 13:53:58
+Message Modality: text
+Message/Query Class: medical
+Message Language: en
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): Yes
+Final Response (2025-11-12 13:54:24) to user: Question: what are the side effects of radiothearpy?
+Answer: Radiation therapy can cause side effects due to damage to normal cells around the tumor. Common side effects include skin changes such as dryness, itching, peeling, and blistering, as well as fatigue. Depending on the treated area, other side effects may include diarrhea, sexual changes, hair loss, swelling, mouth problems, trouble swallowing, nausea, vomiting, and urinary or bladder changes. Most side effects improve within a few months after treatment ends. Always discuss any side effects with your doctor or nurse for proper management.
+Final Response (Indic): Question: what are the side effects of radiothearpy?
+Answer: Radiation therapy can cause side effects due to damage to normal cells around the tumor. Common side effects include skin changes such as dryness, itching, peeling, and blistering, as well as fatigue. Depending on the treated area, other side effects may include diarrhea, sexual changes, hair loss, swelling, mouth problems, trouble swallowing, nausea, vomiting, and urinary or bladder changes. Most side effects improve within a few months after treatment ends. Always discuss any side effects with your doctor or nurse for proper management.
+Final Response Timestamp: 1762935864
+
+================================================================================
+
+CONVERSATION 6
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): what is the weather today?
+Patient Message (English): what is the weather today?
+Message Timestamp: 2025-11-12 13:54:07
+Message Modality: text
+Message/Query Class: out-of-scope
+Message Language: en
+Final Response (2025-11-12 13:54:07) to user: Question: what is the weather today?
+Answer: This is outside the scope of my current knowledge. You can ask me any cancer related questions.
+Final Response (Indic): Question: what is the weather today?
+Answer: This is outside the scope of my current knowledge. You can ask me any cancer related questions.
+Final Response Timestamp: 1762935847
+
+================================================================================
+
+CONVERSATION 7
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): Can I take a bath after my radiation therapy?
+Patient Message (English): Can I take a bath after my radiation therapy?
+Message Timestamp: 2025-11-12 13:55:24
+Message Modality: audio
+Message/Query Class: medical
+Message Language: en
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): Yes
+Final Response (2025-11-12 13:55:54) to user: Question: Can I take a bath after my radiation therapy?
+Answer: Yes, you can take a bath after your radiation therapy, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or cream on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific instructions from your healthcare provider regarding skin care.
+Final Response (Indic): Question: Can I take a bath after my radiation therapy?
+Answer: Yes, you can take a bath after your radiation therapy, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or cream on the treated area. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific instructions from your healthcare provider regarding skin care.
+Final Response Timestamp: 1762935954
+
+================================================================================
+
+CONVERSATION 8
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): Who are you?
+Patient Message (English): Who are you?
+Message Timestamp: 2025-11-12 13:55:09
+Message Modality: audio
+Message/Query Class: small-talk
+Message Language: en
+Final Response (2025-11-12 13:55:09) to user: Question: Who are you?
+Answer: I am an oncology assistant designed to provide educational support and answer questions related to cancer and its treatments, particularly focusing on radiotherapy. While I can offer general guidance, I am not a substitute for your healthcare provider. For personalized medical advice, please consult your doctor.
+Final Response (Indic): Question: Who are you?
+Answer: I am an oncology assistant designed to provide educational support and answer questions related to cancer and its treatments, particularly focusing on radiotherapy. While I can offer general guidance, I am not a substitute for your healthcare provider. For personalized medical advice, please consult your doctor.
+Final Response Timestamp: 1762935909
+
+================================================================================
+
+CONVERSATION 9
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): What is radiotherapy in 10 words?
+Patient Message (English): What is radiotherapy in 10 words?
+Message Timestamp: 2025-11-12 13:55:25
+Message Modality: audio
+Message/Query Class: medical
+Message Language: en
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): Yes
+Final Response (2025-11-12 13:56:00) to user: Question: What is radiotherapy in 10 words?
+Answer: Radiotherapy uses high-energy X-rays to target and kill cancer cells.
+Final Response (Indic): Question: What is radiotherapy in 10 words?
+Answer: Radiotherapy uses high-energy X-rays to target and kill cancer cells.
+Final Response Timestamp: 1762935960
+
+================================================================================
+
+CONVERSATION 10
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): when is my appointment
+Patient Message (English): when is my appointment
+Message Timestamp: 2025-11-12 13:57:25
+Message Modality: text
+Message/Query Class: logistical
+Message Language: en
+Response Text (English): Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.
+
+================================================================================
+
+
+
+### LANGUAGE CHANGE TO HINDI
+
+
+
+CONVERSATION 11
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): tum kaun ho?
+Patient Message (English): Who are you?
+Message Timestamp: 2025-11-12 13:58:33
+Message Modality: text
+Message/Query Class: small-talk
+Message Language: hi
+Final Response (2025-11-12 13:58:33) to user: Question: Who are you?
+Answer: I am an oncology assistant designed to provide educational support and answer questions related to cancer and its treatments, particularly focusing on radiotherapy. While I can offer general guidance, I am not a substitute for your healthcare provider. For personalized medical advice, please consult with your doctor.
+Final Response (Indic): प्रश्न: आप कौन हैं?
+उत्तर: मैं एक ऑन्कोलॉजी सहायक हूँ, जो कैंसर और उसके उपचारों से संबंधित शैक्षिक समर्थन और प्रश्नों के उत्तर देने के लिए डिज़ाइन किया गया है, विशेष रूप से रेडियोथेरेपी पर ध्यान केंद्रित करते हुए। हालांकि मैं सामान्य मार्गदर्शन प्रदान कर सकता हूँ, मैं आपके स्वास्थ्य सेवा प्रदाता का विकल्प नहीं हूँ। व्यक्तिगत चिकित्सा सलाह के लिए, कृपया अपने डॉक्टर से परामर्श करें।
+Final Response Timestamp: 1762936113
+
+================================================================================
+
+CONVERSATION 12
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): kaha se aaye ho?
+Patient Message (English): Where have you come from?
+Message Timestamp: 2025-11-12 13:58:47
+Message Modality: text
+Message/Query Class: incomprehensible
+Message Language: hi
+Final Response (2025-11-12 13:58:47) to user: Question: Where have you come from?
+Answer: I did not understand your question. Could you please rephrase or provide more details?
+Final Response (Indic): प्रश्न: आप कहाँ से आए हैं?  
+उत्तर: मैं आपका प्रश्न समझ नहीं पाया। क्या आप कृपया इसे दोबारा कह सकते हैं या अधिक जानकारी दे सकते हैं?
+Final Response Timestamp: 1762936127
+
+================================================================================
+
+CONVERSATION 13
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): kyu ho?
+Patient Message (English): Why so?
+Message Timestamp: 2025-11-12 13:58:48
+Message Modality: text
+Message/Query Class: medical
+Message Language: hi
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।
+
+================================================================================
+
+CONVERSATION 14
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): आज का मौसम कैसा है?
+Patient Message (English): How is the weather today?
+Message Timestamp: 2025-11-12 13:59:00
+Message Modality: text
+Message/Query Class: out-of-scope
+Message Language: hi
+Final Response (2025-11-12 13:59:00) to user: Question: How is the weather today?
+Answer: This is outside the scope of my current knowledge. You can ask me any cancer related questions.
+Final Response (Indic): प्रश्न: आज मौसम कैसा है?
+उत्तर: यह मेरे वर्तमान ज्ञान के दायरे से बाहर है। आप मुझसे कैंसर से संबंधित कोई भी प्रश्न पूछ सकते हैं।
+Final Response Timestamp: 1762936140
+
+================================================================================
+
+CONVERSATION 15
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): मैं रेडियो थिरपी से पहले नहाँ सकता हूँ
+Patient Message (English): I can take a bath before radiotherapy.
+Message Timestamp: 2025-11-12 13:59:34
+Message Modality: audio
+Message/Query Class: medical
+Message Language: hi
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): No
+Expert Feedback: no that might harm you
+Final Response (2025-11-12 14:00:05) to user: Question: I can take a bath before radiotherapy.
+Answer: No, it is not recommended to take a bath before radiotherapy as it might harm you. Follow any specific guidelines provided by your healthcare provider regarding skin care during treatment.
+Final Response (Indic): प्रश्न: मैं रेडियोथेरेपी से पहले स्नान कर सकता हूँ।  
+उत्तर: नहीं, रेडियोथेरेपी से पहले स्नान करने की सलाह नहीं दी जाती है क्योंकि यह आपको नुकसान पहुँचा सकता है। उपचार के दौरान त्वचा की देखभाल के लिए अपने स्वास्थ्य सेवा प्रदाता द्वारा दिए गए किसी भी विशेष निर्देशों का पालन करें।
+Final Response Timestamp: 1762936205
+
+================================================================================
+
+CONVERSATION 16
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): क्या मैं रेडियोथेरेपी के बाद स्नान कर सकता हूँ?
+Patient Message (English): Can I take a bath after radiotherapy?
+Message Timestamp: 2025-11-12 13:59:17
+Message Modality: text
+Message/Query Class: medical
+Message Language: hi
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): Yes
+Final Response (2025-11-12 14:00:04) to user: Question: Can I take a bath after radiotherapy?
+Answer: Yes, you can take a bath after radiotherapy, but be gentle with the skin in the treatment area. Use lukewarm water and avoid using soap, oil, or cream on the treated area. Pat your skin dry with a soft towel instead of rubbing it. Always follow any specific instructions from your healthcare provider regarding skin care.
+Final Response (Indic): प्रश्न: क्या मैं रेडियोथेरेपी के बाद स्नान कर सकता हूँ?  
+उत्तर: हाँ, आप रेडियोथेरेपी के बाद स्नान कर सकते हैं, लेकिन उपचार क्षेत्र की त्वचा के साथ कोमल रहें। गुनगुने पानी का उपयोग करें और उपचारित क्षेत्र पर साबुन, तेल, या क्रीम का उपयोग करने से बचें। अपनी त्वचा को रगड़ने के बजाय एक नरम तौलिये से थपथपाकर सुखाएं। त्वचा की देखभाल के बारे में अपने स्वास्थ्य सेवा प्रदाता के किसी भी विशेष निर्देश का हमेशा पालन करें।
+Final Response Timestamp: 1762936204
+
+================================================================================
+
+CONVERSATION 17
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): तुमारा काम क्या है?
+Patient Message (English): What is your job?
+Message Timestamp: 2025-11-12 13:59:52
+Message Modality: audio
+Message/Query Class: incomprehensible
+Message Language: hi
+Final Response (2025-11-12 13:59:52) to user: Question: What is your job?
+Answer: I did not understand your question. Could you please rephrase or provide more details?
+Final Response (Indic): प्रश्न: आपका काम क्या है?
+उत्तर: मैं आपके प्रश्न को समझ नहीं पाया। कृपया इसे फिर से लिखें या अधिक जानकारी प्रदान करें।
+Final Response Timestamp: 1762936192
+
+================================================================================
+
+
+
+### LANGUAGE CHANGE TO KANNADA
+
+
+
+CONVERSATION 18
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): ninu yaaru?
+Patient Message (English): Who are you?
+Message Timestamp: 2025-11-12 14:01:39
+Message Modality: text
+Message/Query Class: small-talk
+Message Language: kn
+Final Response (2025-11-12 14:01:39) to user: Question: Who are you?
+Answer: I am an oncology assistant designed to provide educational support and answer questions related to cancer and its treatments, particularly focusing on radiotherapy. While I can offer general guidance, I am not a substitute for direct communication with your healthcare provider. For personalized medical advice, please consult your doctor.
+Final Response (Indic): ಪ್ರಶ್ನೆ: ನೀವು ಯಾರು? ಉತ್ತರ: ನಾನು ಕ್ಯಾನ್ಸರ್ ಮತ್ತು ಅದರ ಚಿಕಿತ್ಸೆಗಳಿಗೆ ಸಂಬಂಧಿಸಿದಂತೆ ಶೈಕ್ಷಣಿಕ ಬೆಂಬಲವನ್ನು ನೀಡಲು ಮತ್ತು ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ಆಂಕಾಲಜಿ ಸಹಾಯಕನಾಗಿದ್ದೇನೆ, ವಿಶೇಷವಾಗಿ ರೇಡಿಯೋಥೆರಪಿ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತೇನೆ. ನಾನು ಸಾಮಾನ್ಯ ಮಾರ್ಗದರ್ಶನವನ್ನು ನೀಡಬಹುದು, ಆದರೆ ನಿಮ್ಮ ಆರೋಗ್ಯ ಸೇವಾ ಪೂರೈಕೆದಾರರೊಂದಿಗೆ ನೇರ ಸಂವಹನಕ್ಕೆ ನಾನು ಪರ್ಯಾಯವಲ್ಲ. ವೈಯಕ್ತಿಕ ವೈದ್ಯಕೀಯ ಸಲಹೆಗಾಗಿ, ದಯವಿಟ್ಟು ನಿಮ್ಮ ವೈದ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ.
+Final Response Timestamp: 1762936299
+
+================================================================================
+
+CONVERSATION 19
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): ನನ್ನ ರೇಡಿಯೊಥೆರಪಿ ನಂತರ ನಾನು ಸ್ನಾನ ಮಾಡಬಹುದೇ?
+Patient Message (English): Can I take a bath after my radiotherapy?
+Message Timestamp: 2025-11-12 14:01:39
+Message Modality: text
+Message/Query Class: medical
+Message Language: kn
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): ನಾನು ಕೆ-ಎಂ-ಸಿ ವೈದ್ಯರೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ ನಿಮಗೆ ದೃಢವಾದ ಉತ್ತರ ನೀಡುತ್ತೇನೆ. ಅಷ್ಟರೊಳಗೆ, ಇನ್ನಷ್ಟು ಪ್ರಶ್ನೆಗಳು ಕೇಳಬಹುದು.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): Yes
+Final Response (2025-11-12 14:02:25) to user: Question: Can I take a bath after my radiotherapy?
+Answer: Yes, you can take a bath after your radiotherapy sessions. Use warm water and a mild, unscented soap, but avoid using soap on the treatment area. Be gentle with your skin, pat it dry with a soft towel, and avoid rubbing. Always follow any specific skin care instructions provided by your healthcare team. Consult with your healthcare provider for personalized advice.
+Final Response (Indic): ಪ್ರಶ್ನೆ: ನನ್ನ ಕಿರಣ ಚಿಕಿತ್ಸೆ ನಂತರ ನಾನು ಸ್ನಾನ ಮಾಡಬಹುದೇ?  
+ಉತ್ತರ: ಹೌದು, ನೀವು ನಿಮ್ಮ ಕಿರಣ ಚಿಕಿತ್ಸೆ ಸೆಷನ್‌ಗಳ ನಂತರ ಸ್ನಾನ ಮಾಡಬಹುದು. ಬಿಸಿ ನೀರು ಮತ್ತು ಮೃದುವಾದ, ವಾಸನೆಯಿಲ್ಲದ ಸಾಬೂನು ಬಳಸಿ, ಆದರೆ ಚಿಕಿತ್ಸೆ ಪ್ರದೇಶದಲ್ಲಿ ಸಾಬೂನು ಬಳಸದಿರಿ. ನಿಮ್ಮ ಚರ್ಮದೊಂದಿಗೆ ಮೃದುವಾಗಿರಿ, ಮೃದು ಟವೆಲ್‌ನೊಂದಿಗೆ ಒಣಗಿಸಿ, ಮತ್ತು ಒರೆಸುವುದನ್ನು ತಪ್ಪಿಸಿ. ನಿಮ್ಮ ಆರೋಗ್ಯ ತಂಡ ನೀಡಿದ ಯಾವುದೇ ವಿಶೇಷ ಚರ್ಮದ ಆರೈಕೆ ಸೂಚನೆಗಳನ್ನು ಯಾವಾಗಲೂ ಅನುಸರಿಸಿ. ವೈಯಕ್ತಿಕ ಸಲಹೆಗಾಗಿ ನಿಮ್ಮ ಆರೋಗ್ಯ ಸೇವಾ ಒದಗಿಸುವವರೊಂದಿಗೆ ಪರಾಮರ್ಶಿಸಿ.
+Final Response Timestamp: 1762936345
+
+================================================================================
+
+CONVERSATION 20
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): ನನ್ನ ರೇಡಿಯಾ ತಿರಪಿ ಮೋಡಲು ನಾನು ಸ್ನಾನ ಮಾಡಬಹುದೆ?
+Patient Message (English): Can I take a bath before my radio show?
+Message Timestamp: 2025-11-12 14:01:58
+Message Modality: audio
+Message/Query Class: medical
+Message Language: kn
+Response Text (English): Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.
+Response Text (Indic): ನಾನು ಕೆ-ಎಂ-ಸಿ ವೈದ್ಯರೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ ನಿಮಗೆ ದೃಢವಾದ ಉತ್ತರ ನೀಡುತ್ತೇನೆ. ಅಷ್ಟರೊಳಗೆ, ಇನ್ನಷ್ಟು ಪ್ರಶ್ನೆಗಳು ಕೇಳಬಹುದು.
+
+--- Expert Interaction ---
+Expert Phone Number: 919739811075 (Type: byoebexpert - medical)
+Expert Verification (Yes/No): No
+Expert Feedback: no it might be dangerous
+Final Response (2025-11-12 14:02:36) to user: Question: Can I take a bath before my radio show?
+Answer: No, it might be dangerous to take a bath before your radio show if you are undergoing radiation therapy. It's important to follow specific guidelines provided by your healthcare provider regarding skin care and bathing during treatment.
+Final Response (Indic): ಪ್ರಶ್ನೆ: ನಾನು ನನ್ನ ರೇಡಿಯೋ ಶೋಗೆ ಮುನ್ನ ಸ್ನಾನ ಮಾಡಬಹುದೇ?
+
+ಉತ್ತರ: ಇಲ್ಲ, ನೀವು ರೇಡಿಯೇಶನ್ ಥೆರಪಿ ಪಡೆಯುತ್ತಿದ್ದರೆ ರೇಡಿಯೋ ಶೋಗೆ ಮುನ್ನ ಸ್ನಾನ ಮಾಡುವುದು ಅಪಾಯಕರವಾಗಿರಬಹುದು. ಚಿಕಿತ್ಸೆ ಸಮಯದಲ್ಲಿ ಚರ್ಮದ ಆರೈಕೆ ಮತ್ತು ಸ್ನಾನಕ್ಕೆ ಸಂಬಂಧಿಸಿದಂತೆ ನಿಮ್ಮ ಆರೋಗ್ಯ ಸೇವಾ ಒದಗಿಸುವವರು ನೀಡಿದ ವಿಶೇಷ ಮಾರ್ಗಸೂಚಿಗಳನ್ನು ಅನುಸರಿಸುವುದು ಮುಖ್ಯ.
+Final Response Timestamp: 1762936356
+
+================================================================================
+
+CONVERSATION 21
+--------------------
+Patient Phone Number: 916352927215
+Patient Message (Indic): ಮತ್ತೆ ನೀನು ಯಾರು?
+Patient Message (English): Who are you again?
+Message Timestamp: 2025-11-12 14:02:14
+Message Modality: text
+Message/Query Class: small-talk
+Message Language: kn
+Final Response (2025-11-12 14:02:14) to user: Question: Who are you again?
+Answer: I am an oncology assistant here to provide information and support related to cancer care. While I can offer guidance based on pre-verified information, I am not your treating doctor. For direct communication with your doctor, please visit the radiation oncology OPD at KMC or contact them through the provided phone numbers.
+Final Response (Indic): ಪ್ರಶ್ನೆ: ನೀವು ಮತ್ತೆ ಯಾರು?  
+ಉತ್ತರ: ನಾನು ಕ್ಯಾನ್ಸರ್ ಆರೈಕೆಗೆ ಸಂಬಂಧಿಸಿದ ಮಾಹಿತಿ ಮತ್ತು ಬೆಂಬಲವನ್ನು ನೀಡಲು ಇಲ್ಲಿರುವ ಆಂಕೋಲಜಿ ಸಹಾಯಕ. ನಾನು ಪೂರ್ವ-ಪರಿಶೀಲಿತ ಮಾಹಿತಿಯ ಆಧಾರದ ಮೇಲೆ ಮಾರ್ಗದರ್ಶನವನ್ನು ನೀಡಬಹುದು, ಆದರೆ ನಾನು ನಿಮ್ಮ ಚಿಕಿತ್ಸೆ ನೀಡುವ ವೈದ್ಯನಲ್ಲ. ನಿಮ್ಮ ವೈದ್ಯರೊಂದಿಗೆ ನೇರ ಸಂಪರ್ಕಕ್ಕಾಗಿ, ದಯವಿಟ್ಟು KMC ನಲ್ಲಿ ರೇಡಿಯೇಶನ್ ಆಂಕೋಲಜಿ OPD ಗೆ ಭೇಟಿ ನೀಡಿ ಅಥವಾ ನೀಡಲಾದ ಫೋನ್ ಸಂಖ್ಯೆಗಳ ಮೂಲಕ ಅವರನ್ನು ಸಂಪರ್ಕಿಸಿ.
+Final Response Timestamp: 1762936334
+
+================================================================================

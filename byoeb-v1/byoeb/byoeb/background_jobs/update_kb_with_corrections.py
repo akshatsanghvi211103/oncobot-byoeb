@@ -73,7 +73,7 @@ async def get_corrected_conversations():
         collection_name = app_config["databases"]["mongo_db"]["message_collection"]
         message_collection_client = await message_db_service._get_collection_client(collection_name)
         
-        # Calculate time window (past 1 hour for new corrections)
+        # Calculate time window (past 24 hours (#TODO rn) for new corrections)
         now = datetime.now()
         one_hour_ago = now - timedelta(hours=24)
         one_hour_ago_timestamp = str(int(one_hour_ago.timestamp()))
@@ -317,77 +317,78 @@ async def update_kb1_with_corrections(corrected_conversations):
         credential=DefaultAzureCredential()
     )
     
-    # Delete existing index if it exists and recreate with proper schema
+    # Check if index exists - create only if it doesn't exist
+    index_exists = False
     try:
-        await index_client.get_index(kb_expert_index_name)
-        print(f"🗑️ Index '{kb_expert_index_name}' exists, deleting to recreate with proper schema...")
-        await index_client.delete_index(kb_expert_index_name)
-        print(f"✅ Successfully deleted existing index")
+        existing_index = await index_client.get_index(kb_expert_index_name)
+        index_exists = True
+        print(f"✅ Index '{kb_expert_index_name}' already exists - will append new corrections")
     except Exception as e:
-        print(f"📋 Index '{kb_expert_index_name}' doesn't exist")
+        print(f"📋 Index '{kb_expert_index_name}' doesn't exist - will create it")
     
-    print(f"🔨 Creating index '{kb_expert_index_name}' with full metadata schema...")
-    
-    # Create index with schema for expert corrections
-    fields = [
-            SimpleField(name="id", type=SearchFieldDataType.String, key=True),
-            SearchableField(name="question", type=SearchFieldDataType.String),
-            SearchableField(name="answer", type=SearchFieldDataType.String), 
-            SearchableField(name="combined_text", type=SearchFieldDataType.String),
-            SimpleField(name="source", type=SearchFieldDataType.String, filterable=True),
-            SimpleField(name="category", type=SearchFieldDataType.String, filterable=True),
-            SimpleField(name="question_number", type=SearchFieldDataType.Int32, filterable=True),
-            SimpleField(name="expert_validated", type=SearchFieldDataType.Boolean, filterable=True),
-            # Correction metadata fields (flattened for Azure Search)
-            SimpleField(name="expert_no_message_id", type=SearchFieldDataType.String, filterable=True),
-            SimpleField(name="original_verification_id", type=SearchFieldDataType.String, filterable=True),
-            SearchableField(name="expert_correction", type=SearchFieldDataType.String),
-            SearchableField(name="original_bot_answer", type=SearchFieldDataType.String),
-            SimpleField(name="corrected_timestamp", type=SearchFieldDataType.DateTimeOffset, filterable=True),
-            SimpleField(name="created_at", type=SearchFieldDataType.DateTimeOffset, filterable=True),
-            SearchableField(name="original_question", type=SearchFieldDataType.String),
-            SearchableField(name="original_answer", type=SearchFieldDataType.String),
-            SearchField(
-                name="text_vector_3072",
-                type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
-                searchable=True,
-                vector_search_dimensions=3072,
-                vector_search_profile_name="vector-profile"
-            )
-    ]
-    
-    # Configure vector search
-    from azure.search.documents.indexes.models import HnswAlgorithmConfiguration
-    
-    vector_search = VectorSearch(
-        algorithms=[
-            HnswAlgorithmConfiguration(
-                name="vector-config",
-                parameters={
-                    "m": 4,
-                    "ef_construction": 400,
-                    "ef_search": 500,
-                    "metric": "cosine"
-                }
-            )
-        ],
-        profiles=[
-            VectorSearchProfile(
-                name="vector-profile",
-                algorithm_configuration_name="vector-config"
-            )
+    if not index_exists:
+        print(f"🔨 Creating index '{kb_expert_index_name}' with full metadata schema...")
+        
+        # Create index with schema for expert corrections
+        fields = [
+                SimpleField(name="id", type=SearchFieldDataType.String, key=True),
+                SearchableField(name="question", type=SearchFieldDataType.String),
+                SearchableField(name="answer", type=SearchFieldDataType.String), 
+                SearchableField(name="combined_text", type=SearchFieldDataType.String),
+                SimpleField(name="source", type=SearchFieldDataType.String, filterable=True),
+                SimpleField(name="category", type=SearchFieldDataType.String, filterable=True),
+                SimpleField(name="question_number", type=SearchFieldDataType.Int32, filterable=True),
+                SimpleField(name="expert_validated", type=SearchFieldDataType.Boolean, filterable=True),
+                # Correction metadata fields (flattened for Azure Search)
+                SimpleField(name="expert_no_message_id", type=SearchFieldDataType.String, filterable=True),
+                SimpleField(name="original_verification_id", type=SearchFieldDataType.String, filterable=True),
+                SearchableField(name="expert_correction", type=SearchFieldDataType.String),
+                SearchableField(name="original_bot_answer", type=SearchFieldDataType.String),
+                SimpleField(name="corrected_timestamp", type=SearchFieldDataType.DateTimeOffset, filterable=True),
+                SimpleField(name="created_at", type=SearchFieldDataType.DateTimeOffset, filterable=True),
+                SearchableField(name="original_question", type=SearchFieldDataType.String),
+                SearchableField(name="original_answer", type=SearchFieldDataType.String),
+                SearchField(
+                    name="text_vector_3072",
+                    type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
+                    searchable=True,
+                    vector_search_dimensions=3072,
+                    vector_search_profile_name="vector-profile"
+                )
         ]
-    )
-    
-    # Create the index
-    index = SearchIndex(
-        name=kb_expert_index_name,
-        fields=fields,
-        vector_search=vector_search
-    )
-    
-    result = await index_client.create_index(index)
-    print(f"✅ Successfully created index '{kb_expert_index_name}'")
+        
+        # Configure vector search
+        from azure.search.documents.indexes.models import HnswAlgorithmConfiguration
+        
+        vector_search = VectorSearch(
+            algorithms=[
+                HnswAlgorithmConfiguration(
+                    name="vector-config",
+                    parameters={
+                        "m": 4,
+                        "ef_construction": 400,
+                        "ef_search": 500,
+                        "metric": "cosine"
+                    }
+                )
+            ],
+            profiles=[
+                VectorSearchProfile(
+                    name="vector-profile",
+                    algorithm_configuration_name="vector-config"
+                )
+            ]
+        )
+        
+        # Create the index
+        index = SearchIndex(
+            name=kb_expert_index_name,
+            fields=fields,
+            vector_search=vector_search
+        )
+        
+        result = await index_client.create_index(index)
+        print(f"✅ Successfully created index '{kb_expert_index_name}'")
     
     # Close index client and create search client
     await index_client.close()
@@ -457,6 +458,25 @@ async def update_kb1_with_corrections(corrected_conversations):
             'original_answer': corrected_answer
         }
         
+        # Check if this correction already exists in KB1_Expert to avoid duplicates
+        try:
+            print(f"🔍 Checking for duplicate correction with verification ID: {conv['original_verification_id']}")
+            duplicate_query = f"original_verification_id eq '{conv['original_verification_id']}'"
+            duplicate_results = await search_client.search(search_text="*", filter=duplicate_query, top=1)
+            
+            duplicate_found = False
+            async for result in duplicate_results:
+                duplicate_found = True
+                print(f"⚠️  Duplicate correction found - skipping (existing ID: {result['id']})")
+                break
+                
+            if duplicate_found:
+                print(f"   ⏭️  Skipping duplicate correction for verification ID: {conv['original_verification_id']}")
+                continue
+                
+        except Exception as e:
+            print(f"⚠️  Warning: Could not check for duplicates: {e} - proceeding with insertion")
+        
         generalizable_conversations.append(kb_entry)
         
         print(f"\n✅ APPROVED FOR KB1_EXPERT - CORRECTION #{i}")
@@ -486,11 +506,13 @@ async def update_kb1_with_corrections(corrected_conversations):
     
     print(f"\n{'='*60}")
     print(f"✅ KB1_EXPERT UPDATE COMPLETE")
-    print(f"   Found {len(corrected_conversations)} total corrections")
-    print(f"   Successfully processed {len(generalizable_conversations)} generalizable corrections")
-    print(f"   Filtered out {len(corrected_conversations) - len(generalizable_conversations)} non-generalizable corrections")
-    print(f"   KB1_Expert now contains {len(generalizable_conversations)} new expert-validated entries")
-    print(f"   These will be prioritized in future LLM responses")
+    print(f"   Found {len(corrected_conversations)} total corrections from past 24 hours")
+    print(f"   Successfully added {len(generalizable_conversations)} new expert-validated entries to KB1_Expert")
+    filtered_out = len(corrected_conversations) - len(generalizable_conversations)
+    if filtered_out > 0:
+        print(f"   Filtered out {filtered_out} corrections (duplicates, non-generalizable, or processing errors)")
+    print(f"   KB1_Expert incrementally updated with new corrections only")
+    print(f"   Expert-validated entries will be prioritized in future LLM responses")
 
 async def main():
     """

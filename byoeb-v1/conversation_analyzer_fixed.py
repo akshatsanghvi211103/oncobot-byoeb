@@ -308,7 +308,7 @@ async def main():
     await analyzer.fetch_users_info()
     
     # Fetch messages after timestamp
-    timestamp = "1762930567"  # Using string format as in original
+    timestamp = "1762935779"  # Using string format as in original
     messages = await analyzer.fetch_messages_after_timestamp(timestamp)
     
     print("🚀 Starting fixed conversation analysis...")

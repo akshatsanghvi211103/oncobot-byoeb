@@ -187,6 +187,7 @@ async def get_pending_expert_verifications():
             
             # Strip patient context from verification text before processing
             verification_text = strip_patient_context(verification_text_raw)
+            verification_text = verification_text.replace("*Question:* ", "")
             
             # Get the expert info from the verification message
             expert_user_data = message_data.get("user", {})
@@ -348,7 +349,7 @@ async def send_consolidated_reminder(expert_user_id: str, verifications: list):
         # Get expert's phone number and user type from the first verification (all should be for same expert)
         expert_phone_id = verifications[0]["expert_phone_id"] if verifications else None
         expert_user_type = verifications[0]["expert_user_type"] if verifications else "medical"
-        # if expert_phone_id == "919969557231":
+        # if expert_phone_id == "919969557231" or expert_phone_id == "917034432034" or expert_phone_id == "917022488975":
         #     print("Skipping")
         #     print(verifications)
         #     print("Skipping this above one")
