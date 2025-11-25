@@ -11,6 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from byoeb.chat_app.configuration.dependency_setup import message_db_service, user_db_service
 import asyncio
+import csv
 from typing import List, Dict
 from collections import defaultdict
 from datetime import datetime
@@ -142,12 +143,16 @@ class ConversationAnalyzerFixed:
             "message_modality": self.determine_modality(question_context),
             "message_class": question_msg.get("message_class", "---"),
             "message_lang": self.extract_language(question_data),
+            "audio_link": self.extract_audio_link(question_context),
             "response_text_eng": "---",
             "response_text_indic": "---",
+            "LLM-answer": "---",
             "expert_phone": "---",
             "expert_type": "---",
             "expert_verification": "---",
+            "expert_verification_timestamp": "---",
             "expert_feedback": "---",
+            "expert_feedback_timestamp": "---",
             "final_response_eng": "---",
             "final_response_indic": "---",
             "final_response_timestamp": "---"
@@ -201,6 +206,14 @@ class ConversationAnalyzerFixed:
                 conv_data["response_text_eng"] = english_text
                 conv_data["response_text_indic"] = source_text
         
+        # Handle expert verification messages
+        elif message_category == "bot_to_byoebexpert_verification":
+            # Extract LLM answer from verification message
+            if conv_data["LLM-answer"] == "---":
+                llm_answer = self.extract_llm_answer_from_verification(english_text)
+                if llm_answer != "---":
+                    conv_data["LLM-answer"] = llm_answer
+        
         # Handle expert responses
         elif message_category in ["byoebexpert_to_bot", "byoebuser_to_bot"]:
             user_data = message_data.get("user", {})
@@ -214,12 +227,15 @@ class ConversationAnalyzerFixed:
                 # Yes/No verification
                 if english_text.lower().strip() in ["yes", "no"]:
                     conv_data["expert_verification"] = english_text.title()
+                    conv_data["expert_verification_timestamp"] = timestamp
                 else:
                     # Expert feedback
                     if conv_data["expert_feedback"] == "---":
                         conv_data["expert_feedback"] = english_text
+                        conv_data["expert_feedback_timestamp"] = timestamp
                     else:
                         conv_data["expert_feedback"] += f" | {english_text}"
+                        # Keep the first feedback timestamp
     
     def extract_phone_number(self, message_data: dict) -> str:
         """Extract phone number from message data."""
@@ -235,6 +251,152 @@ class ConversationAnalyzerFixed:
         """Determine message modality (text/audio)."""
         message_type = message_context.get("message_type", "")
         return "audio" if "audio" in message_type else "text"
+
+    def extract_audio_link(self, message_context: dict) -> str:
+        """Extract audio link from media_info for audio messages."""
+        media_info = message_context.get("media_info", {})
+        if media_info:
+            media_id = media_info.get("media_id", "")
+            if media_id and ("audio" in message_context.get("message_type", "") or media_info.get("mime_type", "").startswith("audio/")):
+                return media_id
+        return "---"
+
+    def extract_llm_answer_from_verification(self, verification_text: str) -> str:
+        """Extract the LLM answer from expert verification message."""
+        if not verification_text:
+            return "---"
+        
+        # Strip patient context first (same logic as KB update script)
+        lines = verification_text.split('\n')
+        
+        # Look for pattern: name line followed by details line (Age:, Gender:, DOB:)
+        if len(lines) >= 3:
+            # Check if second line contains age/gender/dob pattern
+            second_line = lines[1] if len(lines) > 1 else ""
+            if any(keyword in second_line for keyword in ["Age:", "Gender:", "DOB:"]):
+                # Skip the first two lines (patient name and details) and any empty lines after
+                remaining_lines = lines[2:]
+                # Skip any empty lines after patient context
+                while remaining_lines and not remaining_lines[0].strip():
+                    remaining_lines.pop(0)
+                
+                clean_verification_text = '\n'.join(remaining_lines)
+            else:
+                clean_verification_text = verification_text
+        else:
+            clean_verification_text = verification_text
+        
+        # Parse the verification message to extract the original LLM answer
+        lines = clean_verification_text.split('\n')
+        
+        # Handle different verification message formats
+        if len(lines) >= 3:
+            # Format: line 0 = *Question:* question, line 1 = *Answer:* answer, line 2 = "Is the answer correct?"
+            for i, line in enumerate(lines):
+                if line.strip().startswith("*Answer:*"):
+                    # Extract answer after *Answer:*
+                    answer_text = line.replace("*Answer:*", "").strip()
+                    # Look for continuation lines until "Is the answer correct?"
+                    for j in range(i + 1, len(lines)):
+                        if "Is the answer correct?" in lines[j]:
+                            break
+                        answer_text += " " + lines[j].strip()
+                    return answer_text
+        
+        # Fallback parsing logic
+        for i, line in enumerate(lines):
+            if line.startswith("Answer:") or line.startswith("Bot_Answer:"):
+                # Extract answer and look for continuation lines
+                answer_lines = [line.replace("Answer:", "").replace("Bot_Answer:", "").strip()]
+                for j in range(i + 1, len(lines)):
+                    if "Is the answer correct?" in lines[j]:
+                        break
+                    answer_lines.append(lines[j].strip())
+                return " ".join(answer_lines).strip()
+        
+        return "---"
+
+    def export_conversations_csv(self, filename: str = None) -> str:
+        """Export conversations to CSV format with specified fields."""
+        if filename is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"conversation_analysis_{timestamp}.csv"
+        
+        # Define CSV headers as per user requirements
+        headers = [
+            "Patient Number",
+            "Patient Message (in Indic)",
+            "Patient Message (in Eng)", 
+            "Message Timestamp",
+            "Message Modality",
+            "Audio URL (if modality is audio, else empty)",
+            "Message Class (small-talk/logistical/medical...)",
+            "Message Lang",
+            "Response Text (in Eng)",
+            "Response Text (in Indic)",
+            "GPT Answer sent to Expert",
+            "Expert phone num",
+            "Expert Verification (Yes/No)",
+            "Expert Verification Timestamp",
+            "Expert Feedback",
+            "Expert Feedback Timestamp",
+            "Final Response (in Eng)",
+            "Final Response (in Indic)",
+            "Final Response Timestamp"
+        ]
+        
+        with open(filename, 'w', newline='', encoding='utf-8-sig') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(headers)
+            
+            for i, (question_id, conv_data) in enumerate(self.conversations_data.items(), 1):
+                # Convert timestamps to readable format (with quotes to prevent Excel auto-conversion)
+                def format_timestamp(ts):
+                    if ts == "---":
+                        return ""
+                    try:
+                        formatted_time = datetime.fromtimestamp(int(ts)).strftime("%Y-%m-%d %H:%M:%S")
+                        return f"'{formatted_time}"  # Add leading quote to force Excel text format
+                    except:
+                        return ts
+                
+                # Helper to replace newlines with /n
+                def format_text_for_csv(text):
+                    if text == "---":
+                        return ""
+                    return text.replace('\n', '/n') if text else ""
+                
+                # Format phone number as string with leading quote to prevent Excel number conversion
+                def format_phone_number(phone):
+                    if phone == "---":
+                        return ""
+                    return f"'{phone}"  # Add leading quote to force Excel text format
+                
+                row = [
+                    format_phone_number(conv_data['patient_phone']),  # Patient Number (formatted as string)
+                    format_text_for_csv(conv_data['patient_message_indic']),
+                    format_text_for_csv(conv_data['patient_message_eng']),
+                    format_timestamp(conv_data['message_timestamp']),
+                    conv_data['message_modality'],
+                    conv_data['audio_link'] if conv_data['message_modality'] == 'audio' else "",
+                    conv_data['message_class'],
+                    conv_data['message_lang'],
+                    format_text_for_csv(conv_data['response_text_eng']),
+                    format_text_for_csv(conv_data['response_text_indic']),
+                    format_text_for_csv(conv_data['LLM-answer']),
+                    conv_data['expert_phone'] if conv_data['expert_phone'] != "---" else "",
+                    conv_data['expert_verification'] if conv_data['expert_verification'] != "---" else "",
+                    format_timestamp(conv_data['expert_verification_timestamp']),
+                    format_text_for_csv(conv_data['expert_feedback']),
+                    format_timestamp(conv_data['expert_feedback_timestamp']),
+                    format_text_for_csv(conv_data['final_response_eng']),
+                    format_text_for_csv(conv_data['final_response_indic']),
+                    format_timestamp(conv_data['final_response_timestamp'])
+                ]
+                
+                writer.writerow(row)
+        
+        return filename
 
     def format_conversations_readable(self) -> str:
         """Format conversations in a readable paragraph format."""
@@ -264,10 +426,18 @@ class ConversationAnalyzerFixed:
             output_lines.append(f"Message/Query Class: {conv_data['message_class']}")
             output_lines.append(f"Message Language: {conv_data['message_lang']}")
             
+            # Audio link for audio messages
+            if conv_data['audio_link'] != "---":
+                output_lines.append(f"Audio Link: {conv_data['audio_link']}")
+            
             # Response information
             if conv_data['response_text_eng'] != "---":
                 output_lines.append(f"Response Text (English): {conv_data['response_text_eng']}")
                 output_lines.append(f"Response Text (Indic): {conv_data['response_text_indic']}")
+            
+            # LLM answer sent to expert for verification
+            if conv_data['LLM-answer'] != "---":
+                output_lines.append(f"LLM-answer (sent to expert): {conv_data['LLM-answer']}")
             
             # Expert interaction
             if conv_data['expert_verification'] != "---":
@@ -278,10 +448,29 @@ class ConversationAnalyzerFixed:
                 expert_type_readable = "medical" if conv_data['expert_type'] == "byoebexpert" else "logistical" if conv_data['expert_type'] == "byoebexpert2" else conv_data['expert_type']
                 
                 output_lines.append(f"Expert Phone Number: {conv_data['expert_phone']} (Type: {conv_data['expert_type']} - {expert_type_readable})")
-                output_lines.append(f"Expert Verification (Yes/No): {conv_data['expert_verification']}")
                 
+                # Expert verification with timestamp
+                verification_text = f"Expert Verification (Yes/No): {conv_data['expert_verification']}"
+                if conv_data['expert_verification_timestamp'] != "---":
+                    try:
+                        timestamp_int = int(conv_data['expert_verification_timestamp'])
+                        readable_time = datetime.fromtimestamp(timestamp_int).strftime("%Y-%m-%d %H:%M:%S")
+                        verification_text += f" (at {readable_time})"
+                    except:
+                        pass
+                output_lines.append(verification_text)
+                
+                # Expert feedback with timestamp
                 if conv_data['expert_feedback'] != "---":
-                    output_lines.append(f"Expert Feedback: {conv_data['expert_feedback']}")
+                    feedback_text = f"Expert Feedback: {conv_data['expert_feedback']}"
+                    if conv_data['expert_feedback_timestamp'] != "---":
+                        try:
+                            timestamp_int = int(conv_data['expert_feedback_timestamp'])
+                            readable_time = datetime.fromtimestamp(timestamp_int).strftime("%Y-%m-%d %H:%M:%S")
+                            feedback_text += f" (at {readable_time})"
+                        except:
+                            pass
+                    output_lines.append(feedback_text)
             
             # Final response
             if conv_data['final_response_eng'] != "---":
@@ -308,7 +497,7 @@ async def main():
     await analyzer.fetch_users_info()
     
     # Fetch messages after timestamp
-    timestamp = "1762935779"  # Using string format as in original
+    timestamp = "1763095950"  # Using string format as in original
     messages = await analyzer.fetch_messages_after_timestamp(timestamp)
     
     print("🚀 Starting fixed conversation analysis...")
@@ -319,14 +508,18 @@ async def main():
     # Generate readable output
     readable_output = analyzer.format_conversations_readable()
     
-    # Write to file
+    # Write readable format to file
     output_file = "conversations_fixed.txt"
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(readable_output)
     
+    # Export to CSV
+    csv_file = analyzer.export_conversations_csv()
+    
     print(f"✅ Fixed analysis complete!")
     print(f"📊 Total user conversations: {len(analyzer.conversations_data)}")
-    print(f"📄 Output written to: {output_file}")
+    print(f"📄 Readable output written to: {output_file}")
+    print(f"📊 CSV export written to: {csv_file}")
 
 if __name__ == "__main__":
     asyncio.run(main())

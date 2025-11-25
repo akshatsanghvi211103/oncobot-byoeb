@@ -7223,3 +7223,41 @@ Successfully send the message to the user and expert in 0.36977100372314453 seco
 DB queries executed in: 1.4155991077423096 seconds
 Successfully processed 3 messages
 Processed 3 message in: 52 seconds
+Conversations created in: 5.003509044647217 seconds
+DB queries executed in: 0.7252790927886963 seconds
+Successfully processed 1 messages
+Processed 1 message in: 7 seconds
+Conversations created in: 1.115588903427124 seconds
+DB queries executed in: 0.0010080337524414062 seconds
+Successfully processed 0 messages
+Processed 1 message in: 4 seconds
+Conversations created in: 1.0605127811431885 seconds
+Retrieved chunks in 13.452675819396973 seconds
+Generated answer tokens: {'total_tokens': 1645, 'completion_tokens': 82, 'prompt_tokens': 1563}
+Generated answer tokens: {'total_tokens': 1197, 'completion_tokens': 65, 'prompt_tokens': 1132}
+Generated answer and related questions in 31.852735996246338 seconds
+Successfully send the message to the user and expert in 0.7342429161071777 seconds
+DB queries executed in: 0.5843400955200195 seconds
+Successfully processed 1 messages
+Processed 1 message in: 47 seconds
+Conversations created in: 1.0685639381408691 seconds
+DB queries executed in: 0.0009989738464355469 seconds
+Successfully processed 0 messages
+Processed 1 message in: 1 seconds
+Conversations created in: 1.080122947692871 seconds
+Retrieved chunks in 8.171492099761963 seconds
+Generated answer tokens: {'total_tokens': 1618, 'completion_tokens': 128, 'prompt_tokens': 1490}
+Generated answer tokens: {'total_tokens': 1123, 'completion_tokens': 66, 'prompt_tokens': 1057}
+Generated answer and related questions in 20.7088840007782 seconds
+Successfully send the message to the user and expert in 0.5602531433105469 seconds
+DB queries executed in: 0.8520760536193848 seconds
+Successfully processed 1 messages
+Processed 1 message in: 29 seconds
+Conversations created in: 0.7459969520568848 seconds
+DB queries executed in: 0.78312087059021 seconds
+Successfully processed 1 messages
+Processed 1 message in: 12 seconds
+Conversations created in: 0.6466770172119141 seconds
+DB queries executed in: 0.6394619941711426 seconds
+Successfully processed 1 messages
+Processed 2 message in: 2 seconds

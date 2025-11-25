@@ -56,12 +56,15 @@ class AsyncAzureOpenAIWhisper(BaseSpeechTranslator):
         source_language: str = None,
         **kwargs
     ) -> str:
+        print("Translating speech to text using AsyncAzureOpenAIWhisper to language:", source_language)
         audio_file_like = io.BytesIO(audio_data)
         audio_file_like.name = "temp.wav"
         result = await self.__client.audio.transcriptions.create(
             file=audio_file_like,
             model=self.__model,
+            language=source_language
         )
+        print("Output text after translation to", source_language, ":", result.text)
         return result.text
 
         
