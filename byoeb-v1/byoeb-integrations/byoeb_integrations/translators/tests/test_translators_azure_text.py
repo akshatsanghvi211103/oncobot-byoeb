@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 load_dotenv(test_environment_path)
 
 credential = DefaultAzureCredential()
-TEXT_TRANSLATOR_RESOURCE_ID=os.getenv('TEXT_TRANSLATOR_RESOURCE_ID')
-TEXT_TRANSLATOR_REGION=os.getenv('TEXT_TRANSLATOR_REGION')
+TEXT_TRANSLATOR_RESOURCE_ID="/subscriptions/cef13953-6a76-4434-9a65-1d95481f83c7/resourceGroups/Aarobot/providers/Microsoft.CognitiveServices/accounts/aarobot-translator"
+TEXT_TRANSLATOR_REGION="eastus"
 
 @pytest.fixture
 def event_loop():

@@ -78,3 +78,24 @@ class AsyncAzureTextTranslator(BaseTextTranslator):
 
     async def _close(self):
         await self.__client.__aexit__()
+
+
+if __name__ == "__main__":
+    from azure.identity import DefaultAzureCredential
+
+    credentials = DefaultAzureCredential()
+    translator = AsyncAzureTextTranslator(
+        credential=credentials,
+        region="eastus",
+        resource_id="/subscriptions/cef13953-6a76-4434-9a65-1d95481f83c7/resourceGroups/Aarobot/providers/Microsoft.CognitiveServices/accounts/aarobot-translator",
+    )
+    async def main():
+        async with translator:
+            translated_text = await translator.atranslate_text(
+                input_text="Bonjour tout le monde",
+                source_language="fr",
+                target_language="en"
+            )
+            print(f"Translated Text: {translated_text}")
+
+    asyncio.run(main())

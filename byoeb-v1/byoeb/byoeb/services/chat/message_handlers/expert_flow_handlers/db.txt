@@ -179,7 +179,7 @@
       message_context: {
         message_id: 'E4z6cDPr8wS6ShkS1mntaQrHo',
         message_type: 'regular_audio',
-        message_source_text: 'क्या मैं रेडियो  थेरापी के पहले ना आ सकता हूँ?',
+        message_source_text: 'क्या मैं रेडियो थेरापी के पहले ना आ सकता हूँ?',
         message_english_text: 'Can I not come before radiotherapy?',
         media_info: {
           media_id: 'https://storage.googleapis.com/qikchat-chats/TelfYQC/1649627392665170.ogg',
