@@ -134,8 +134,8 @@ async def get_corrected_conversations():
                         # Handle different verification message formats
                         if len(lines) >= 3:
                             # Format: line 0 = question, line 1 = answer, line 2 = "Is the answer correct?"
-                            conversation["user_query"] = lines[0].strip()
-                            conversation["bot_answer"] = lines[1].strip()
+                            conversation["user_query"] = lines[0].replace("Question:", "").strip()
+                            conversation["bot_answer"] = lines[1].replace("Bot_Answer:", "").strip()
                         else:
                             # Fallback to original parsing logic
                             for i, line in enumerate(lines):
@@ -193,7 +193,7 @@ async def get_corrected_conversations():
                         if user_responses:
                             user_response = user_responses[0]
                             user_context = user_response.get("message_data", {}).get("message_context", {})
-                            final_message = user_context.get("message_english_text", "").strip()
+                            final_message = user_context.get("message_english_text", "")
                             conversation["final_corrected_message"] = final_message
             
             # Only add conversations that have meaningful data
@@ -249,11 +249,13 @@ async def anonymize_qa_pair(question, answer, llm_client):
                 # Use anonymized versions
                 final_question = root.find('query_anonymized').text or question
                 final_answer = root.find('response_anonymized').text or answer
+                final_question = final_question.replace('Question:','').strip()
+                final_answer = final_answer.replace('Answer:','').strip()
                 print(f"   ✅ Generalizable with PII - using anonymized versions")
             else:
                 # Use original versions
-                final_question = question
-                final_answer = answer  
+                final_question = question.replace('Question:','').strip()
+                final_answer = answer.replace('Answer:','').strip()
                 print(f"   ✅ Generalizable without PII - using original versions")
             
             return True, final_question, final_answer
@@ -406,7 +408,7 @@ async def update_kb1_with_corrections(corrected_conversations):
         
         # Use the final corrected message as the answer (if available), otherwise use expert correction
         corrected_answer = conv.get("final_corrected_message") or conv.get("expert_correction")
-        question = conv['user_query']
+        question = conv['user_query'].replace('Question:','').strip()
         
         # Check generalizability and anonymize if needed
         is_generalizable, final_question, final_answer = await anonymize_qa_pair(
