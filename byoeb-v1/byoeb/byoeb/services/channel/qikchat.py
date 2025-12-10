@@ -256,16 +256,32 @@ class QikchatService(BaseChannelService):
             else:
                 self.logger.info(f"Using QikChat message ID: {qikchat_message_id}")
             
-            timestamp = response.get("timestamp") or str(datetime.now().timestamp())
+            # Extract timestamp from QikChat response
+            # QikChat returns created_at in ISO format in data array
+            timestamp = None
+            created_at = None
             
-            # Convert timestamp to integer if it's a string
-            if isinstance(timestamp, str):
+            # Check for timestamp in various possible locations
+            if "data" in response and isinstance(response["data"], list) and len(response["data"]) > 0:
+                created_at = response["data"][0].get("created_at")
+            
+            print(f"🕒 CREATE_CONV Response {i+1}/{len(responses)}: created_at from QikChat = {created_at}")
+            
+            # Convert QikChat's ISO timestamp to Unix timestamp if available
+            if created_at:
                 try:
-                    timestamp_int = int(float(timestamp))
-                except (ValueError, TypeError):
+                    from dateutil import parser
+                    dt = parser.parse(created_at)
+                    timestamp_int = int(dt.timestamp())
+                    print(f"🕒 CREATE_CONV: Parsed QikChat created_at to Unix timestamp: {timestamp_int}")
+                except Exception as e:
+                    print(f"🕒 CREATE_CONV: Failed to parse created_at '{created_at}': {e}")
                     timestamp_int = int(datetime.now().timestamp())
+                    print(f"🕒 CREATE_CONV: Using current time as fallback: {timestamp_int}")
             else:
-                timestamp_int = int(timestamp)
+                # No timestamp from QikChat, use current time
+                timestamp_int = int(datetime.now().timestamp())
+                print(f"🕒 CREATE_CONV: No created_at from QikChat, using current time: {timestamp_int}")
             
             # AUDIO_URL_FIX: Use original message additional_info if available
             if original_messages and i < len(original_messages):

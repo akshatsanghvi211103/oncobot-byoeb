@@ -273,7 +273,8 @@ class ByoebUserGenerateResponse(Handler):
         texts: List[str],
         emoji = None,
         status = None,
-        related_questions = None
+        related_questions = None,
+        is_audio_query = False
     ):
         additional_info = {
             constants.EMOJI: emoji,
@@ -281,7 +282,8 @@ class ByoebUserGenerateResponse(Handler):
             "button_titles": bot_config["template_messages"]["expert"]["verification"]["button_titles"],
             constants.TEMPLATE_NAME: bot_config["channel_templates"]["expert"]["verification"],
             constants.TEMPLATE_LANGUAGE: "en",  # Explicitly use string, not object
-            constants.TEMPLATE_PARAMETERS: texts
+            constants.TEMPLATE_PARAMETERS: texts,
+            "is_audio_query": is_audio_query  # Store whether original query was audio
         }
         
         # Store related questions for later use when sending to user
@@ -649,17 +651,30 @@ class ByoebUserGenerateResponse(Handler):
             verification_bot_answer.replace('\n', ' ').strip()
         ]
         
+        # Check if original user query was audio
+        is_audio_query = message.message_context.message_type == MessageTypes.REGULAR_AUDIO.value
+        print(f"🎤 DEBUG [Creating expert verification]: Original user query was audio: {is_audio_query}")
+        
         additional_info = self.__get_expert_additional_info(
             template_parameters,
             emoji,
             status,
-            related_questions
+            related_questions,
+            is_audio_query
         )
         
         print(f"📋 Template parameters created:")
         print(f"  {{1}} Patient Info: {patient_info}")
         print(f"  {{2}} Question: {verification_question}")
         print(f"  {{3}} Answer: {verification_bot_answer}")
+        
+        # Debug: Show full additional_info contents
+        print(f"🔍 DEBUG [Expert message creation]: additional_info contents:")
+        for key, value in additional_info.items():
+            if key == 'is_audio_query':
+                print(f"     ✅ {key}: {value}")
+            else:
+                print(f"        {key}: {str(value)[:100] if not isinstance(value, bool) else value}..." if len(str(value)) > 100 else f"        {key}: {value}")
         
         # For template messages (INTERACTIVE_BUTTON), patient info is in template parameters
         # For text messages (fallback), format the message to match the template structure
@@ -686,6 +701,11 @@ class ByoebUserGenerateResponse(Handler):
             ),
             incoming_timestamp=message.incoming_timestamp,
         )
+        
+        # Debug: Confirm additional_info was set on the message
+        print(f"🔍 DEBUG [After expert message creation]: message_context.additional_info has is_audio_query: {'is_audio_query' in new_expert_verification_message.message_context.additional_info}")
+        if 'is_audio_query' in new_expert_verification_message.message_context.additional_info:
+            print(f"     Value: {new_expert_verification_message.message_context.additional_info['is_audio_query']}")
         return new_expert_verification_message
     
     @retry(
@@ -882,7 +902,12 @@ class ByoebUserGenerateResponse(Handler):
         # FLOW CHANGE: Handle small-talk vs medical/logistical queries differently
         if query_type == "small-talk":
             # For small-talk, send direct answer without expert verification
-            formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {answer}"
+            is_audio_query = message.message_context.message_type == MessageTypes.REGULAR_AUDIO.value
+            print(f"🎤 DEBUG [Small-talk]: Original user query was audio: {is_audio_query}")
+            if is_audio_query:
+                formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {answer}"
+            else:
+                formatted_answer = answer
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
                 response_text=formatted_answer,  # Send the actual LLM answer directly
@@ -902,7 +927,12 @@ class ByoebUserGenerateResponse(Handler):
             # formatted_answer = f"Question: {message.message_context.message_source_text}\nAnswer: {answer}"
             # formatted_answer = f"Question: {message.message_context.message_source_text}\nAnswer: {english_answer}"
             # formatted_english_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
-            formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
+            is_audio_query = message.message_context.message_type == MessageTypes.REGULAR_AUDIO.value
+            print(f"🎤 DEBUG [Out-of-scope]: Original user query was audio: {is_audio_query}")
+            if is_audio_query:
+                formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
+            else:
+                formatted_answer = english_answer
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
                 response_text=formatted_answer,  # Send the out-of-scope message directly
@@ -921,7 +951,12 @@ class ByoebUserGenerateResponse(Handler):
                            "I did not understand your question. Could you please rephrase or provide more details?")
             # formatted_answer = f"Question: {message.message_context.message_source_text}\nAnswer: {answer}"
             # formatted_english_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
-            formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
+            is_audio_query = message.message_context.message_type == MessageTypes.REGULAR_AUDIO.value
+            print(f"🎤 DEBUG [Incomprehensible]: Original user query was audio: {is_audio_query}")
+            if is_audio_query:
+                formatted_answer = f"Question: {message.message_context.message_english_text}\nAnswer: {english_answer}"
+            else:
+                formatted_answer = english_answer
             byoeb_user_messages = await self.__create_user_message(
                 message=message,
                 response_text=formatted_answer,  # Send the incomprehensible message directly

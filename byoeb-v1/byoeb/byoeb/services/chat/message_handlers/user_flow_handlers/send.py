@@ -346,9 +346,10 @@ class ByoebUserSendResponse(Handler):
                 print(f"   First expert response: {expert_responses[0]}")
             
             byoeb_expert_verification_status = byoeb_expert_message.message_context.additional_info.get(verification_status)
-            byoeb_expert_message.message_context.additional_info = {
-                verification_status: byoeb_expert_verification_status
-            }
+            # AUDIO_PREFIX_FIX: Don't overwrite additional_info - preserve is_audio_query and other fields
+            if byoeb_expert_message.message_context.additional_info is None:
+                byoeb_expert_message.message_context.additional_info = {}
+            byoeb_expert_message.message_context.additional_info[verification_status] = byoeb_expert_verification_status
             bot_to_expert_cross_convs = channel_service.create_cross_conv(
                 byoeb_user_message,
                 byoeb_expert_message,
@@ -416,6 +417,14 @@ class ByoebUserSendResponse(Handler):
                     import uuid
                     user_question_message.message_context.message_id = f"user_q_{uuid.uuid4().hex[:8]}"
                     print(f"⚠️ No reply_id found, using generated ID: {user_question_message.message_context.message_id}")
+                
+                # Set outgoing_timestamp for USER_TO_BOT message (uses incoming_timestamp or current time)
+                if not hasattr(user_question_message, 'outgoing_timestamp') or user_question_message.outgoing_timestamp is None:
+                    # For incoming user messages, use incoming_timestamp if available, otherwise current time
+                    if hasattr(user_question_message, 'incoming_timestamp') and user_question_message.incoming_timestamp:
+                        user_question_message.outgoing_timestamp = user_question_message.incoming_timestamp
+                    else:
+                        user_question_message.outgoing_timestamp = int(datetime.now().timestamp())
                 
                 print(f"🔧 Created USER_TO_BOT message:")
                 print(f"   ID: {user_question_message.message_context.message_id}")

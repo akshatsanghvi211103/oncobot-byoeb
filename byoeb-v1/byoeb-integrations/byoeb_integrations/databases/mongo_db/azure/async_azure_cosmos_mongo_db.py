@@ -128,6 +128,8 @@ class AsyncAzureCosmosMongoDBCollection(BaseDocumentCollection):
         if self.__collection is None:
             raise ValueError("Collection is not present or deleted. Please create a new collection")
         try:
+            # print the _id of the documents
+             print(f"Inserting documents: {[doc.get('_id') for doc in documents if '_id' in doc]}")
              result = await self.__collection.insert_many(documents, ordered=False)
         except Exception as e:
             self.__logger.error(f"Error inserting data: {e}")

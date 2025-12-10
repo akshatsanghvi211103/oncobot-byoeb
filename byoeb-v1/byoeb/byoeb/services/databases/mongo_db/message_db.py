@@ -203,11 +203,22 @@ class MessageMongoDBService(BaseMongoDBService):
                 "Is the answer correct?" in message_text)
             )
             
+            # Use outgoing_timestamp if available (actual send time), otherwise use current time
+            has_outgoing = hasattr(message, 'outgoing_timestamp') and message.outgoing_timestamp
+            outgoing_value = message.outgoing_timestamp if has_outgoing else None
+            timestamp = str(int(outgoing_value)) if has_outgoing else str(int(datetime.now().timestamp()))
+            
+            print(f"🕒 TIMESTAMP_DEBUG Message {i+1}/{len(byoeb_messages)}: ID={message_id[:20]}")
+            print(f"   has_outgoing_timestamp: {has_outgoing}")
+            print(f"   outgoing_timestamp value: {outgoing_value}")
+            print(f"   final timestamp: {timestamp}")
+            print(f"   message_type: {message_type}")
+            
             # Create the main text message entry
             query = {
                 "_id": message_id,
                 "message_data": message.model_dump(),
-                "timestamp": str(int(datetime.now().timestamp())),
+                "timestamp": timestamp,
             }
             
             # Add message_class if LLM query type is available
@@ -223,6 +234,12 @@ class MessageMongoDBService(BaseMongoDBService):
             print(f"   Is Expert Verification: {is_expert_verification}")
             print(f"   QikChat Audio ID: {qikchat_audio_id}")
             print(f"   Text Preview: {(message_text or '')[:80]}...")
+            
+            # Debug: Show additional_info contents for expert verification messages
+            if is_expert_verification and hasattr(message.message_context, 'additional_info') and message.message_context.additional_info:
+                print(f"   🔍 Expert verification additional_info keys: {list(message.message_context.additional_info.keys())}")
+                if 'is_audio_query' in message.message_context.additional_info:
+                    print(f"   ✅ is_audio_query in additional_info: {message.message_context.additional_info['is_audio_query']}")
             
             # Note: qikchat_audio_id is already stored in additional_info of the main message
             # No need to create a separate audio entry - the highlighted entry is correct

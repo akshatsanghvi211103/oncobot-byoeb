@@ -6,6 +6,7 @@ from byoeb.services.channel.base import BaseChannelService, MessageReaction
 from byoeb.services.databases.mongo_db import UserMongoDBService, MessageMongoDBService
 from byoeb.services.chat.message_handlers.base import Handler
 from byoeb.services.channel.base import MessageReaction
+from datetime import datetime
 
 class ByoebExpertSendResponse(Handler):
     def __init__(

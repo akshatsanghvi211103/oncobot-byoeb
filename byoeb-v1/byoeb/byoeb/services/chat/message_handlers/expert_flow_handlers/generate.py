@@ -891,9 +891,26 @@ class ByoebExpertGenerateResponse(Handler):
 
             user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
             
+            # Debug: Show what's in reply_context.additional_info
+            print(f"🔍 DEBUG [Expert NO - checking additional_info]:")
+            if reply_context and reply_context.additional_info:
+                print(f"     reply_context.additional_info keys: {list(reply_context.additional_info.keys())}")
+                print(f"     has is_audio_query: {'is_audio_query' in reply_context.additional_info}")
+                if 'is_audio_query' in reply_context.additional_info:
+                    print(f"     is_audio_query value: {reply_context.additional_info['is_audio_query']}")
+            else:
+                print(f"     reply_context.additional_info is None or empty")
+            
+            # Check if original user query was audio from the stored flag in reply context
+            is_audio_query = reply_context.additional_info.get("is_audio_query", False) if reply_context and reply_context.additional_info else False
+            print(f"🎤 DEBUG [Expert NO correction]: Original user query was audio: {is_audio_query}")
+            
             # Format the corrected answer with Question/Answer format
             # Keep English version for database storage
-            formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+            if is_audio_query:
+                formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+            else:
+                formatted_response_en = response_text
             
             # Format response based on the user language for display
             formatted_response = formatted_response_en  # Default to English
@@ -926,9 +943,9 @@ class ByoebExpertGenerateResponse(Handler):
             print("✅ Branch: Expert clicked YES - sending approved answer to user and thank you to expert")
             
             # Parse the verification message to get the original answer
-            print(f"🔧 DEBUG: Original verification text: '{reply_context.reply_english_text}'")
+            # print(f"🔧 DEBUG: Original verification text: '{reply_context.reply_english_text}'")
             parsed_message = self.__parse_message_patient_info(reply_context.reply_english_text)
-            print(f"🔧 DEBUG: Parsed verification message: {parsed_message}")
+            # print(f"🔧 DEBUG: Parsed verification message: {parsed_message}")
             
             if "Bot_Answer" not in parsed_message:
                 print(f"❌ ERROR: Bot_Answer not found in parsed message. Available keys: {list(parsed_message.keys())}")
@@ -972,9 +989,26 @@ class ByoebExpertGenerateResponse(Handler):
             user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
             print(f"Translating bot answer to user's language: {user_lang_here}")
 
+            # Debug: Show what's in reply_context.additional_info
+            print(f"🔍 DEBUG [Expert YES - checking additional_info]:")
+            if reply_context and reply_context.additional_info:
+                print(f"     reply_context.additional_info keys: {list(reply_context.additional_info.keys())}")
+                print(f"     has is_audio_query: {'is_audio_query' in reply_context.additional_info}")
+                if 'is_audio_query' in reply_context.additional_info:
+                    print(f"     is_audio_query value: {reply_context.additional_info['is_audio_query']}")
+            else:
+                print(f"     reply_context.additional_info is None or empty")
+            
+            # Check if original user query was audio from the stored flag in reply context
+            is_audio_query = reply_context.additional_info.get("is_audio_query", False) if reply_context and reply_context.additional_info else False
+            print(f"🎤 DEBUG [Expert YES approval]: Original user query was audio: {is_audio_query}")
+
             # Format bot answer with Question/Answer format
             # Keep English version for database storage
-            formatted_bot_answer_en = f"Question: {question}\nAnswer: {bot_answer}"
+            if is_audio_query:
+                formatted_bot_answer_en = f"Question: {question}\nAnswer: {bot_answer}"
+            else:
+                formatted_bot_answer_en = bot_answer
             
             # Format bot answer based on user language for display
             formatted_bot_answer = formatted_bot_answer_en  # Default to English
@@ -1222,9 +1256,26 @@ class ByoebExpertGenerateResponse(Handler):
             
             user_lang_here = message.cross_conversation_context.get(constants.USER, {}).get('user_language', 'en')
 
+            # Debug: Show what's in reply_context.additional_info
+            print(f"🔍 DEBUG [Expert custom - checking additional_info]:")
+            if reply_context and reply_context.additional_info:
+                print(f"     reply_context.additional_info keys: {list(reply_context.additional_info.keys())}")
+                print(f"     has is_audio_query: {'is_audio_query' in reply_context.additional_info}")
+                if 'is_audio_query' in reply_context.additional_info:
+                    print(f"     is_audio_query value: {reply_context.additional_info['is_audio_query']}")
+            else:
+                print(f"     reply_context.additional_info is None or empty")
+            
+            # Check if original user query was audio from the stored flag in reply context
+            is_audio_query = reply_context.additional_info.get("is_audio_query", False) if reply_context and reply_context.additional_info else False
+            print(f"🎤 DEBUG [Expert custom correction]: Original user query was audio: {is_audio_query}")
+
             # Format the corrected answer with Question/Answer format
             # Keep English version for database storage
-            formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+            if is_audio_query:
+                formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+            else:
+                formatted_response_en = response_text
             
             # Format response based on the user language for display
             formatted_response = formatted_response_en  # Default to English
