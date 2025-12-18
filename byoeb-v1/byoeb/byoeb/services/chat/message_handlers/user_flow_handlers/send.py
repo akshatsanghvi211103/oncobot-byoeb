@@ -70,7 +70,7 @@ class ByoebUserSendResponse(Handler):
 
     async def is_active_user(self, user_id: str, expert: bool = False):
         # if expert:
-        #     return True
+        #     return False
         try:
             result = await self._user_db_service.get_user_activity_timestamp(user_id)
             if result is None:
@@ -112,17 +112,18 @@ class ByoebUserSendResponse(Handler):
         is_active_user = await self.is_active_user(expert_message_context.user.user_id, expert=True)
         print(f"🔧 Expert is_active_user: {is_active_user}")
         
-        expert_requests = await channel_service.prepare_requests(expert_message_context)
-        interactive_button_message = expert_requests[0]
-        template_verification_message = expert_requests[1]
-        
+        # Set message type BEFORE prepare_requests so it generates the right format
         if not is_active_user:
-            print("📋 Sending template message to inactive expert")
+            print("📋 Preparing template message for inactive expert")
             expert_message_context.message_context.message_type = MessageTypes.TEMPLATE_BUTTON.value
-            responses, message_ids = await channel_service.send_requests([template_verification_message])
         else:
-            print("🔘 Sending interactive button to active expert")
-            responses, message_ids = await channel_service.send_requests([interactive_button_message])
+            print("🔘 Preparing interactive button for active expert")
+        
+        expert_requests = await channel_service.prepare_requests(expert_message_context)
+        print(f"🔧 Expert prepare_requests returned {len(expert_requests)} messages")
+        
+        # Send all expert requests (may include continuation messages if split)
+        responses, message_ids = await channel_service.send_requests(expert_requests)
         print("responses", responses)
         pending_emoji = expert_message_context.message_context.additional_info.get(constants.EMOJI)
         

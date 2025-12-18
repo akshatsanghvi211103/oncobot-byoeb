@@ -71,19 +71,28 @@ class QikchatService(BaseChannelService):
         2. Simpler request structure
         3. Different function names (qikchat vs whatsapp prefixes)
         4. Audio requests are now async due to media upload
+        5. Handles list returns from payload functions (for message splitting)
         """
         qik_requests = []
         
-        # Handle interactive button messages
-        if utils.has_interactive_button_additional_info(byoeb_message):
-            qik_interactive_button_message = qik_req_payload.get_qikchat_interactive_button_request_from_byoeb_message(byoeb_message)
-            qik_requests.append(qik_interactive_button_message)
+        # Check message type to decide between interactive buttons and templates
+        # Expert verification messages have both button_titles and template_name,
+        # so we use message_type to determine which format to use
+        message_type = byoeb_message.message_context.message_type
+        
+        # Handle template messages (for inactive experts)
+        if message_type == MessageTypes.TEMPLATE_BUTTON.value and utils.has_template_additional_info(byoeb_message):
+            result = qik_req_payload.get_qikchat_template_request_from_byoeb_message(byoeb_message)
+            qik_requests.extend(result)
+        
+        # Handle interactive button messages (for active experts)
+        elif utils.has_interactive_button_additional_info(byoeb_message):
+            result = qik_req_payload.get_qikchat_interactive_button_request_from_byoeb_message(byoeb_message)
+            qik_requests.extend(result)
             
         # Handle interactive list messages
         elif utils.has_interactive_list_additional_info(byoeb_message):
-            # print(f"🔗 Detected interactive list message with additional_info: {byoeb_message.message_context.additional_info}")
             qik_interactive_list_message = qik_req_payload.get_qikchat_interactive_list_request_from_byoeb_message(byoeb_message)
-            # print(f"📋 Generated qikchat interactive list request: {qik_interactive_list_message}")
             qik_requests.append(qik_interactive_list_message)
             
         # Handle text messages (skip if text is empty to avoid "Missing body text" errors)
@@ -100,11 +109,6 @@ class QikchatService(BaseChannelService):
                 print(f"🎵 Audio message request prepared")
             else:
                 print(f"⚠️ Audio message skipped (upload failed)")
-            
-        # Handle template messages
-        if utils.has_template_additional_info(byoeb_message):
-            qik_template_message = qik_req_payload.get_qikchat_template_request_from_byoeb_message(byoeb_message)
-            qik_requests.append(qik_template_message)
         
         return qik_requests
     
@@ -153,17 +157,30 @@ class QikchatService(BaseChannelService):
         2. Simpler response format
         3. Different message ID extraction
         4. No message type parameter needed
+        5. Filters continuation flags and marks responses
         """
         from byoeb.chat_app.configuration.dependency_setup import channel_client_factory
         client = await channel_client_factory.get(self.__client_type)
         
         print(f"\n=== QIKCHAT SEND_REQUESTS DEBUG ===")
         print(f"📤 Sending {len(requests)} requests")
+        
+        # Track continuation messages and clean requests before sending
+        continuation_indices = set()
+        clean_requests = []
+        
         for i, request in enumerate(requests):
-            print(f"📤 Request {i+1}: {request}")
+            # Check if this is a continuation message
+            if request.get('_is_continuation', False):
+                continuation_indices.add(i)
+            
+            # Remove internal flags before sending
+            clean_req = {k: v for k, v in request.items() if not k.startswith('_')}
+            clean_requests.append(clean_req)
+            print(f"📤 Request {i+1}: {clean_req}")
         
         tasks = []
-        for request in requests:
+        for request in clean_requests:
             # Qikchat uses single send_message method for all types
             tasks.append(client.send_message(request))
         
@@ -184,6 +201,10 @@ class QikchatService(BaseChannelService):
                 responses.append({"error": str(result)})
                 message_ids.append(None)
             else:
+                # Mark continuation responses with internal flag
+                if i in continuation_indices:
+                    result['_is_continuation'] = True
+                
                 responses.append(result)
                 # Extract message ID from Qikchat response
                 # Qikchat returns: {"status": True, "data": [{"id": "message_id", ...}]}
@@ -213,13 +234,29 @@ class QikchatService(BaseChannelService):
         """
         Create conversation context from bot responses and update original message IDs.
         
+        Filters out continuation messages (marked with _is_continuation flag) to ensure
+        only one database entry is created per logical message, even if split for sending.
+        
         Key Differences from WhatsApp:
         1. Different response structure (Dict vs WhatsAppResponse)
         2. Different message ID extraction  
         3. Updates original message with actual QikChat ID
         4. Preserves conversation thread ID
+        5. Filters continuation messages to prevent duplicate DB entries
         """
         bot_to_user_messages = []
+        
+        # Filter out continuation messages - only keep primary messages for database
+        primary_responses = []
+        primary_indices = []
+        
+        for i, response in enumerate(responses):
+            if not response.get('_is_continuation', False):
+                primary_responses.append(response)
+                primary_indices.append(i)
+        
+        if len(primary_responses) < len(responses):
+            print(f"📋 SPLIT_MESSAGE_FILTER: Filtered {len(responses)} responses down to {len(primary_responses)} primary (removed {len(responses) - len(primary_responses)} continuation messages)")
         
         # DEBUG: Let's see what we have in the user message context
         print(f"🔍 CREATE_CONV DEBUG:")
@@ -235,9 +272,13 @@ class QikchatService(BaseChannelService):
             original_user_question_id = byoeb_user_message.message_context.message_id
             print(f"🔗 REPLY_CONTEXT_FIX: Fallback to message_context.message_id: {original_user_question_id}")
         
-        for i, response in enumerate(responses):
+        # Iterate only over primary responses (continuation messages already sent but not stored)
+        for idx, response in enumerate(primary_responses):
             if "error" in response:
                 continue
+            
+            # Map back to original message index if available
+            i = primary_indices[idx] if idx < len(primary_indices) else idx
                 
             # Extract message details from Qikchat response
             qikchat_message_id = None
@@ -265,7 +306,7 @@ class QikchatService(BaseChannelService):
             if "data" in response and isinstance(response["data"], list) and len(response["data"]) > 0:
                 created_at = response["data"][0].get("created_at")
             
-            print(f"🕒 CREATE_CONV Response {i+1}/{len(responses)}: created_at from QikChat = {created_at}")
+            print(f"🕒 CREATE_CONV Response {idx+1}/{len(primary_responses)} (original {i+1}): created_at from QikChat = {created_at}")
             
             # Convert QikChat's ISO timestamp to Unix timestamp if available
             if created_at:
@@ -365,10 +406,13 @@ class QikchatService(BaseChannelService):
         """
         Create cross conversation context from responses.
         
+        Filters out continuation messages from expert responses to prevent duplicate DB entries.
+        
         Key Differences from WhatsApp:
         1. Dict responses instead of WhatsAppResponse objects
         2. Different message ID extraction
         3. Simpler response structure
+        4. Filters continuation messages
         """
         user_messages_context = []
         for user_response in user_responses:
@@ -425,9 +469,15 @@ class QikchatService(BaseChannelService):
         user_messages_context = filtered_messages_context
         print(f"🧹 FILTER_DUPLICATES: After filtering - {len(user_messages_context)} entries remaining")
         
+        # Filter out continuation messages from expert responses (only keep primary for DB)
+        primary_expert_responses = [resp for resp in expert_responses if not resp.get('_is_continuation', False)]
+        
+        if len(primary_expert_responses) < len(expert_responses):
+            print(f"📋 EXPERT_SPLIT_FILTER: Filtered {len(expert_responses)} expert responses down to {len(primary_expert_responses)} primary")
+        
         # Process expert responses and update expert message with returned message ID
-        print(f"🔧 CREATE_CROSS_CONV: Processing {len(expert_responses)} expert responses")
-        for i, expert_response in enumerate(expert_responses):
+        print(f"🔧 CREATE_CROSS_CONV: Processing {len(primary_expert_responses)} expert responses (primary only)")
+        for i, expert_response in enumerate(primary_expert_responses):
             print(f"🔧 CREATE_CROSS_CONV: Expert response {i+1}: {expert_response}")
             
             if "error" in expert_response:
