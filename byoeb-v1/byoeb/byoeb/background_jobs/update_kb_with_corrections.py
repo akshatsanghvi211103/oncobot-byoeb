@@ -91,6 +91,14 @@ async def get_corrected_conversations():
         expert_no_responses = await message_collection_client.afetch_all(expert_no_responses_query)
         print(f"📝 Found {len(expert_no_responses)} expert 'No' responses in the past hour")
         
+        # Exclude corrections from specific phone numbers (e.g., test accounts)
+        EXCLUDED_PHONE_NUMBERS = ["919739811075", "9739811075"]
+        expert_no_responses = [
+            response for response in expert_no_responses
+            if response.get("message_data", {}).get("user", {}).get("phone_number_id") not in EXCLUDED_PHONE_NUMBERS
+        ]
+        print(f"📝 After excluding test accounts: {len(expert_no_responses)} expert 'No' responses to process")
+        
         corrected_conversations = []
         
         for i, no_response in enumerate(expert_no_responses):
