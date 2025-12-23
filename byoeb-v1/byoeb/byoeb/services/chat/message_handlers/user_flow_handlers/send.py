@@ -69,6 +69,7 @@ class ByoebUserSendResponse(Handler):
         }
 
     async def is_active_user(self, user_id: str, expert: bool = False):
+        # return False
         # if expert:
         #     return False
         try:

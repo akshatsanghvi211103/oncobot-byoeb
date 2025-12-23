@@ -538,7 +538,7 @@ class ByoebExpertGenerateResponse(Handler):
                         
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
-                            message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
+                            message_type=MessageTypes.TEMPLATE_BUTTON.value,  # Use TEMPLATE_BUTTON for templates
                             message_english_text=message_en_text,
                             message_source_text=text_message,
                             additional_info={
@@ -631,7 +631,7 @@ class ByoebExpertGenerateResponse(Handler):
                         
                         message_context = MessageContext(
                             message_id=str(uuid.uuid4()),  # Generate unique message ID
-                            message_type=MessageTypes.REGULAR_TEXT.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
+                            message_type=MessageTypes.TEMPLATE_BUTTON.value,  # Start as regular, will be changed to TEMPLATE_BUTTON later
                             message_english_text=message_en_text,
                             message_source_text=text_message,
                             additional_info={
@@ -905,10 +905,21 @@ class ByoebExpertGenerateResponse(Handler):
             is_audio_query = reply_context.additional_info.get("is_audio_query", False) if reply_context and reply_context.additional_info else False
             print(f"🎤 DEBUG [Expert NO correction]: Original user query was audio: {is_audio_query}")
             
+            # Check if user is active (needed to decide if Question prefix is required)
+            from byoeb.chat_app.configuration.dependency_setup import user_db_service
+            from byoeb.services.chat.message_handlers.user_flow_handlers.send import ByoebUserSendResponse
+            user_no = message.cross_conversation_context.get(constants.USER, {})
+            user_id_for_active_check_no = user_no.get("user_id")
+            send_handler_no = ByoebUserSendResponse(user_db_service, None)
+            is_active_user_no = await send_handler_no.is_active_user(user_id_for_active_check_no)
+            print(f"🎤 DEBUG [Expert NO correction]: User is_active_user: {is_active_user_no}")
+            
             # Format the corrected answer with Question/Answer format
+            # Include Question prefix for: 1) audio queries, OR 2) inactive users (who get template messages)
             # Keep English version for database storage
-            if is_audio_query:
+            if is_audio_query or not is_active_user_no:
                 formatted_response_en = f"Question: {question}\nAnswer: {response_text}"
+                print(f"🎤 DEBUG [Expert NO correction]: Including Question prefix (audio={is_audio_query}, inactive={not is_active_user_no})")
             else:
                 formatted_response_en = response_text
             
@@ -936,6 +947,9 @@ class ByoebExpertGenerateResponse(Handler):
                 [],  # Empty list to suppress related questions in final verified answer
                 formatted_response_en  # Pass English version for database storage
             )
+
+            print("This is the byoeb user message", byoeb_user_messages)
+            print("done here")
 
         elif (reply_context.message_category == MessageCategory.BOT_TO_EXPERT_VERIFICATION.value
             and reply_context.additional_info[constants.VERIFICATION_STATUS] == constants.PENDING
@@ -1003,10 +1017,21 @@ class ByoebExpertGenerateResponse(Handler):
             is_audio_query = reply_context.additional_info.get("is_audio_query", False) if reply_context and reply_context.additional_info else False
             print(f"🎤 DEBUG [Expert YES approval]: Original user query was audio: {is_audio_query}")
 
+            # Check if user is active (needed to decide if Question prefix is required)
+            from byoeb.chat_app.configuration.dependency_setup import user_db_service
+            from byoeb.services.chat.message_handlers.user_flow_handlers.send import ByoebUserSendResponse
+            user = message.cross_conversation_context.get(constants.USER, {})
+            user_id_for_active_check = user.get("user_id")
+            send_handler_early = ByoebUserSendResponse(user_db_service, None)
+            is_active_user_early = await send_handler_early.is_active_user(user_id_for_active_check)
+            print(f"🎤 DEBUG [Expert YES approval]: User is_active_user: {is_active_user_early}")
+
             # Format bot answer with Question/Answer format
+            # Include Question prefix for: 1) audio queries, OR 2) inactive users (who get template messages)
             # Keep English version for database storage
-            if is_audio_query:
+            if is_audio_query or not is_active_user_early:
                 formatted_bot_answer_en = f"Question: {question}\nAnswer: {bot_answer}"
+                print(f"🎤 DEBUG [Expert YES approval]: Including Question prefix (audio={is_audio_query}, inactive={not is_active_user_early})")
             else:
                 formatted_bot_answer_en = bot_answer
             
@@ -1090,7 +1115,7 @@ class ByoebExpertGenerateResponse(Handler):
             
             message_context = MessageContext(
                 message_id=str(uuid.uuid4()),
-                message_type=MessageTypes.REGULAR_TEXT.value,
+                message_type=MessageTypes.TEMPLATE_BUTTON.value,
                 message_english_text=formatted_bot_answer_en,  # English version for database
                 message_source_text=translated_bot_answer,  # Already translated text
                 additional_info=media_additional_info if is_active_user else {
@@ -1135,39 +1160,11 @@ class ByoebExpertGenerateResponse(Handler):
                 incoming_timestamp=message.incoming_timestamp,
             )
             
-            # Handle inactive user template message (similar to expert verification pattern)
+            # Handle inactive user template message - just prepare the message, send.py will handle sending
             if not is_active_user:
-                print("📋 User is inactive for 24 hours, preparing template message")
-                # Get channel service to prepare requests
-                if message.channel_type == "whatsapp":
-                    from byoeb.services.channel.whatsapp import WhatsAppService
-                    channel_service = WhatsAppService()
-                elif message.channel_type == "qikchat":
-                    from byoeb.services.channel.qikchat import QikchatService
-                    channel_service = QikchatService()
-                else:
-                    print(f"❌ Unsupported channel type: {message.channel_type}")
-                    byoeb_user_messages = [new_user_message]
-                    return
-                
-                # Prepare requests (creates both regular and template versions)
-                user_requests = await channel_service.prepare_requests(new_user_message)
-                print(f"🔧 DEBUG: user_requests length: {len(user_requests)}")
-                
-                if len(user_requests) < 2:
-                    print(f"❌ ERROR: Expected 2 requests (regular + template), got only {len(user_requests)}")
-                    byoeb_user_messages = [new_user_message]
-                    return
-                    
-                regular_message = user_requests[0]
-                template_message = user_requests[1]
-                
-                # Change message type to template and send template version
-                new_user_message.message_context.message_type = MessageTypes.TEMPLATE_BUTTON.value
-                responses, message_ids = await channel_service.send_requests([template_message])
-                print(f"📋 Template message sent to inactive user: {responses}")
-                
-                # Keep byoeb_user_messages for database storage (don't clear)
+                print("📋 User is inactive for 24 hours, message prepared with template format")
+                # Message is already prepared with TEMPLATE_BUTTON type and template params
+                # send.py will handle the actual sending
                 byoeb_user_messages = [new_user_message]
             else:
                 print("🔘 User is active, will send regular message through normal flow")

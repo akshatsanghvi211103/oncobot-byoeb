@@ -1,30 +1,24 @@
 (byoeb-py3.11) PS C:\Users\t-asanghvi\work\byoeb\byoeb-v1\byoeb\byoeb\chat_app> p3 .\run.py
-cool /subscriptions/cef13953-6a76-4434-9a65-1d95481f83c7/resourceGroups/swasthyabot/providers/Microsoft.CognitiveServices/accounts/swasthyabot-speech2 bruh <function get_bearer_token_provider.<locals>.wrapper at 0x0000017ED2ABAD40> nice
-INFO:     Started server process [7204]
+cool /subscriptions/cef13953-6a76-4434-9a65-1d95481f83c7/resourceGroups/swasthyabot/providers/Microsoft.CognitiveServices/accounts/swasthyabot-speech2 bruh <function get_bearer_token_provider.<locals>.wrapper at 0x000001FD3077AD40> nice
+INFO:     Started server process [50168]
 INFO:     Waiting for application startup.
-FastAPI app is running with PID: 7204
+FastAPI app is running with PID: 50168
 hi there
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:5000 (Press CTRL+C to quit)
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-hi there
 DEBUG PRODUCER: Message ID in message: None
-DEBUG PRODUCER: Payload ID: QoXyqys78PaoIFWUg6zDmIoRF
-DEBUG PRODUCER: Using payload ID as fallback: QoXyqys78PaoIFWUg6zDmIoRF
+DEBUG PRODUCER: Payload ID: aH00uNS3TVpOB4Znac5pxuzsI
+DEBUG PRODUCER: Using payload ID as fallback: aH00uNS3TVpOB4Znac5pxuzsI
 
 === QIKCHAT MESSAGE CONVERSION DEBUG ===
 📥 Converting message: {
   "from": "916352927215",
-  "timestamp": "2025-12-17T18:30:10.000Z",
+  "timestamp": "2025-12-23T10:29:22.000Z",
   "text": {
-    "body": "mera appointment kab hai?"
+    "body": "kya mai radiotherapy ke  pehle naha sakta hu?"
   },
   "type": "text",
-  "id": "QoXyqys78PaoIFWUg6zDmIoRF"
+  "id": "aH00uNS3TVpOB4Znac5pxuzsI"
 }
 📝 Detected message type: text
 ✅ Converting as regular message
@@ -38,33 +32,33 @@ INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
 [DEBUG] Using collection: 'users'
 C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.11\Lib\site-packages\motor\core.py:171: UserWarning: You appear to be connected to a CosmosDB cluster. For more information regarding feature compatibility and support please visit https://www.mongodb.com/supportability/cosmosdb
   delegate = self.__delegate_class__(*args, **kwargs)
-[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': '1101', 'User': {'user_id': '1101', 'user_name': 'Akshat Sanghvi', 'user_location': {}, 'user_language': 'hi', 'user_type': 'byoebuser', 'phone_number_id': '916352927215', 'test_user': False, 'experts': {'byoebexpert': ['919739811075'], 'byoebexpert2': ['8123273694']}, 'audience': [], 'patient_details': {'date_of_birth': '1985-03-15', 'gender': 'Male', 'age': 21}, 'created_timestamp': 1762936642, 'activity_timestamp': 1765996045, 'last_conversations': [{'question': 'Can I take a bath after radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'When is my appointment?', 'answer': 'Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'When is my appointment?', 'answer': 'Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.'}]}, 'timestamp': '1762936642'}]
+[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': '1101', 'User': {'user_id': '1101', 'user_name': 'Akshat Sanghvi', 'user_location': {}, 'user_language': 'hi', 'user_type': 'byoebuser', 'phone_number_id': '916352927215', 'test_user': False, 'experts': {'byoebexpert': ['919739811075'], 'byoebexpert2': ['8123273694']}, 'audience': [], 'patient_details': {'date_of_birth': '1985-03-15', 'gender': 'Male', 'age': 21}, 'created_timestamp': 1762936642, 'activity_timestamp': 1766485668, 'last_conversations': [{'question': 'Can I take a bath after radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'Can I take a bath after radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}, {'question': 'Can I take a bath after radiotherapy?', 'answer': 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'}]}, 'timestamp': '1762936642'}]    
 [DEBUG] Retrieved user by phone - user_id: '1101', phone_number_id: '916352927215', user_name: 'Akshat Sanghvi', conversations: 3
 🔍 GET_BOT_MESSAGES: Database returned 0 results
 ❌ GET_BOT_MESSAGES: No messages found in database
 🔍 Let's check what IDs actually exist in the database...
-🔍 Recent messages in database (last hour): 54
-   Recent 1: ID=WfUtzmYahUg2plgHMIwIJJpzg, Text='Recently, I underwent a major oral and maxillofaci...'
-   Recent 2: ID=GQ3VoKODdxtrAZd67d3wRk80O, Text='Let me check with the KMC staff and get back to yo...'
-   Recent 3: ID=qhkjHClC9SyNAZUuin8HtY9vH, Text='Let me check with a KMC doctor and get back to you...'
-   Recent 4: ID=CyfNwzjteQoXraEcKiDAc1aqe, Text='*Patient Info*: Akshat Sanghvi, Age: 21, Gender: M...'
-❌ Failed to get recent messages for debug: 'NoneType' object is not subscriptable
+🔍 Recent messages in database (last hour): 115
+   Recent 1: ID=MxFxy9BYFhaCdX2LKmk10rhzs, Text='Yes, you can take a bath after radiotherapy, but i...'
+   Recent 2: ID=oTrk4CUqbuaViPFgwnpqMel1b, Text='Thank you for verifiying the answer....'
+   Recent 3: ID=nNu1MKriuZPXz6qQqf5WC4u1Q, Text='Yes...'
+   Recent 4: ID=HOy8PS2fxBKooIw8iYZCmRJ2j, Text='Yes, you can take a bath after radiotherapy, but i...'
+   Recent 5: ID=sENvU5bOsQJV10Cf2IGLOVhbx, Text='Thank you for verifiying the answer....'
 [DEBUG] Looking for user with phone_number_id: '916352927215' in 1 retrieved users
 [DEBUG] Found existing user with user_id: '1101', user_name: 'Akshat Sanghvi', phone_number_id: '916352927215', conversations: 3
 🔍 PROCESSING MESSAGE: Category=byoebuser_to_bot, UserType=byoebuser
-🔍 Message Text: mera appointment kab hai?
+🔍 Message Text: kya mai radiotherapy ke  pehle naha sakta hu?
 🔍 Added USER conversation to processing queue
-🔤 USER PROCESS: Translating 'mera appointment kab hai?' from hi to en
-Thread ID: 16972, Variable Address: 1644863316864, client address: 1644212040208
-🔤 USER PROCESS: Translation result: 'When is my appointment?'
+🔤 USER PROCESS: Translating 'kya mai radiotherapy ke  pehle naha sakta hu?' from hi to en
+Thread ID: 45520, Variable Address: 2187603802816, client address: 2186951569872
+🔤 USER PROCESS: Translation result: 'Can I take a bath before radiotherapy?'
 
 === RESPONSE GENERATION DEBUG ===
-📝 Original message: 'mera appointment kab hai?'
-📤 English message for KB: 'When is my appointment?'
+📝 Original message: 'kya mai radiotherapy ke  pehle naha sakta hu?'
+📤 English message for KB: 'Can I take a bath before radiotherapy?'
 👤 User: 916352927215 (language: hi)
 
 🔍 MULTI-KB SEARCH DEBUG:
-🔍 Query: 'When is my appointment?'
+🔍 Query: 'Can I take a bath before radiotherapy?'
 🔍 Searching 4 knowledge bases...
 🔍 Searching KB1 (Q&A pairs) with filter: source eq 'oncobot_knowledge_base'
 🔍 KB1 returned 3 Q&A results
@@ -77,65 +71,19 @@ Thread ID: 16972, Variable Address: 1644863316864, client address: 1644212040208
 🔍 Total chunks retrieved: 8 (KB1: 3, KB2: 2, KB3: 2, KB1_Expert: 1)
 
 === KB CONTEXT RETRIEVED (8 chunks) ===
-Query: When is my appointment?
+Query: Can I take a bath before radiotherapy?
 Chunk 1:
-  Question: When is my appointment for radiation ?
+  Question: Can I use soap on the rest of my body while undergoing radiation therapy?
   Source: oncobot_knowledge_base
-  Content: Question: When is my appointment for radiation ?
-Answer: Your appointment for radiation is typically scheduled according to availability of slot. You could enquire about the availability of slots on t...
-  ---
-Chunk 2:
-  Question: Should I book an appointment to meet my doctor after 1 month?
-  Source: oncobot_knowledge_base
-  Content: Question: Should I book an appointment to meet my doctor after 1 month?
-Answer: Once your treatment is over , your doctor will provide you with a date for your follow up visit. This will depend on how...      
-  ---
-Chunk 3:
-  Question: When is my appointment for radiotherapy?
-  Source: oncobot_knowledge_base
-  Content: Question: When is my appointment for radiotherapy?
-Answer: Please contact the radiography team in room number 11 or 12 ( Linear accelerator ) to know more details about your appointment. You can also ...
-  ---
-Chunk 4:
-  Question: Radiation Therapy Guide > Radiotherapy Treatment Process
-  Source: kb2_content
-  Content: Section: Radiation Therapy Guide > Radiotherapy Treatment Process
-Content: The radiotherapy process follows these sequential steps:
-
-1. First examination by the doctor
-2. Advised required investigatio...
-  ---
-Chunk 5:
-  Question: Radiation Therapy Guide > Pain Management During Treatment > Pain Medication Guidelines
-  Source: kb2_content
-  Content: Section: Radiation Therapy Guide > Pain Management During Treatment > Pain Medication Guidelines
-Content: Follow the doctor's advice and continue to take the pain medications. Do not alter/change dose...
-  ---
-Chunk 6:
-  Question: Radiation Therapy to Your Head and Neck > After your simulation
-  Source: kb3_content
-  Content: Section: Radiation Therapy to Your Head and Neck > After your simulation
-Content: At the end of your simulation appointment, we will schedule an appointment for your set-up procedure. This is the fina...       
-  ---
-Chunk 7:
-  Question: Radiation Therapy to Your Head and Neck > After your simulation > Scheduling your treatment
-  Source: kb3_content
-  Content: Section: Radiation Therapy to Your Head and Neck > After your simulation > Scheduling your treatment
-Content: You will have radiation treatments every day (Monday through Friday) for about 7 weeks. Yo...
-  ---
-Chunk 8:
-  Question: Hair falls out during treatment.
-  Source: oncobot_expert_knowledge_base
-  🏆 EXPERT-VALIDATED: This chunk contains expert-corrected content
-  Content: [EXPERT-VALIDATED] Question: Hair falls out during treatment.
-Answer: Hair loss during cancer treatment can occur, but it depends on the site of radiotherapy. Radiation therapy typically causes hair l...
+  Content: Question: Can I use soap on the rest of my body while undergoing radiation therapy?
+Answer: Yes, you can use mild soap on the rest of your body while undergoing radiation therapy. However, be gentle a...
   ---
 === END KB CONTEXT ===
 
 
 === FULL LLM INPUT DEBUG ===
 Message 1 (system):
-  Content: You are an expert oncology assistant helping cancer patients. Your purpose is to answer patients with any oncology-related queries they might have.
+  Content: You are an expert oncology assistant helping cancer patients. Your purpose is to answer patients with any oncology-related queries they might have. 
 
 You have access to four knowledge bases:
 - KB1: Q&A pairs covering general oncology topics.
@@ -148,97 +96,97 @@ Message 2 (user):
   Content: The following knowledge base context has been retrieved from multiple sources to help answer your question. Content marked with [EXPERT-VALIDATED] has been specifically reviewed by medical professionals - use this content ONLY if it directly relates to the user's question:
 
 KNOWLEDGE BASE CONTEXT:
-Question: When is my appointment for radiation ?
-Answer: Your appointment for radiation is typically scheduled according to availability of slot. You could enquire about the availability of slots on th...
-🔍 Question being processed: 'When is my appointment?'
+Question: Can I use soap on the rest of my body while undergoing radiation therapy?
+Answer: Yes, you can use mild soap on the rest of your body while undergoing radiation therapy. However, be gentle an...
+🔍 Question being processed: 'Can I take a bath before radiotherapy?'
 🔍 Number of chunks: 8
 === END FULL LLM INPUT DEBUG ===
 
 
 === LLM RESPONSE DEBUG ===
 🔤 Raw LLM response_text: '<BEGIN RESPONSE>
-To find out the details of your appointment for radiation therapy, please contact the radiography team in room number 11 or 12 (Linear accelerator). You can also call 0820.2922489 for more information. They will be able to provide you with the specific time and date of your appointment.
+Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.
 <END RESPONSE>
 
 <BEGIN QUERY TYPE>
-logistical
+medical
 <END QUERY TYPE>'
-🔤 Response length: 367
+🔤 Response length: 464
 🔤 Contains 'Sorry': False
 🔤 Contains 'assist': False
 === END LLM RESPONSE DEBUG ===
 
-Generated answer:  To find out the details of your appointment for radiation therapy, please contact the radiography team in room number 11 or 12 (Linear accelerator). You can also call 0820.2922489 for more information. They will be able to provide you with the specific time and date of your appointment.
-Query the type:  logistical
-Query the type:  logistical
+Generated answer:  Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.
+Query the type:  medical
+Query the type:  medical
 📊 CLASSIFICATION_FIX: Set original message category to 'byoebuser_to_bot' for proper filtering
-finding here ['How do I schedule my radiation treatment time?', 'What steps are involved in radiotherapy treatment?', 'Can I change my radiation treatment schedule?']
-Thread ID: 16972, Variable Address: 1644868659904, client address: 1644212040208
-Thread ID: 16972, Variable Address: 1644868659904, client address: 1644212040208
-Thread ID: 16972, Variable Address: 1644868659904, client address: 1644212040208
+finding here ['Can I use moisturizer on the treatment area?', 'What should I do if my skin becomes itchy?', 'Is it safe to swim during radiation therapy?']
+Thread ID: 45520, Variable Address: 2187607877696, client address: 2186951569872
+Thread ID: 45520, Variable Address: 2187607877696, client address: 2186951569872
+Thread ID: 45520, Variable Address: 2187607877696, client address: 2186951569872
 ✅ Translated 3 related questions to hi
-📋 Using staff waiting message for logistical query
-🔤 WAITING MESSAGE: Localized (hi): 'मैं के-एम-सी के स्टाफ से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'
-🔤 WAITING MESSAGE: English: 'Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.'
-🔗 DEBUG: Storing original user question ID for reply context: QoXyqys78PaoIFWUg6zDmIoRF
+👨‍⚕️ Using doctor waiting message for medical query
+🔤 WAITING MESSAGE: Localized (hi): 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'
+🔤 WAITING MESSAGE: English: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
+🔗 DEBUG: Storing original user question ID for reply context: aH00uNS3TVpOB4Znac5pxuzsI
 🔤 TRANSLATION DEBUG: About to translate message to hi
-🔤 TRANSLATION DEBUG: Input text: 'मैं के-एम-सी के स्टाफ से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'
-Thread ID: 16972, Variable Address: 1644868659904, client address: 1644212040208
-🔤 TRANSLATION DEBUG: Final result: 'मैं के-एम-सी के स्टाफ से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'
+🔤 TRANSLATION DEBUG: Input text: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'
+Thread ID: 45520, Variable Address: 2187607877696, client address: 2186951569872
+🔤 TRANSLATION DEBUG: Final result: 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'
 🔤 TRANSLATION DEBUG: Translation used: True
-🔤 ENGLISH TEXT: Using provided English text: 'Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to ask more questions.'
+🔤 ENGLISH TEXT: Using provided English text: 'Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ask more questions.'
 � Creating user response message...
 🔗 Adding 3 follow-up questions to interactive list
-🔗 DEBUG: Creating reply context - user message ID: QoXyqys78PaoIFWUg6zDmIoRF
-🔗 DEBUG: Created main waiting message reply context with reply_id: QoXyqys78PaoIFWUg6zDmIoRF
-🔗 DEBUG: Main waiting message ID: 46f7411d-5f73-427b-b8cd-8136732ec881
+🔗 DEBUG: Creating reply context - user message ID: aH00uNS3TVpOB4Znac5pxuzsI
+🔗 DEBUG: Created main waiting message reply context with reply_id: aH00uNS3TVpOB4Znac5pxuzsI
+🔗 DEBUG: Main waiting message ID: 1a65c10b-259e-4c34-ba77-e930323fef19
 🎵 Generating TTS audio again for message...
 running tts now
 running tts now again
-🔧 SPEECH DEBUG - SUCCESS: Generated 107136 bytes of audio
-🔧 TTS DEBUG - Received audio_bytes: <class 'bytes'>, length: 107136
+🔧 SPEECH DEBUG - SUCCESS: Generated 109152 bytes of audio
+🔧 TTS DEBUG - Received audio_bytes: <class 'bytes'>, length: 109152
 running tts now again 2
 🎵 TTS audio message generated successfully with SAS URL
-🔗 DEBUG: Audio message reply context reply_id: QoXyqys78PaoIFWUg6zDmIoRF
-🔗 DEBUG: Audio message ID: 6b2ecf7c-9019-47f1-a04f-19f2f53d0db3
+🔗 DEBUG: Audio message reply context reply_id: aH00uNS3TVpOB4Znac5pxuzsI
+🔗 DEBUG: Audio message ID: 8abf2271-dc34-4395-a311-efd7ac2a9176
 💬 Returning 2 messages: ['interactive_list_reply', 'regular_audio']
 ✅ Waiting messages sent to user (in hi)
 👨‍⚕️ Creating expert verification message...
 expert result {'byoebexpert': ['919739811075'], 'byoebexpert2': ['8123273694']}
-expert result 2 ('8123273694', 'byoebexpert2') logistical
-👨‍⚕️ Using configured expert: 8123273694 (byoebexpert2)
-🆔 Generated expert user_id: 17c1ac967b52a4cf1deb6983380f3f0e from phone: 8123273694
+expert result 2 ('919739811075', 'byoebexpert') medical
+👨‍⚕️ Using configured expert: 919739811075 (byoebexpert)
+🆔 Generated expert user_id: d7022499fc5fbcd34df184209477a79f from phone: 919739811075
 👤 Added patient context for expert: 2 lines
 🎤 DEBUG [Creating expert verification]: Original user query was audio: False
 🔧 Expert additional_info template_language: en (type: <class 'str'>)
 📋 Template parameters created:
   {1} Patient Info: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
-  {2} Question: When is my appointment?
-  {3} Answer: To find out the details of your appointment for radiation therapy, please contact the radiography team in room number 11 or 12 (Linear accelerator). You can also call 0820.2922489 for more information. They will be able to provide you with the specific time and date of your appointment.
+  {2} Question: Can I take a bath before radiotherapy?
+  {3} Answer: Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.
 🔍 DEBUG [Expert message creation]: additional_info contents:
         emoji: None
         verification_status: pending
         button_titles: ['Yes', 'No']
         template_name: verification_with_butons
         template_language: en
-        template_parameters: ['Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15', 'When is my appointment?', 'To find out t...     
+        template_parameters: ['Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15', 'Can I take a bath before radiotherapy?',...
      ✅ is_audio_query: False
-        related_questions: ['मैं अपने रेडिएशन उपचार का समय कैसे निर्धारित करूँ?', 'रेडियोथेरेपी उपचार में कौन-कौन से कदम शामिल ...       
+        related_questions: ['क्या मैं उपचार क्षेत्र पर मॉइस्चराइज़र का उपयोग कर सकता हूँ?', 'अगर मेरी त्वचा में खुजली हो तो मुझ...
 👨‍⚕️ Expert message created with patient info in template format
 🔍 DEBUG [After expert message creation]: message_context.additional_info has is_audio_query: True
      Value: False
 ✅ Expert verification message created
 🎉 Complete! Generated 5 messages (original user message + waiting messages + expert verification + read receipt)
-📥 INCOMING: regular_text, ID=QoXyqys78PaoIFWUg6zDmIoRF
-📤 OUTGOING: interactive_list_reply, ID=46f7411d-5f73-427b-b8cd-8136732ec881
-📤 OUTGOING: regular_audio, ID=6b2ecf7c-9019-47f1-a04f-19f2f53d0db3
+📥 INCOMING: regular_text, ID=aH00uNS3TVpOB4Znac5pxuzsI
+📤 OUTGOING: interactive_list_reply, ID=1a65c10b-259e-4c34-ba77-e930323fef19
+📤 OUTGOING: regular_audio, ID=8abf2271-dc34-4395-a311-efd7ac2a9176
 🔍 MESSAGE BREAKDOWN: Total=5, Incoming=1, Outgoing=2, Expert=1, ReadReceipt=1
-🔍 User message 1: Type=interactive_list_reply, ID=46f7411d-5f73-427b-b8cd-8136732ec881
-🔍 User message 2: Type=regular_audio, ID=6b2ecf7c-9019-47f1-a04f-19f2f53d0db3
+🔍 User message 1: Type=interactive_list_reply, ID=1a65c10b-259e-4c34-ba77-e930323fef19
+🔍 User message 2: Type=regular_audio, ID=8abf2271-dc34-4395-a311-efd7ac2a9176
 🔧 DEBUG: Using channel_type='qikchat' -> service=QikchatService
-💬 Sending response: Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to...
+💬 Sending response: Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ...
 🏷️ Query type: medical
-👨‍⚕️ Found expert verification message for 8123273694
+👨‍⚕️ Found expert verification message for 919739811075
 📤 Processing user message 1/2: interactive_list_reply
 🔍 HANDLE_USER: Processing interactive_list_reply
 Checking interactive list - has description: True, has row_texts: True, row_texts not None: True, result: True
@@ -246,11 +194,11 @@ Checking interactive list - has description: True, has row_texts: True, row_text
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
 📤 Sending 1 requests
-📤 Request 1: {'to_contact': '916352927215', 'type': 'interactive', 'interactive': {'type': 'list', 'body': {'text': 'मैं के-एम-सी के स्ट    टाफ से पूछ कर आपको एक सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'}, 'action': {'button': 'संबंधित प्रश्न', 'sections': [{'title': ''              ', 'rows': [{'id': 'option_0', 'title': 'Q1', 'description': 'मैं अपने रेडिएशन उपचार का समय कैसे निर्धारित करूँ?'}, {'id': 'option_1', 'ti        itle': 'Q2', 'description': 'रेडियोथेरेपी उपचार में कौन-कौन से कदम शामिल होते हैं?'}, {'id': 'option_2', 'title': 'Q3', 'description': 'क्         या मैं अपनी रेडिएशन उपचार की समय-सारणी बदल सकता हूँ?'}]}]}}, 'context': {'message_id': 'QoXyqys78PaoIFWUg6zDmIoRF'}}
+📤 Request 1: {'to_contact': '916352927215', 'type': 'interactive', 'interactive': {'type': 'list', 'body': {'text': 'मैं के-एम-सी के डॉक्टर से पूछ कर आपको एक        सटीक उत्तर दूँगा। तब तक, बेझिझक और प्रश्न पूछें।'}, 'action': {'button': 'संबंधित प्रश्न', 'sections': [{'title': '', 'rows': [{'id': 'option_0', 'title': 'Q1'            ', 'description': 'क्या मैं उपचार क्षेत्र पर मॉइस्चराइज़र का उपयोग कर सकता हूँ?'}, {'id': 'option_1', 'title': 'Q2', 'description': 'अगर मेरी त्वचा में खुजली हो              ो तो मुझे क्या करना चाहिए?'}, {'id': 'option_2', 'title': 'Q3', 'description': 'रेडिएशन थेरेपी के दौरान तैरना सुरक्षित है या नहीं, यह आपके डॉक्टर पर ...'}]}]}},             , 'context': {'message_id': 'aH00uNS3TVpOB4Znac5pxuzsI'}}
 📤 Got 1 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'wVODGrh8rYXE3jBKRR6PqxADH', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-12-17T18:30:48.424Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: wVODGrh8rYXE3jBKRR6PqxADH
-📤 Final message_ids: ['wVODGrh8rYXE3jBKRR6PqxADH']
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'm9mMkD4KroCtyzhYEBevxntDH', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-12-23T10:30:06.732Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: m9mMkD4KroCtyzhYEBevxntDH
+📤 Final message_ids: ['m9mMkD4KroCtyzhYEBevxntDH']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
 
@@ -273,11 +221,11 @@ Checking interactive list - has description: False, has row_texts: False, row_te
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
 📤 Sending 1 requests
-📤 Request 1: {'to_contact': '916352927215', 'type': 'audio', 'audio': {'link': 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_bdb13679e5be4538841f613e09a6ed00.mp3?st=2025-12-17T18%3A30%3A47Z&se=2025-12-17T19%3A30%3A47Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-12-17T18%3A30%3A47Z&ske=2025-12-17T19%3A30%3A47Z&sks=b&skv=2025-01-05&sig=Ca/9pblq4VNqG4xDqQ2i3zy30uX6tZCwFoKa5UIYM7M%3D'}, 'context': {'message_id': 'QoXyqys78PaoIFWUg6zDmIoRF'}}  
+📤 Request 1: {'to_contact': '916352927215', 'type': 'audio', 'audio': {'link': 'https://smartkcstorage1.blob.core.windows.net/oncobot-container/tts_audio_a65a96c3fe6347118ad4c67823490293.mp3?st=2025-12-23T10%3A30%3A04Z&se=2025-12-23T11%3A30%3A04Z&sp=r&sv=2025-01-05&sr=b&skoid=f5b64d94-ba27-422a-abb5-cad2b511c671&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2025-12-23T10%3A30%3A04Z&ske=2025-12-23T11%3A30%3A04Z&sks=b&skv=2025-01-05&sig=LqS9VX6nnrn6YxZVsgS1rtg74SAve5PXyD4PgYjh0As%3D'}, 'context': {'message_id': 'aH00uNS3TVpOB4Znac5pxuzsI'}}
 📤 Got 1 results
-📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'OsToH0Tq3j2xhEWETZcV4L7rf', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-12-17T18:30:48.573Z', 'status': 'processing'}]}
-📤 Extracted message_id for result 1: OsToH0Tq3j2xhEWETZcV4L7rf
-📤 Final message_ids: ['OsToH0Tq3j2xhEWETZcV4L7rf']
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'Fmf385XFjOvISP3BnPDRJLjHJ', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0, 'created_at': '2025-12-23T10:30:06.909Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: Fmf385XFjOvISP3BnPDRJLjHJ
+📤 Final message_ids: ['Fmf385XFjOvISP3BnPDRJLjHJ']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
 
@@ -287,23 +235,22 @@ Checking interactive list - has description: False, has row_texts: False, row_te
 📤 Final message_ids: []
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
-🔧 Handling expert message for: 8123273694
-🔧 Expert user_id: 17c1ac967b52a4cf1deb6983380f3f0e
-User 17c1ac967b52a4cf1deb6983380f3f0e not found in database - treating as inactive
+🔧 Handling expert message for: 919739811075
+🔧 Expert user_id: d7022499fc5fbcd34df184209477a79f
 🔧 Expert is_active_user: False
-🔍 Interactive button message length: 429 chars
-🔍 Split result: 1 chunks
+📋 Preparing template message for inactive expert
 🔧 Expert prepare_requests returned 1 messages
-📋 Sending template message to inactive expert
-📋 Sending 0 template messages
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
-📤 Sending 0 requests
-📤 Got 0 results
-📤 Final message_ids: []
+📤 Sending 1 requests
+📤 Request 1: {'to_contact': '919739811075', 'type': 'template', 'template': {'name': 'verification_with_butons', 'language': 'en', 'components': [{'type': 'body', 'parameters': [{'type': 'text', 'text': 'Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15'}, {'type': 'text', 'text': 'Can I take a bath before radiotherapy?'}, {'type': 'text', 'text': "Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment."}]}]}}
+📤 Got 1 results
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'fqyRUqHjyAma4zg5JmnNDTNYr', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0.2, 'created_at': '2025-12-23T10:30:07.099Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: fqyRUqHjyAma4zg5JmnNDTNYr
+📤 Final message_ids: ['fqyRUqHjyAma4zg5JmnNDTNYr']
 === END QIKCHAT SEND_REQUESTS DEBUG ===
 
-responses []
+responses [{'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'fqyRUqHjyAma4zg5JmnNDTNYr', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0.2, 'created_at': '2025-12-23T10:30:07.099Z', 'status': 'processing'}]}]
 📌 Skipping emoji reaction (emoji is None)
 
 === QIKCHAT SEND_REQUESTS DEBUG ===
@@ -315,105 +262,441 @@ responses []
 ✅ Sent 2 user messages and expert verifier message!
 ✅ Response sent successfully!
 🔍 CREATE_CONV DEBUG:
-   byoeb_user_message.message_context.message_id: 46f7411d-5f73-427b-b8cd-8136732ec881
-   byoeb_user_message.reply_context.reply_id: QoXyqys78PaoIFWUg6zDmIoRF
-🔗 REPLY_CONTEXT_FIX: Using reply_context.reply_id as original user question ID: QoXyqys78PaoIFWUg6zDmIoRF
-🕒 CREATE_CONV Response 1/2 (original 1): created_at from QikChat = 2025-12-17T18:30:48.424Z
-🕒 CREATE_CONV: Parsed QikChat created_at to Unix timestamp: 1765996248
+   byoeb_user_message.message_context.message_id: 1a65c10b-259e-4c34-ba77-e930323fef19
+   byoeb_user_message.reply_context.reply_id: aH00uNS3TVpOB4Znac5pxuzsI
+🔗 REPLY_CONTEXT_FIX: Using reply_context.reply_id as original user question ID: aH00uNS3TVpOB4Znac5pxuzsI
+🕒 CREATE_CONV Response 1/2 (original 1): created_at from QikChat = 2025-12-23T10:30:06.732Z
+🕒 CREATE_CONV: Parsed QikChat created_at to Unix timestamp: 1766485806
 🎵 AUDIO_URL_FIX: Using original message 1 additional_info
-🔗 REPLY_CONTEXT_FIX: Bot message 1 reply_id set to: QoXyqys78PaoIFWUg6zDmIoRF (QikChat ID: wVODGrh8rYXE3jBKRR6PqxADH)
-🕒 CREATE_CONV Response 2/2 (original 2): created_at from QikChat = 2025-12-17T18:30:48.573Z
-🕒 CREATE_CONV: Parsed QikChat created_at to Unix timestamp: 1765996248
+🔗 REPLY_CONTEXT_FIX: Bot message 1 reply_id set to: aH00uNS3TVpOB4Znac5pxuzsI (QikChat ID: m9mMkD4KroCtyzhYEBevxntDH)
+🕒 CREATE_CONV Response 2/2 (original 2): created_at from QikChat = 2025-12-23T10:30:06.909Z
+🕒 CREATE_CONV: Parsed QikChat created_at to Unix timestamp: 1766485806
 🎵 AUDIO_URL_FIX: Using original message 2 additional_info
 🎵 AUDIO_URL_FIX: Found audio_url in original message: https://smartkcstorage1.blob.core.windows.net/onco...
-🔗 REPLY_CONTEXT_FIX: Bot message 2 reply_id set to: QoXyqys78PaoIFWUg6zDmIoRF (QikChat ID: OsToH0Tq3j2xhEWETZcV4L7rf)
-🔍 CLASSIFICATION_FIX: Found original user message with ID QoXyqys78PaoIFWUg6zDmIoRF
+🔗 REPLY_CONTEXT_FIX: Bot message 2 reply_id set to: aH00uNS3TVpOB4Znac5pxuzsI (QikChat ID: Fmf385XFjOvISP3BnPDRJLjHJ)
+🔧 EXPERT MESSAGE ID DEBUG:
+   Original expert ID: f1a2e3f0-cb47-43b7-be01-9e0c078318fa
+   Expert responses count: 1
+   First expert response: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'fqyRUqHjyAma4zg5JmnNDTNYr', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0.2, 'created_at': '2025-12-23T10:30:07.099Z', 'status': 'processing'}]}
+🧹 FILTER_DUPLICATES: Before filtering - 2 entries in messages_context
+🧹 FILTER_DUPLICATES: Keeping entry: 90a127ca-9ec5-46a7-b4b8-144d12de6811 (UUID: True, Corrected: False)
+🧹 FILTER_DUPLICATES: Keeping entry: 421a3190-7f57-47f7-a53c-e07f0744348d (UUID: True, Corrected: False)
+🧹 FILTER_DUPLICATES: After filtering - 2 entries remaining
+🔧 CREATE_CROSS_CONV: Processing 1 expert responses (primary only)
+🔧 CREATE_CROSS_CONV: Expert response 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'fqyRUqHjyAma4zg5JmnNDTNYr', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0.2, 'created_at': '2025-12-23T10:30:07.099Z', 'status': 'processing'}]}
+🔧 CREATE_CROSS_CONV: Top-level message ID: None
+🔧 CREATE_CROSS_CONV: Checking data array with 1 items
+🔧 CREATE_CROSS_CONV: Found message ID in data[0]: fqyRUqHjyAma4zg5JmnNDTNYr
+🔧 CREATE_CROSS_CONV: Final extracted expert message ID: fqyRUqHjyAma4zg5JmnNDTNYr
+🔧 CREATE_CROSS_CONV: Original expert message ID: f1a2e3f0-cb47-43b7-be01-9e0c078318fa
+🔧 CREATE_CROSS_CONV: Updated expert message ID: f1a2e3f0-cb47-43b7-be01-9e0c078318fa -> fqyRUqHjyAma4zg5JmnNDTNYr
+🔧 CREATE_CROSS_CONV: Expert message will be stored with Qikchat ID: fqyRUqHjyAma4zg5JmnNDTNYr
+🔧 CREATE_CROSS_CONV: Returning 3 messages for database storage
+   Message 1: ID=90a127ca-9ec5-46a7-b4b8-144d12de6811, Type=interactive_list_reply, Text='...'
+   Message 2: ID=421a3190-7f57-47f7-a53c-e07f0744348d, Type=interactive_list_reply, Text='...'
+   Message 3: ID=fqyRUqHjyAma4zg5JmnNDTNYr, Type=template_button, Text='*Patient Info*: Akshat Sanghvi, Age: 21, Gender: M...'
+   Expert ID after create_cross_conv: fqyRUqHjyAma4zg5JmnNDTNYr
+   ID changed: True
+   ℹ️ Expert message will be stored in database with correct QikChat ID: fqyRUqHjyAma4zg5JmnNDTNYr
+🔍 CLASSIFICATION_FIX: Found original user message with ID aH00uNS3TVpOB4Znac5pxuzsI
 🔍 CLASSIFICATION_FIX: Using original user message with preserved classification
-📎 Using original message ID from reply context: QoXyqys78PaoIFWUg6zDmIoRF
+📎 Using original message ID from reply context: aH00uNS3TVpOB4Znac5pxuzsI
 🔧 Created USER_TO_BOT message:
-   ID: QoXyqys78PaoIFWUg6zDmIoRF
-   Text: 'When is my appointment?...'
+   ID: aH00uNS3TVpOB4Znac5pxuzsI
+   Text: 'Can I take a bath before radiotherapy?...'
 
 === USER HANDLER MESSAGE STORAGE DEBUG ===
-📊 Total conversations to store: 3
-  1. ID: QoXyqys78PaoIFWUg6zDmIoRF
+📊 Total conversations to store: 6
+  1. ID: aH00uNS3TVpOB4Znac5pxuzsI
      Category: byoebuser_to_bot
      Type: regular_text
-     Text: 'When is my appointment?...'
-  2. ID: wVODGrh8rYXE3jBKRR6PqxADH
+     Text: 'Can I take a bath before radiotherapy?...'
+  2. ID: m9mMkD4KroCtyzhYEBevxntDH
      Category: bot_to_byoebuser_response
      Type: interactive_list_reply
-     Text: 'Let me check with the KMC staff and get back to yo...'
-  3. ID: OsToH0Tq3j2xhEWETZcV4L7rf
+     Text: 'Let me check with a KMC doctor and get back to you...'
+  3. ID: Fmf385XFjOvISP3BnPDRJLjHJ
      Category: bot_to_byoebuser_response
      Type: regular_audio
      Text: '...'
+  4. ID: 90a127ca-9ec5-46a7-b4b8-144d12de6811
+     Category: None
+     Type: interactive_list_reply
+     Text: '...'
+  5. ID: 421a3190-7f57-47f7-a53c-e07f0744348d
+     Category: None
+     Type: interactive_list_reply
+     Text: '...'
+  6. ID: fqyRUqHjyAma4zg5JmnNDTNYr
+     Category: bot_to_byoebexpert_verification
+     Type: template_button
+     Text: '*Patient Info*: Akshat Sanghvi, Age: 21, Gender: M...'
 === END USER HANDLER DEBUG ===
 
-🔍 MESSAGE_CREATE_QUERIES: Processing 3 messages for database storage
-🕒 TIMESTAMP_DEBUG Message 1/3: ID=QoXyqys78PaoIFWUg6zD
-   has_outgoing_timestamp: 1765996249
-   outgoing_timestamp value: 1765996249
-   final timestamp: 1765996249
+🔍 MESSAGE_CREATE_QUERIES: Processing 6 messages for database storage
+🕒 TIMESTAMP_DEBUG Message 1/6: ID=aH00uNS3TVpOB4Znac5p
+   has_outgoing_timestamp: 1766485806
+   outgoing_timestamp value: 1766485806
+   final timestamp: 1766485806
    message_type: regular_text
 🔍 MESSAGE_CREATE_QUERIES: Message 1
-   Message ID: QoXyqys78PaoIFWUg6zDmIoRF
+   Message ID: aH00uNS3TVpOB4Znac5pxuzsI
    Message Type: regular_text
-   Message Class: logistical
+   Message Class: medical
    Is Expert Verification: False
    QikChat Audio ID: None
-   Text Preview: When is my appointment?...
-🕒 TIMESTAMP_DEBUG Message 2/3: ID=wVODGrh8rYXE3jBKRR6P
-   has_outgoing_timestamp: 1765996248
-   outgoing_timestamp value: 1765996248
-   final timestamp: 1765996248
+   Text Preview: Can I take a bath before radiotherapy?...
+🕒 TIMESTAMP_DEBUG Message 2/6: ID=m9mMkD4KroCtyzhYEBev
+   has_outgoing_timestamp: 1766485806
+   outgoing_timestamp value: 1766485806
+   final timestamp: 1766485806
    message_type: interactive_list_reply
 🔍 MESSAGE_CREATE_QUERIES: Message 2
-   Message ID: wVODGrh8rYXE3jBKRR6PqxADH
+   Message ID: m9mMkD4KroCtyzhYEBevxntDH
    Message Type: interactive_list_reply
    Message Class: Not classified
    Is Expert Verification: False
    QikChat Audio ID: None
-   Text Preview: Let me check with the KMC staff and get back to you with a verified answer. Unti...
-🕒 TIMESTAMP_DEBUG Message 3/3: ID=OsToH0Tq3j2xhEWETZcV
-   has_outgoing_timestamp: 1765996248
-   outgoing_timestamp value: 1765996248
-   final timestamp: 1765996248
+   Text Preview: Let me check with a KMC doctor and get back to you with a verified answer. Until...
+🕒 TIMESTAMP_DEBUG Message 3/6: ID=Fmf385XFjOvISP3BnPDR
+   has_outgoing_timestamp: 1766485806
+   outgoing_timestamp value: 1766485806
+   final timestamp: 1766485806
    message_type: regular_audio
 🔍 MESSAGE_CREATE_QUERIES: Message 3
-   Message ID: OsToH0Tq3j2xhEWETZcV4L7rf
+   Message ID: Fmf385XFjOvISP3BnPDRJLjHJ
    Message Type: regular_audio
    Message Class: Not classified
    Is Expert Verification:
    QikChat Audio ID: None
    Text Preview: ...
+🕒 TIMESTAMP_DEBUG Message 4/6: ID=90a127ca-9ec5-46a7-b
+   has_outgoing_timestamp: None
+   outgoing_timestamp value: None
+   final timestamp: 1766485806
+   message_type: interactive_list_reply
+🔍 MESSAGE_CREATE_QUERIES: Message 4
+   Message ID: 90a127ca-9ec5-46a7-b4b8-144d12de6811
+   Message Type: interactive_list_reply
+   Message Class: Not classified
+   Is Expert Verification: None
+   QikChat Audio ID: None
+   Text Preview: ...
+🕒 TIMESTAMP_DEBUG Message 5/6: ID=421a3190-7f57-47f7-a
+   has_outgoing_timestamp: None
+   outgoing_timestamp value: None
+   final timestamp: 1766485806
+   message_type: interactive_list_reply
+🔍 MESSAGE_CREATE_QUERIES: Message 5
+   Message ID: 421a3190-7f57-47f7-a53c-e07f0744348d
+   Message Type: interactive_list_reply
+   Message Class: Not classified
+   Is Expert Verification: None
+   QikChat Audio ID: None
+   Text Preview: ...
+🕒 TIMESTAMP_DEBUG Message 6/6: ID=fqyRUqHjyAma4zg5JmnN
+   has_outgoing_timestamp: None
+   outgoing_timestamp value: None
+   final timestamp: 1766485806
+   message_type: template_button
+🔍 MESSAGE_CREATE_QUERIES: Message 6
+   Message ID: fqyRUqHjyAma4zg5JmnNDTNYr
+   Message Type: template_button
+   Message Class: Not classified
+   Is Expert Verification: True
+   QikChat Audio ID: None
+   Text Preview: *Patient Info*: Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15
+
+*Questio...
+   🔍 Expert verification additional_info keys: ['emoji', 'verification_status', 'button_titles', 'template_name', 'template_language', 'template_parameters', 'is_audio_query', 'related_questions']
+   ✅ is_audio_query in additional_info: False
+🔍 MESSAGE_CREATE_QUERIES: Generated 6 database create queries
+🔍 FINAL_QUERIES_DEBUG: About to return 6 queries:
+   Query 1: ID=aH00uNS3TVpOB4Znac5pxuzsI, has_text=True, has_audio=False
+   Query 2: ID=m9mMkD4KroCtyzhYEBevxntDH, has_text=True, has_audio=False
+   Query 3: ID=Fmf385XFjOvISP3BnPDRJLjHJ, has_text=False, has_audio=True
+   Query 4: ID=90a127ca-9ec5-46a7-b4b8-144d12de6811, has_text=False, has_audio=False
+   Query 5: ID=421a3190-7f57-47f7-a53c-e07f0744348d, has_text=False, has_audio=False
+   Query 6: ID=fqyRUqHjyAma4zg5JmnNDTNYr, has_text=True, has_audio=False
+Saving conversation history: Q: Can I take a bath before radiotherapy? | A: Let me check with a KMC doctor and get back to you with a verified answer. Until then, feel free to ...
+🔍 PROCESSING RESULTS: Got 1 results from handlers
+✅ Result 0: MSG_CREATE=6, MSG_UPDATE=0, USER_CREATE=0, USER_UPDATE=1
+Executing database queries - User updates: 1, Message creates: 6
+🔍 EXECUTE_QUERIES: Starting execution with queries: ['create', 'update']
+🔍 EXECUTE_QUERIES: Executing 6 CREATE operations
+   CREATE 1: Message ID = aH00uNS3TVpOB4Znac5pxuzsI
+   CREATE 2: Message ID = m9mMkD4KroCtyzhYEBevxntDH
+   CREATE 3: Message ID = Fmf385XFjOvISP3BnPDRJLjHJ
+   CREATE 4: Message ID = 90a127ca-9ec5-46a7-b4b8-144d12de6811
+   CREATE 5: Message ID = 421a3190-7f57-47f7-a53c-e07f0744348d
+   CREATE 6: Message ID = fqyRUqHjyAma4zg5JmnNDTNYr
+Inserting documents: ['aH00uNS3TVpOB4Znac5pxuzsI', 'm9mMkD4KroCtyzhYEBevxntDH', 'Fmf385XFjOvISP3BnPDRJLjHJ', '90a127ca-9ec5-46a7-b4b8-144d12de6811', '421a3190-7f57-47f7-a53c-e07f0744348d', 'fqyRUqHjyAma4zg5JmnNDTNYr']
+✅ EXECUTE_QUERIES: CREATE operations completed successfully
+   Result: (['aH00uNS3TVpOB4Znac5pxuzsI', 'm9mMkD4KroCtyzhYEBevxntDH', 'Fmf385XFjOvISP3BnPDRJLjHJ', '90a127ca-9ec5-46a7-b4b8-144d12de6811', '421a3190-7f57-47f7-a53c-e07f0744348d', 'fqyRUqHjyAma4zg5JmnNDTNYr'], None)
+Database operations completed in 0.61 seconds
+DEBUG PRODUCER: Message ID in message: None
+DEBUG PRODUCER: Payload ID: Gy9vJy3QXsK7oS9X8Y6VviTOs
+DEBUG PRODUCER: Using payload ID as fallback: Gy9vJy3QXsK7oS9X8Y6VviTOs
+
+=== QIKCHAT MESSAGE CONVERSION DEBUG ===
+📥 Converting message: {
+  "from": "919739811075",
+  "timestamp": "2025-12-23T10:30:25.000Z",
+  "button": {
+    "payload": "Yes",
+    "text": "Yes"
+  },
+  "type": "button",
+  "context": {
+    "messageId": "fqyRUqHjyAma4zg5JmnNDTNYr"
+  },
+  "id": "Gy9vJy3QXsK7oS9X8Y6VviTOs"
+}
+📝 Detected message type: button
+🔘 Converting button message as interactive message
+🔍 Interactive context data found: {'messageId': 'fqyRUqHjyAma4zg5JmnNDTNYr'}
+🔗 INTERACTIVE REPLY CONTEXT FOUND: reply_to_message_id = fqyRUqHjyAma4zg5JmnNDTNYr
+✅ Button conversion successful
+   - Reply ID: fqyRUqHjyAma4zg5JmnNDTNYr
+=== END QIKCHAT MESSAGE CONVERSION DEBUG ===
+
+INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
+[DEBUG] Looking up users by phone_numbers: ['919739811075']
+[DEBUG] get_users_by_phone_numbers called with phone_numbers: ['919739811075']
+[DEBUG] Using collection: 'users'
+[DEBUG] Raw users_obj from DB (by phone numbers): [{'_id': 'd7022499fc5fbcd34df184209477a79f', 'User': {'user_id': 'd7022499fc5fbcd34df184209477a79f', 'user_name': None, 'user_location': {}, 'user_language': 'en', 'user_type': 'byoebexpert', 'phone_number_id': '919739811075', 'test_user': False, 'experts': {}, 'audience': ['916360720233', '919740379935', '916352927215'], 'patient_details': {}, 'created_timestamp': 1762936628, 'activity_timestamp': 1766485689, 'last_conversations': []}, 'timestamp': '1762936628'}]
+[DEBUG] Retrieved user by phone - user_id: 'd7022499fc5fbcd34df184209477a79f', phone_number_id: '919739811075', user_name: 'None', conversations: 0
+🔍 GET_BOT_MESSAGES: Database returned 1 results
+✅ GET_BOT_MESSAGES: Found matching messages
+   Found 1: ID=fqyRUqHjyAma4zg5JmnNDTNYr
+🤖 Bot message 0: ID=fqyRUqHjyAma4zg5JmnNDTNYr
+[DEBUG] Looking for user with phone_number_id: '919739811075' in 1 retrieved users
+[DEBUG] Found existing user with user_id: 'd7022499fc5fbcd34df184209477a79f', user_name: 'None', phone_number_id: '919739811075', conversations: 0
+� Expert message debug - reply_id: fqyRUqHjyAma4zg5JmnNDTNYr, bot_message found: True
+🔍 Reply context exists: reply_id=fqyRUqHjyAma4zg5JmnNDTNYr
+🔍 PROCESSING MESSAGE: Category=('byoebexpert_to_bot',), UserType=byoebexpert
+🔍 Message Text: Yes
+🔍 Added EXPERT conversation to processing queue
+
+=== EXPERT MESSAGE CONSUMER DEBUG ===
+👨‍⚕️ Processing expert message from: 919739811075
+💬 Message text: 'Yes'
+📝 Message type: interactive_button_reply
+🔗 Reply ID: fqyRUqHjyAma4zg5JmnNDTNYr
+🔗 Reply additional info: {'emoji': None, 'verification_status': 'pending', 'button_titles': ['Yes', 'No'], 'template_name': 'verification_with_butons', 'template_language': 'en', 'template_parameters': ['Akshat Sanghvi, Age: 21, Gender: Male, DOB: 1985-03-15', 'Can I take a bath before radiotherapy?', "Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment."], 'is_audio_query': False, 'related_questions': ['क्या मैं उपचार क्षेत्र पर मॉइस्चराइज़र का उपयोग कर         सकता हूँ?', 'अगर मेरी त्वचा में खुजली हो तो मुझे क्या करना चाहिए?', 'रेडिएशन थेरेपी के दौरान तैरना सुरक्षित है या नहीं, यह आपके डॉक्टर पर निर्भर करता है। कुछ म                       मामलों में, तैरना सुरक्षित हो सकता है, लेकिन त्वचा की संवेदनशीलता और संक्रमण के जोखिम को ध्यान में रखते हुए डॉक्टर से सलाह लेना महत्वपूर्ण है।']}
+=== END EXPERT MESSAGE CONSUMER DEBUG ===
+
+Translation skipped - same language
+
+=== EXPERT GENERATE RESPONSE DEBUG ===
+📧 Processing expert message from: 919739811075
+💬 Message text: 'Yes'
+📝 Message type: interactive_button_reply
+🔗 Reply context exists: True
+🔗 Reply ID: fqyRUqHjyAma4zg5JmnNDTNYr
+🔗 Reply message category: bot_to_byoebexpert_verification
+🔗 Reply additional_info keys: ['emoji', 'verification_status', 'button_titles', 'template_name', 'template_language', 'template_parameters', 'is_audio_query', 'related_questions']
+🔗 Verification status: pending
+✅ Branch: Expert clicked YES - sending approved answer to user and thank you to expert
+🔧 DEBUG: Final extracted question: 'Can I take a bath before radiotherapy?' bot_answer: 'Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.'
+🔧 DEBUG: Expert thank you message: 'Thank you for verifiying the answer.'
+🔧 DEBUG: Created expert message with text: 'Thank you for verifiying the answer.'
+Translating bot answer to user's language: hi
+🔍 DEBUG [Expert YES - checking additional_info]:
+     reply_context.additional_info keys: ['emoji', 'verification_status', 'button_titles', 'template_name', 'template_language', 'template_parameters', 'is_audio_query', 'related_questions']
+     has is_audio_query: True
+     is_audio_query value: False
+🎤 DEBUG [Expert YES approval]: Original user query was audio: False
+🎤 DEBUG [Expert YES approval]: User is_active_user: False
+🎤 DEBUG [Expert YES approval]: Including Question prefix (audio=False, inactive=True)
+here now,  Question: Can I take a bath before radiotherapy?
+Answer: Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.
+Thread ID: 45520, Variable Address: 2187559570176, client address: 2186951569872
+🔧 SPEECH DEBUG - SUCCESS: Generated 495072 bytes of audio
+🔧 TTS DEBUG - Received audio_bytes: <class 'bytes'>, length: 495072
+🔧 DEBUG: Audio message generated successfully for YES flow with SAS URL
+🔧 User 1101 is_active_user: False
+COMING HERE 3
+🔧 DEBUG: Using translated template params (case 3) - Q: 'क्या मैं रेडियोथेरेपी से पहले स्नान कर सकता हूँ?', A: 'हाँ, आप रेडियोथेरेपी से पहले स्नान कर सकते हैं                    , लेकिन अपनी त्वचा के साथ विशेष रूप से उपचार क्षेत्र में कोमल रहना महत्वपूर्ण है। गुनगुने पानी और हल्के, बिना सुगंध वाले साबुन का उपयोग करें, और उपचार क्षेत्र                              पर साबुन का उपयोग करने से बचें। अपनी त्वचा को एक नरम तौलिये से थपथपाकर सुखाएं और रगड़ने से बचें। उपचार के दौरान त्वचा की देखभाल के लिए अपने स्वास्थ्य सेवा प्रद                        दाता की किसी भी विशेष सिफारिश का पालन करें।'
+🔧 DEBUG: Using last message in conversation context: 421a3190-7f57-47f7-a53c-e07f0744348d
+🔧 DEBUG: Last message category: 'None'
+🔧 __create_user_reply_context DEBUG: status=verified, cross_conv_message has reply_context=True
+🔧 __create_user_reply_context DEBUG: cross_conv_message.reply_context.reply_id=aH00uNS3TVpOB4Znac5pxuzsI
+🔧 __create_user_reply_context DEBUG: additional_info exists=False
+🔧 __create_user_reply_context DEBUG: additional_info is None!
+🔧 __create_user_reply_context DEBUG: Checking verified condition:
+  - status == constants.VERIFIED: True (status='verified', VERIFIED='verified')
+  - reply_context is not None: True
+  - additional_info is not None: False
+🔧 __create_user_reply_context DEBUG: Using verified flow, reply_id set to: aH00uNS3TVpOB4Znac5pxuzsI
+🔧 __create_user_reply_context DEBUG: Final reply_id being returned: aH00uNS3TVpOB4Znac5pxuzsI
+🔧 DEBUG: Created reply_context with reply_id: aH00uNS3TVpOB4Znac5pxuzsI
+📋 User is inactive for 24 hours, preparing template message
+🔧 DEBUG: user_requests length: 1
+
+=== QIKCHAT SEND_REQUESTS DEBUG ===
+📤 Sending 1 requests
+📤 Request 1: {'to_contact': '916352927215', 'type': 'template', 'template': {'name': 'bot_temp', 'language': 'hi', 'components': [{'type': 'body', 'parameters': [{'type': 'text', 'text': 'क्या मैं रेडियोथेरेपी से पहले स्नान कर सकता हूँ?'}, {'type': 'text', 'text': 'हाँ, आप रेडियोथेरेपी से पहले स्नान कर सकते हैं, लेक                     किन अपनी त्वचा के साथ विशेष रूप से उपचार क्षेत्र में कोमल रहना महत्वपूर्ण है। गुनगुने पानी और हल्के, बिना सुगंध वाले साबुन का उपयोग करें, और उपचार क्षेत्र पर सा                           ाबुन का उपयोग करने से बचें। अपनी त्वचा को एक नरम तौलिये से थपथपाकर सुखाएं और रगड़ने से बचें। उपचार के दौरान त्वचा की देखभाल के लिए अपने स्वास्थ्य सेवा प्रदाता क                        की किसी भी विशेष सिफारिश का पालन करें।'}]}]}}
+📤 Got 1 results
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'nCcP6aFGx5UmkRESBMfGrBWYi', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0.2, 'created_at': '2025-12-23T10:30:38.099Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: nCcP6aFGx5UmkRESBMfGrBWYi
+📤 Final message_ids: ['nCcP6aFGx5UmkRESBMfGrBWYi']
+=== END QIKCHAT SEND_REQUESTS DEBUG ===
+
+📋 Template message sent to inactive user: [{'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'nCcP6aFGx5UmkRESBMfGrBWYi', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0.2, 'created_at': '2025-12-23T10:30:38.099Z', 'status': 'processing'}]}]
+🔧 DEBUG: Created user message with bot_answer: 'Yes, you can take a bath before radiotherapy, but it's important to be gentle with your skin, especially in the treatment area. Use warm water and a mild, unscented soap, and avoid using soap on the treatment area itself. Pat your skin dry with a soft towel and avoid rubbing. Always follow any specific recommendations from your healthcare provider regarding skin care during treatment.'
+🔧 Including original expert message for storage: ID=Gy9vJy3QXsK7oS9X8Y6VviTOs
+🔧 Original expert message category: ('byoebexpert_to_bot',)
+📤 Generated messages: 1 user, 1 expert
+=== END EXPERT GENERATE RESPONSE DEBUG ===
+
+
+=== EXPERT SEND RESPONSE DEBUG ===
+📨 Processing 4 messages in send handler
+📨 Message 1: user_type='byoebuser', category='bot_to_byoebuser_response'
+📨 Message 2: user_type='byoebexpert', category='bot_to_byoebexpert'
+📨 Message 3: user_type='None', category='read_receipt'
+📨 Message 4: user_type='byoebexpert', category='('byoebexpert_to_bot',)'
+📨 After filtering: 1 read receipts, 1 user messages, 2 expert messages
+
+=== QIKCHAT SEND_REQUESTS DEBUG ===
+📤 Sending 1 requests
+📤 Request 1: {'to_contact': '919739811075', 'type': 'text', 'text': {'body': 'Thank you for verifiying the answer.'}, 'context': {'message_id': 'fqyRUqHjyAma4zg5JmnNDTNYr'}}
+📤 Got 1 results
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'WQFEDYzstiJeylSnzaw3VXrfT', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '919739811075', 'credits': 0, 'created_at': '2025-12-23T10:30:38.284Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: WQFEDYzstiJeylSnzaw3VXrfT
+📤 Final message_ids: ['WQFEDYzstiJeylSnzaw3VXrfT']
+=== END QIKCHAT SEND_REQUESTS DEBUG ===
+
+🔧 EXPERT_ID_FIX: Updating expert message ID: 552627be-03f7-4846-96a4-7f86465bc28f -> WQFEDYzstiJeylSnzaw3VXrfT
+🔄 Updating expert message ID in database: 552627be-03f7-4846-96a4-7f86465bc28f -> WQFEDYzstiJeylSnzaw3VXrfT
+🔄 UPDATE_MESSAGE_ID: Starting ID update process
+   Old ID: 552627be-03f7-4846-96a4-7f86465bc28f
+   New ID: WQFEDYzstiJeylSnzaw3VXrfT
+🔄 UPDATE_MESSAGE_ID: Looking for document with old ID: 552627be-03f7-4846-96a4-7f86465bc28f
+❌ UPDATE_MESSAGE_ID: Message with ID 552627be-03f7-4846-96a4-7f86465bc28f not found for update
+🔍 UPDATE_MESSAGE_ID: Checking if message exists in different format...
+❌ UPDATE_MESSAGE_ID: Message not found in nested structure either
+📨 Sending 1 user messages
+📤 __handle_user: Processing 1 user messages
+🔧 __modify_user_messages_context: Processing 1 messages
+🔧 No audio messages found, fixing reply contexts for user messages
+🔧 Original reply_id: aH00uNS3TVpOB4Znac5pxuzsI
+🔧 Reply_id already looks like valid QikChat message ID, keeping it: aH00uNS3TVpOB4Znac5pxuzsI
+📤 After modification: 1 messages to send
+📤 Preparing request for message 1/1
+📤 Message type: template_button
+📤 Message source text length: 472
+📤 Has reply_context: True
+📤 Reply ID: aH00uNS3TVpOB4Znac5pxuzsI
+📤 Successfully prepared 1 requests for message 1
+
+=== QIKCHAT SEND_REQUESTS DEBUG ===
+📤 Sending 1 requests
+📤 Request 1: {'to_contact': '916352927215', 'type': 'template', 'template': {'name': 'bot_temp', 'language': 'hi', 'components': [{'type': 'body', 'parameters': [{'type': 'text', 'text': 'क्या मैं रेडियोथेरेपी से पहले स्नान कर सकता हूँ?'}, {'type': 'text', 'text': 'हाँ, आप रेडियोथेरेपी से पहले स्नान कर सकते हैं, लेक                     किन अपनी त्वचा के साथ विशेष रूप से उपचार क्षेत्र में कोमल रहना महत्वपूर्ण है। गुनगुने पानी और हल्के, बिना सुगंध वाले साबुन का उपयोग करें, और उपचार क्षेत्र पर सा                           ाबुन का उपयोग करने से बचें। अपनी त्वचा को एक नरम तौलिये से थपथपाकर सुखाएं और रगड़ने से बचें। उपचार के दौरान त्वचा की देखभाल के लिए अपने स्वास्थ्य सेवा प्रदाता क                        की किसी भी विशेष सिफारिश का पालन करें।'}]}]}}
+📤 Got 1 results
+📤 Result 1: {'status': True, 'message': 'Messages queued successfully', 'data': [{'id': 'hqpe9HxPJwXpVchIa8pS1eRoV', 'channel': 'whatsapp', 'from': '916366282002', 'recipient': '916352927215', 'credits': 0.2, 'created_at': '2025-12-23T10:30:39.057Z', 'status': 'processing'}]}
+📤 Extracted message_id for result 1: hqpe9HxPJwXpVchIa8pS1eRoV
+📤 Final message_ids: ['hqpe9HxPJwXpVchIa8pS1eRoV']
+=== END QIKCHAT SEND_REQUESTS DEBUG ===
+
+📤 Successfully sent message 1, got response: 1 items, message_id: ['hqpe9HxPJwXpVchIa8pS1eRoV']
+🔧 FINAL_ANSWER_ID_FIX: Updating 1 message IDs with QikChat IDs
+🔧 FINAL_ANSWER_ID_FIX: Available QikChat IDs: ['hqpe9HxPJwXpVchIa8pS1eRoV']
+🔧 FINAL_ANSWER_ID_FIX: Processing message 1
+   - Original ID: 4b88ae2e-df9b-4201-a962-5cce31d40850
+   - Has audio: False
+   - Message type: template_button
+🔧 FINAL_ANSWER_ID_FIX: Message 1 ID updated: 4b88ae2e-df9b-4201-a962-5cce31d40850 -> hqpe9HxPJwXpVchIa8pS1eRoV
+📤 No emoji found, skipping final reaction
+🗄️ __prepare_db_queries: Preparing queries for 1 user messages and 2 expert messages
+🗄️ AUDIO_DEBUG: Checking 1 user messages for audio processing
+🗄️ AUDIO_DEBUG: User message 1: ID=hqpe9HxPJwXpVchIa8pS1eRoV, has_audio=False
+🗄️ Added 1 user response messages for storage
+🗄️ Added 2 expert messages for storage
+
+=== EXPERT HANDLER MESSAGE STORAGE DEBUG ===
+📊 Total messages to store: 3
+  1. ID: hqpe9HxPJwXpVchIa8pS1eRoV
+     Category: bot_to_byoebuser_response
+     Type: template_button
+     Has Audio: False
+     Text: 'Question: Can I take a bath before radiotherapy?
+A...'
+  2. ID: WQFEDYzstiJeylSnzaw3VXrfT
+     Category: bot_to_byoebexpert
+     Type: regular_text
+     Has Audio: None
+     Text: 'Thank you for verifiying the answer....'
+  3. ID: Gy9vJy3QXsK7oS9X8Y6VviTOs
+     Category: ('byoebexpert_to_bot',)
+     Type: interactive_button_reply
+     Has Audio: False
+     Text: 'Yes...'
+=== END EXPERT HANDLER DEBUG ===
+
+🔍 MESSAGE_CREATE_QUERIES: Processing 3 messages for database storage
+🕒 TIMESTAMP_DEBUG Message 1/3: ID=hqpe9HxPJwXpVchIa8pS
+   has_outgoing_timestamp: None
+   outgoing_timestamp value: None
+   final timestamp: 1766485838
+   message_type: template_button
+🔍 MESSAGE_CREATE_QUERIES: Message 1
+   Message ID: hqpe9HxPJwXpVchIa8pS1eRoV
+   Message Type: template_button
+   Message Class: Not classified
+   Is Expert Verification: False
+   QikChat Audio ID: None
+   Text Preview: Question: Can I take a bath before radiotherapy?
+Answer: Yes, you can take a bat...
+🕒 TIMESTAMP_DEBUG Message 2/3: ID=WQFEDYzstiJeylSnzaw3
+   has_outgoing_timestamp: None
+   outgoing_timestamp value: None
+   final timestamp: 1766485838
+   message_type: regular_text
+🔍 MESSAGE_CREATE_QUERIES: Message 2
+   Message ID: WQFEDYzstiJeylSnzaw3VXrfT
+   Message Type: regular_text
+   Message Class: Not classified
+   Is Expert Verification: False
+   QikChat Audio ID: None
+   Text Preview: Thank you for verifiying the answer....
+🕒 TIMESTAMP_DEBUG Message 3/3: ID=Gy9vJy3QXsK7oS9X8Y6V
+   has_outgoing_timestamp: None
+   outgoing_timestamp value: None
+   final timestamp: 1766485838
+   message_type: interactive_button_reply
+C:\Users\t-asanghvi\AppData\Local\pypoetry\Cache\virtualenvs\byoeb-7XHC672s-py3.11\Lib\site-packages\pydantic\main.py:463: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [input_value=('byoebexpert_to_bot',), input_type=tuple])       
+  return self.__pydantic_serializer__.to_python(
+🔍 MESSAGE_CREATE_QUERIES: Message 3
+   Message ID: Gy9vJy3QXsK7oS9X8Y6VviTOs
+   Message Type: interactive_button_reply
+   Message Class: Not classified
+   Is Expert Verification: False
+   QikChat Audio ID: None
+   Text Preview: Yes...
 🔍 MESSAGE_CREATE_QUERIES: Generated 3 database create queries
 🔍 FINAL_QUERIES_DEBUG: About to return 3 queries:
-   Query 1: ID=QoXyqys78PaoIFWUg6zDmIoRF, has_text=True, has_audio=False
-   Query 2: ID=wVODGrh8rYXE3jBKRR6PqxADH, has_text=True, has_audio=False
-   Query 3: ID=OsToH0Tq3j2xhEWETZcV4L7rf, has_text=False, has_audio=True
-Saving conversation history: Q: When is my appointment? | A: Let me check with the KMC staff and get back to you with a verified answer. Until then, feel free to...
+   Query 1: ID=hqpe9HxPJwXpVchIa8pS1eRoV, has_text=True, has_audio=False
+   Query 2: ID=WQFEDYzstiJeylSnzaw3VXrfT, has_text=True, has_audio=False
+   Query 3: ID=Gy9vJy3QXsK7oS9X8Y6VviTOs, has_text=True, has_audio=False
+🗄️ Generated 3 CREATE queries
+🗄️ Calling correction_update_query
+🗄️ Calling verification_status_update_query
+🗄️ Generated 4 UPDATE queries
+🗄️ Database queries prepared successfully
+=== END EXPERT SEND RESPONSE DEBUG ===
+
 🔍 PROCESSING RESULTS: Got 1 results from handlers
-✅ Result 0: MSG_CREATE=3, MSG_UPDATE=0, USER_CREATE=0, USER_UPDATE=1
+✅ Result 0: MSG_CREATE=3, MSG_UPDATE=4, USER_CREATE=0, USER_UPDATE=1
 Executing database queries - User updates: 1, Message creates: 3
 🔍 EXECUTE_QUERIES: Starting execution with queries: ['create', 'update']
 🔍 EXECUTE_QUERIES: Executing 3 CREATE operations
-   CREATE 1: Message ID = QoXyqys78PaoIFWUg6zDmIoRF
-   CREATE 2: Message ID = wVODGrh8rYXE3jBKRR6PqxADH
-   CREATE 3: Message ID = OsToH0Tq3j2xhEWETZcV4L7rf
-Inserting documents: ['QoXyqys78PaoIFWUg6zDmIoRF', 'wVODGrh8rYXE3jBKRR6PqxADH', 'OsToH0Tq3j2xhEWETZcV4L7rf']
+   CREATE 1: Message ID = hqpe9HxPJwXpVchIa8pS1eRoV
+   CREATE 2: Message ID = WQFEDYzstiJeylSnzaw3VXrfT
+   CREATE 3: Message ID = Gy9vJy3QXsK7oS9X8Y6VviTOs
+Inserting documents: ['hqpe9HxPJwXpVchIa8pS1eRoV', 'WQFEDYzstiJeylSnzaw3VXrfT', 'Gy9vJy3QXsK7oS9X8Y6VviTOs']
 ✅ EXECUTE_QUERIES: CREATE operations completed successfully
-   Result: (['QoXyqys78PaoIFWUg6zDmIoRF', 'wVODGrh8rYXE3jBKRR6PqxADH', 'OsToH0Tq3j2xhEWETZcV4L7rf'], None)
+   Result: (['hqpe9HxPJwXpVchIa8pS1eRoV', 'WQFEDYzstiJeylSnzaw3VXrfT', 'Gy9vJy3QXsK7oS9X8Y6VviTOs'], None)
 Database operations completed in 0.66 seconds
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
-=== WEBHOOK ENDPOINT HIT - PRINT STATEMENT ===
-INFO:     35.207.205.165:0 - "POST /webhook/whk HTTP/1.1" 200 OK
